@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composants UI - ImmoApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'construction-yellow': '#FFD700',
+                        'construction-dark-yellow': '#FFC107',
+                        'construction-black': '#1A1A1A',
+                        'construction-gray': '#2D2D2D'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-yellow {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .modal {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .input-focus:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+        .table-striped tbody tr:nth-child(even) {
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            color: #1A1A1A;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans p-6 space-y-8">
+
+    <!-- SECTION: TABLEAUX -->
+    <section class="space-y-6">
+        <h2 class="text-2xl font-bold text-construction-black mb-4">📊 Tableaux</h2>
+        
+        <!-- Tableau simple -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-construction-black">Liste des biens immobiliers</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table-striped">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bien</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Locataire</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loyer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 gradient-yellow rounded-lg flex items-center justify-center mr-3">
+                                        <span class="text-construction-black font-bold">🏢</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Apt 3B - Rue de la Paix</div>
+                                        <div class="text-sm text-gray-500">Paris 75001</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Appartement</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Marie Martin</div>
+                                <div class="text-sm text-gray-500">marie.martin@email.com</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">€850/mois</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                    Occupé
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button class="text-construction-yellow hover:text-construction-dark-yellow">Voir</button>
+                                <button class="text-blue-600 hover:text-blue-800">Modifier</button>
+                                <button class="text-red-600 hover:text-red-800">Supprimer</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 gradient-yellow rounded-lg flex items-center justify-center mr-3">
+                                        <span class="text-construction-black font-bold">🏠</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Maison - Boulevard Victor Hugo</div>
+                                        <div class="text-sm text-gray-500">Lyon 69001</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maison</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-500">Vacant</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">€1,200/mois</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    Vacant
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button class="text-construction-yellow hover:text-construction-dark-yellow">Voir</button>
+                                <button class="text-blue-600 hover:text-blue-800">Modifier</button>
+                                <button class="text-red-600 hover:text-red-800">Supprimer</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Affichage de <span class="font-medium">1</span> à <span class="font-medium">10</span> sur <span class="font-medium">127</span> résultats
+                </div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-500 hover:bg-gray-50">Précédent</button>
+                    <button class="px-3 py-1 bg-construction-yellow text-construction-black rounded-md text-sm font-medium">1</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">2</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">3</button>
+                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-500 hover:bg-gray-50">Suivant</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: BOUTONS -->
+    <section class="space-y-6">
+        <h2 class="text-2xl font-bold text-construction-black mb-4">🔘 Boutons</h2>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg space-y-6">
+            <!-- Boutons principaux -->
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Boutons principaux</h4>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn-primary px-4 py-2 rounded-lg">Ajouter un bien</button>
+                    <button class="btn-primary px-6 py-3 rounded-lg text-lg">+ Nouveau locataire</button>
+                    <button class="btn-primary px-3 py-2 rounded-lg text-sm">Générer rapport</button>
+                </div>
+            </div>
+
+            <!-- Boutons secondaires -->
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Boutons secondaires</h4>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn-secondary px-4 py-2 rounded-lg">Annuler</button>
+                    <button class="btn-secondary px-4 py-2 rounded-lg">Modifier</button>
+                    <button class="btn-secondary px-4 py-2 rounded-lg">Exporter</button>
+                </div>
+            </div>
+
+            <!-- Boutons de danger -->
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Boutons d'action critique</h4>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn-danger px-4 py-2 rounded-lg">Supprimer</button>
+                    <button class="btn-danger px-4 py-2 rounded-lg">Résilier contrat</button>
+                </div>
+            </div>
+
+            <!-- Boutons avec icônes -->
+            <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Boutons avec icônes</h4>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn-primary px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <span>📄</span>
+                        <span>Générer quittance</span>
+                    </button>
+                    <button class="btn-secondary px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <span>📧</span>
+                        <span>Envoyer email</span>
+                    </button>
+                    <button class="btn-secondary px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <span>📊</span>
+                        <span>Statistiques</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: FORMULAIRES -->
+    <section class="space-y-6">
+        <h2 class="text-2xl font-bold text-construction-black mb-4">📝 Formulaires</h2>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <h3 class="text-lg font-semibold text-construction-black mb-6">Ajouter un nouveau bien</h3>
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Input texte -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom du bien</label>
+                        <input type="text" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Ex: Appartement 3B">
+                    </div>
+
+                    <!-- Select -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Type de bien</label>
+                        <select class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                            <option>Sélectionner un type</option>
+                            <option>Appartement</option>
+                            <option>Maison</option>
+                            <option>Studio</option>
+                            <option>Commerce</option>
+                        </select>
+                    </div>
+
+                    <!-- Input nombre -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Surface (m²)</label>
+                        <input type="number" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="0">
+                    </div>
+
+                    <!-- Input prix -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Loyer mensuel (€)</label>
+                        <div class="relative">
+                            <input type="number" class="input-focus w-full px-3 py-2 pl-8 border border-gray-300 rounded-lg focus:outline-none" placeholder="0">
+                            <span class="absolute left-3 top-2 text-gray-500">€</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textarea -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea rows="4" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Description détaillée du bien..."></textarea>
+                </div>
+
+                <!-- Checkbox -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Équipements</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="w-4 h-4 text-construction-yellow border-gray-300 rounded focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Meublé</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="w-4 h-4 text-construction-yellow border-gray-300 rounded focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Parking</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="w-4 h-4 text-construction-yellow border-gray-300 rounded focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Balcon</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="w-4 h-4 text-construction-yellow border-gray-300 rounded focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Cave</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Radio buttons -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Statut de location</label>
+                    <div class="flex space-x-6">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="status" value="occupied" class="w-4 h-4 text-construction-yellow border-gray-300 focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Occupé</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="status" value="vacant" class="w-4 h-4 text-construction-yellow border-gray-300 focus:ring-construction-yellow">
+                            <span class="text-sm text-gray-700">Vacant</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Upload de fichiers -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Photos du bien</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-construction-yellow transition-colors">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 gradient-yellow rounded-full flex items-center justify-center mx-auto">
+                                <span class="text-construction-black font-bold text-xl">📁</span>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                <span class="text-construction-yellow font-medium">Cliquez pour télécharger</span> ou glissez-déposez
+                            </div>
+                            <div class="text-xs text-gray-500">PNG, JPG jusqu'à 10MB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons du formulaire -->
+                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <button type="button" class="btn-secondary px-6 py-2 rounded-lg">Annuler</button>
+                    <button type="submit" class="btn-primary px-6 py-2 rounded-lg">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- SECTION: MODALS -->
+    <section class="space-y-6">
+        <h2 class="text-2xl font-bold text-construction-black mb-4">🖼️ Modals</h2>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="space-y-4">
+                <button onclick="openModal('confirmModal')" class="btn-primary px-4 py-2 rounded-lg">Ouvrir Modal de Confirmation</button>
+                <button onclick="openModal('infoModal')" class="btn-secondary px-4 py-2 rounded-lg">Ouvrir Modal d'Information</button>
+                <button onclick="openModal('formModal')" class="btn-secondary px-4 py-2 rounded-lg">Ouvrir Modal Formulaire</button>
+            </div>
+        </div>
+
+        <!-- Modal de confirmation -->
+        <div id="confirmModal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-auto">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <span class="text-red-600 text-xl">⚠️</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-construction-black">Confirmer la suppression</h3>
+                            <p class="text-sm text-gray-600">Cette action est irréversible</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-6">
+                        Êtes-vous sûr de vouloir supprimer ce bien immobilier ? Toutes les données associées seront définitivement perdues.
+                    </p>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeModal('confirmModal')" class="btn-secondary px-4 py-2 rounded-lg">Annuler</button>
+                        <button class="btn-danger px-4 py-2 rounded-lg">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal d'information -->
+        <div id="infoModal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-auto">
+                <div class="p-6">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-12 h-12 gradient-yellow rounded-full flex items-center justify-center">
+                            <span class="text-construction-black text-xl font-bold">🏢</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-construction-black">Détails du bien</h3>
+                            <p class="text-sm text-gray-600">Appartement 3B - Rue de la Paix</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Type:</span>
+                            <span class="font-medium">Appartement</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Surface:</span>
+                            <span class="font-medium">65 m²</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Loyer:</span>
+                            <span class="font-medium text-green-600">€850/mois</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Statut:</span>
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Occupé</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button onclick="closeModal('infoModal')" class="btn-secondary px-4 py-2 rounded-lg">Fermer</button>
+                        <button class="btn-primary px-4 py-2 rounded-lg">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal avec formulaire -->
+        <div id="formModal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-auto max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-construction-black">Ajouter un nouveau locataire</h3>
+                        <button onclick="closeModal('formModal')" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                                <input type="text" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Prénom">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                                <input type="text" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Nom">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="email@exemple.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                            <input type="tel" class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="01 23 45 67 89">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Bien assigné</label>
+                            <select class="input-focus w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                                <option>Sélectionner un bien</option>
+                                <option>Appartement 3B - Rue de la Paix</option>
+                                <option>Studio - Boulevard Victor Hugo</option>
+                                <option>Maison - Avenue des Champs</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                            <button type="button" onclick="closeModal('formModal')" class="btn-secondary px-4 py-2 rounded-lg">Annuler</button>
+                            <button type="submit" class="btn-primary px-4 py-2 rounded-lg">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Fermer les modals en cliquant sur le fond
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal(this.id);
+                }
+            });
+        });
+
+        // Fermer les modals avec Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (!modal.classList.contains('hidden')) {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
