@@ -112,9 +112,33 @@
                 </div>
             </header>
             <div class="p-4 lg:p-6 space-y-6">
-               <?php include __DIR__ . '/../' . $content_view; ?>
+                <?php include __DIR__ . '/../' . $content_view; ?>
             </div>
         </main>
+    </div>
+    <!-- Modal de confirmation de suppression générale -->
+    <div id="confirmDeleteModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <span class="text-red-600 text-xl">⚠️</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-construction-black">Confirmer la suppression</h3>
+                        <p class="text-sm text-gray-600">Cette action est irréversible</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6">Êtes-vous sûr de vouloir supprimer cet élément ?</p>
+                <form id="deleteEntityForm" method="POST" action="">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(\App\Utils\generateCsrfToken()); ?>">
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal('confirmDeleteModal')" class="btn-secondary px-4 py-2 rounded-lg">Annuler</button>
+                        <button type="submit" class="btn-danger px-4 py-2 rounded-lg">Supprimer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <script>
         function toggleMobileMenu() {
@@ -135,8 +159,10 @@
         document.getElementById('closeMobileMenu').addEventListener('click', closeMobileMenu);
         document.getElementById('mobileOverlay').addEventListener('click', closeMobileMenu);
         window.addEventListener('resize', () => { if (window.innerWidth >= 1024) closeMobileMenu(); });
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
+        function openDeleteModal(entityRoute, id) {
+            const modal = document.getElementById('confirmDeleteModal');
+            const form = document.getElementById('deleteEntityForm');
+            form.action = entityRoute + id;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.classList.add('overflow-hidden');

@@ -28,6 +28,12 @@ class PaymentController
         exit;
     }
 
+     public function edit($id)
+    {
+        $content_view = 'admin/payments/edit.php';
+        require_once dirname(__DIR__) . '/Views/layouts/admin_layout.php';
+    }
+
     public function update($id)
     {
         // Simuler la mise à jour (logique à implémenter par l'équipe)

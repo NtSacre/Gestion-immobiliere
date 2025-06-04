@@ -26,7 +26,7 @@
                         <div class="flex space-x-2">
                             <a href="/agent/apartments/1" class="text-blue-600 hover:underline">Voir</a>
                             <a href="/agent/apartments/edit/1" class="text-yellow-600 hover:underline">Modifier</a>
-                            <button onclick="openModal('confirmDeleteModal')" class="text-red-600 hover:underline">Supprimer</button>
+                            <button onclick="openDeleteModal('/agent/apartments/delete/', 2)" class="text-red-600 hover:underline">Supprimer</button>
                         </div>
                     </td>
                 </tr>
@@ -40,7 +40,7 @@
                         <div class="flex space-x-2">
                             <a href="/agent/apartments/2" class="text-blue-600 hover:underline">Voir</a>
                             <a href="/agent/apartments/edit/2" class="text-yellow-600 hover:underline">Modifier</a>
-                            <button onclick="openModal('confirmDeleteModal')" class="text-red-600 hover:underline">Supprimer</button>
+                            <button onclick="openDeleteModal('/agent/apartments/delete/', 2)" class="text-red-600 hover:underline">Supprimer</button>
                         </div>
                     </td>
                 </tr>

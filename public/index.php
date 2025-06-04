@@ -2,11 +2,42 @@
 // index.php
 // Point d'entrée principal de l'application
 
+// Activer le débogage pour voir les erreurs directement
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 $routes = require_once __DIR__ . '/../routes.php';
 
 // Démarrage de la session
 session_start();
+
+// Fonction pour journaliser les erreurs
+function logError(Exception $e) {
+    $logDir = __DIR__ . '/../logs';
+    $logFile = $logDir . '/app.log';
+
+    // Créer le dossier logs s'il n'existe pas
+    if (!is_dir($logDir)) {
+        mkdir($logDir, 0755, true);
+    }
+
+    // Format du message de log
+    $timestamp = date('Y-m-d H:i:s');
+    $message = $e->getMessage();
+    $code = $e->getCode();
+    $file = $e->getFile();
+    $line = $e->getLine();
+    $trace = $e->getTraceAsString();
+
+    $logMessage = "[$timestamp] ERROR: $message (Code: $code) in $file on line $line\n";
+    $logMessage .= "Stack trace:\n$trace\n";
+    $logMessage .= "----------------------------------------\n";
+
+    // Écrire dans le fichier de log
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
 
 // Récupérer l'URI et la méthode HTTP
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -55,9 +86,12 @@ try {
     call_user_func_array([$controller, $action], $params);
 
 } catch (Exception $e) {
+    // Journaliser l'erreur
+    logError($e);
+
+    // Afficher la page d'erreur
     $code = $e->getCode() === 404 ? 404 : 500;
     http_response_code($code);
     $content_view = 'errors/' . ($code === 404 ? '404.php' : '500.php');
     require_once dirname(__DIR__) . '/src/Views/layouts/public_layout.php';
 }
-?>

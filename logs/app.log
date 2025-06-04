@@ -1,0 +1,8 @@
+[2025-06-04 17:35:18] ERROR: Action edit introuvable dans App\Controllers\BuildingController (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 79
+Stack trace:
+#0 {main}
+----------------------------------------
+[2025-06-04 17:48:50] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 67
+Stack trace:
+#0 {main}
+----------------------------------------
