@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Controllers\Public;
 
 use App\Config\Database;
-use App\Utils;
+use App\Utils\Helpers;
+use App\Utils\Flash;
 use PDOException;
 
 /**
@@ -12,11 +14,15 @@ use PDOException;
 class AuthController
 {
     private $pdo;
+    private $helpers;
+    private $flash;
 
     public function __construct()
     {
         // Initialisation de la connexion PDO via Database singleton
         $this->pdo = Database::getInstance();
+        $this->helpers = new Helpers();
+        $this->flash = new Flash();
     }
 
     /**
@@ -25,16 +31,17 @@ class AuthController
     public function showLogin()
     {
         // Redirige si déjà connecté
-        if (Utils\isAuthenticated()) {
-            Utils\redirect('/admin/dashboard');
+        if (isset($_SESSION['user_id'])) {
+            $this->flash->flash('info', 'Vous êtes déjà connecté.');
+            $this->helpers->redirect('/dashboard');
         }
 
         // Génère un jeton CSRF pour la vue
-        $csrf_token = Utils\generateCsrfToken();
+        $csrf_token = $this->helpers->csrf_token();
 
         // Charge la vue login.php
         $content_view = 'auth/login.php';
-        require_once dirname(__DIR__) . '/../Views/layouts/public_layout.php';
+        require_once dirname(__DIR__, 3) . '/Views/layouts/public_layout.php';
     }
 
     /**
@@ -43,19 +50,19 @@ class AuthController
     public function login()
     {
         // Vérifie la méthode POST et le jeton CSRF
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Utils\verifyCsrfToken($_POST['csrf_token'] ?? '')) {
-            Utils\setFlash('error', 'Requête inappropriée.');
-            Utils\redirect('/');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->helpers->csrf_verify($_POST['csrf_token'] ?? '')) {
+            $this->flash->flash('error', 'Requête inappropriée.');
+            $this->helpers->redirect('/');
             return;
         }
 
         // Validation des entrées
-        $email = Utils\sanitize($_POST['email'] ?? '');
+        $email = $this->helpers->sanitize($_POST['email'] ?? '');
         $password = $_POST['password'] ?? ''; // Mot de passe non sanitizé (brut pour vérification)
 
         if (empty($email) || empty($password)) {
-            Utils\setFlash('error', 'Vérifiez votre adresse e-mail et/ou votre mot de passe.');
-            Utils\redirect('/auth/login');
+            $this->flash->flash('error', 'Vérifiez votre adresse e-mail et/ou votre mot de passe.');
+            $this->helpers->redirect('/auth/login');
             return;
         }
 
@@ -71,8 +78,8 @@ class AuthController
             $user = $stmt->fetch();
 
             if (!$user || !password_verify($password, $user['password'])) {
-                Utils\setFlash('error', 'Adresse e-mail ou mot de passe incorrect.');
-                Utils\redirect('/auth/login');
+                $this->flash->flash('error', 'Adresse e-mail ou mot de passe incorrect.');
+                $this->helpers->redirect('/auth/login');
                 return;
             }
 
@@ -81,17 +88,13 @@ class AuthController
             $_SESSION['role'] = $user['role_name'];
             $_SESSION['agency_id'] = $user['agency_id'];
 
-            // Redirection selon le rôle
-            $redirect = match ($user['role_name']) {
-                'admin' => '/admin/dashboard',
-                'agent' => '/agent/dashboard',
-                default => '/dashboard'
-            };
-            Utils\redirect($redirect);
+            // Redirection vers le dashboard
+            $this->flash->flash('success', 'Connexion réussie !');
+            $this->helpers->redirect('/dashboard');
 
         } catch (PDOException $e) {
-            Utils\setFlash('error', 'Une erreur est survenue.');
-            Utils\redirect('/auth/login');
+            $this->flash->flash('error', 'Une erreur est survenue.');
+            $this->helpers->redirect('/auth/login');
         }
     }
 
@@ -101,16 +104,17 @@ class AuthController
     public function showRegister()
     {
         // Redirige si déjà connecté
-        if (Utils\isAuthenticated()) {
-            Utils\redirect('/admin/dashboard');
+        if (isset($_SESSION['user_id'])) {
+            $this->flash->flash('info', 'Vous êtes déjà connecté.');
+            $this->helpers->redirect('/dashboard');
         }
 
         // Génère un jeton CSRF pour la vue
-        $csrf_token = Utils\generateCsrfToken();
+        $csrf_token = $this->helpers->csrf_token();
 
         // Charge la vue register.php
         $content_view = 'auth/register.php';
-        require_once dirname(__DIR__) . '/../Views/layouts/public_layout.php';
+        require_once dirname(__DIR__, 3) . '/Views/layouts/public_layout.php';
     }
 
     /**
@@ -119,34 +123,34 @@ class AuthController
     public function register()
     {
         // Vérifie la méthode POST et le jeton CSRF
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !Utils\verifyCsrfToken($_POST['csrf_token'] ?? '')) {
-            Utils\setFlash('error', 'Requête inappropriée.');
-            Utils\redirect('/auth/register');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->helpers->csrf_verify($_POST['csrf_token'] ?? '')) {
+            $this->flash->flash('error', 'Requête inappropriée.');
+            $this->helpers->redirect('/auth/register');
             return;
         }
 
         // Validation des entrées
-        $agency_name = Utils\sanitize($_POST['agency_name'] ?? '');
-        $address = Utils\sanitize($_POST['address'] ?? '');
-        $agency_phone = Utils\sanitize($_POST['agency_phone'] ?? '');
-        $siret = Utils\sanitize($_POST['siret'] ?? '');
-        $username = Utils\sanitize($_POST['username'] ?? '');
-        $email = Utils\sanitize($_POST['email'] ?? '');
+        $agency_name = $this->helpers->sanitize($_POST['agency_name'] ?? '');
+        $address = $this->helpers->sanitize($_POST['address'] ?? '');
+        $agency_phone = $this->helpers->sanitize($_POST['agency_phone'] ?? '');
+        $siret = $this->helpers->sanitize($_POST['siret'] ?? '');
+        $username = $this->helpers->sanitize($_POST['username'] ?? '');
+        $email = $this->helpers->sanitize($_POST['email'] ?? '');
         $password = $_POST['password'] ?? ''; // Mot de passe non sanitizé
-        $first_name = Utils\sanitize($_POST['first_name'] ?? '');
-        $last_name = Utils\sanitize($_POST['last_name'] ?? '');
-        $phone = Utils\sanitize($_POST['phone'] ?? '');
+        $first_name = $this->helpers->sanitize($_POST['first_name'] ?? '');
+        $last_name = $this->helpers->sanitize($_POST['last_name'] ?? '');
+        $phone = $this->helpers->sanitize($_POST['phone'] ?? '');
 
         if (empty($agency_name) || empty($username) || empty($email) || empty($password) || empty($first_name) || empty($last_name)) {
-            Utils\setFlash('error', 'Veuillez remplir tous les champs obligatoires.');
-            Utils\redirect('/auth/register');
+            $this->flash->flash('error', 'Veuillez remplir tous les champs obligatoires.');
+            $this->helpers->redirect('/auth/register');
             return;
         }
 
         // Validation du mot de passe (minimum 8 caractères)
         if (strlen($password) < 8) {
-            Utils\setFlash('error', 'Le mot de passe doit contenir au moins 8 caractères.');
-            Utils\redirect('/auth/register');
+            $this->flash->flash('error', 'Le mot de passe doit contenir au moins 8 caractères.');
+            $this->helpers->redirect('/auth/register');
             return;
         }
 
@@ -155,8 +159,8 @@ class AuthController
             $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM users WHERE email = ? OR username = ?');
             $stmt->execute([$email, $username]);
             if ($stmt->fetchColumn() > 0) {
-                Utils\setFlash('error', 'Cet e-mail ou ce nom d’utilisateur est déjà utilisé.');
-                Utils\redirect('/auth/register');
+                $this->flash->flash('error', 'Cet e-mail ou ce nom d’utilisateur est déjà utilisé.');
+                $this->helpers->redirect('/auth/register');
                 return;
             }
 
@@ -164,8 +168,8 @@ class AuthController
             $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM agencies WHERE email = ?');
             $stmt->execute([$email]);
             if ($stmt->fetchColumn() > 0) {
-                Utils\setFlash('error', 'Cet e-mail est déjà associé à une agence.');
-                Utils\redirect('/auth/register');
+                $this->flash->flash('error', 'Cet e-mail est déjà associé à une agence.');
+                $this->helpers->redirect('/auth/register');
                 return;
             }
 
@@ -174,8 +178,8 @@ class AuthController
                 $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM agencies WHERE siret = ?');
                 $stmt->execute([$siret]);
                 if ($stmt->fetchColumn() > 0) {
-                    Utils\setFlash('error', 'Ce SIRET est déjà utilisé.');
-                    Utils\redirect('/auth/register');
+                    $this->flash->flash('error', 'Ce SIRET est déjà utilisé.');
+                    $this->helpers->redirect('/auth/register');
                     return;
                 }
             }
@@ -185,8 +189,8 @@ class AuthController
             $stmt->execute(['admin']);
             $role = $stmt->fetch();
             if (!$role) {
-                Utils\setFlash('error', 'Rôle admin non trouvé.');
-                Utils\redirect('/auth/register');
+                $this->flash->flash('error', 'Rôle admin non trouvé.');
+                $this->helpers->redirect('/auth/register');
                 return;
             }
 
@@ -218,13 +222,13 @@ class AuthController
             $_SESSION['role'] = 'admin';
             $_SESSION['agency_id'] = $agency_id;
 
-            Utils\setFlash('success', 'Inscription de l’agence réussie !');
-            Utils\redirect('/admin/dashboard');
+            $this->flash->flash('success', 'Inscription de l’agence réussie !');
+            $this->helpers->redirect('/dashboard');
 
         } catch (PDOException $e) {
             $this->pdo->rollBack();
-            Utils\setFlash('error', 'Une erreur est survenue.');
-            Utils\redirect('/auth/register');
+            $this->flash->flash('error', 'Une erreur est survenue.');
+            $this->helpers->redirect('/auth/register');
         }
     }
 
@@ -236,7 +240,7 @@ class AuthController
         // Détruit la session
         session_unset();
         session_destroy();
-        Utils\setFlash('success', 'Déconnexion réussie.');
-        Utils\redirect('/auth/login');
+        $this->flash->flash('success', 'Déconnexion réussie.');
+        $this->helpers->redirect('/auth/login');
     }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 04 juin 2025 à 20:54
+-- Généré le : mar. 03 juin 2025 à 03:07
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -40,11 +40,11 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `description`, `created_at`) VALUES
-(1, 'admin', 'Administrateur système', '2025-06-04 20:54:00'),
-(2, 'agent', 'Agent immobilier', '2025-06-04 20:54:00'),
-(3, 'proprietaire', 'Propriétaire de biens', '2025-06-04 20:54:00'),
-(4, 'locataire', 'Locataire d’un appartement', '2025-06-04 20:54:00'),
-(5, 'acheteur', 'Acheteur potentiel', '2025-06-04 20:54:00');
+(1, 'admin', 'Administrateur système', '2025-06-03 03:07:00'),
+(2, 'agent', 'Agent immobilier', '2025-06-03 03:07:00'),
+(3, 'proprietaire', 'Propriétaire de biens', '2025-06-03 03:07:00'),
+(4, 'locataire', 'Locataire d’un appartement', '2025-06-03 03:07:00'),
+(5, 'acheteur', 'Acheteur potentiel', '2025-06-03 03:07:00');
 
 -- --------------------------------------------------------
 
@@ -61,15 +61,36 @@ CREATE TABLE `users` (
   `agency_id` INT(11),
   `first_name` VARCHAR(50) NOT NULL,
   `last_name` VARCHAR(50) NOT NULL,
-  `phone` VARCHAR(20) DEFAULT NULL,
+  `phone` VARCHAR(20),
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `role_id` (`role_id`),
   KEY `agency_id` (`agency_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `owners`
+--
+
+CREATE TABLE `owners` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `type` VARCHAR(20) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `siret` VARCHAR(20),
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME,
+  `deleted_at` DATETIME,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  UNIQUE KEY `siret` (`siret`),
+  KEY `user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -82,34 +103,17 @@ CREATE TABLE `agencies` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `address` TEXT NOT NULL,
-  `phone` VARCHAR(20) DEFAULT NULL,
+  `phone` VARCHAR(20) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
+  `siret` VARCHAR(20) NOT NULL,
+  `subscription_id` INT(11),
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `owners`
---
-
-CREATE TABLE `owners` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `user_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
-  `type` VARCHAR(20) NOT NULL,
-  `name` VARCHAR(100) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `agent_id` (`agent_id`)
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `siret` (`siret`),
+  KEY `subscription_id` (`subscription_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -135,7 +139,6 @@ CREATE TABLE `building_types` (
 CREATE TABLE `buildings` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `agency_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `owner_id` INT(11) NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `city` VARCHAR(100) NOT NULL,
@@ -151,10 +154,9 @@ CREATE TABLE `buildings` (
   `price` DECIMAL(12,2),
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   KEY `agency_id` (`agency_id`),
-  KEY `agent_id` (`agent_id`),
   KEY `owner_id` (`owner_id`),
   KEY `type_id` (`type_id`),
   KEY `city` (`city`),
@@ -184,7 +186,6 @@ CREATE TABLE `apartment_types` (
 CREATE TABLE `apartments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `building_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `owner_id` INT(11) NOT NULL,
   `number` VARCHAR(20) NOT NULL,
   `floor` INT(11) NOT NULL,
@@ -204,10 +205,9 @@ CREATE TABLE `apartments` (
   `price` DECIMAL(12,2),
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   KEY `building_id` (`building_id`),
-  KEY `agent_id` (`agent_id`),
   KEY `owner_id` (`owner_id`),
   KEY `type_id` (`type_id`),
   KEY `status` (`status`),
@@ -258,14 +258,12 @@ CREATE TABLE `profile_images` (
 CREATE TABLE `tenants` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `agent_id` (`agent_id`)
+  KEY `user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -277,14 +275,12 @@ CREATE TABLE `tenants` (
 CREATE TABLE `buyers` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `agent_id` (`agent_id`)
+  KEY `user_id_idx` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -297,7 +293,6 @@ CREATE TABLE `leases` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `apartment_id` INT(11) NOT NULL,
   `tenant_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `start_date` DATE NOT NULL,
   `end_date` DATE,
   `rent_amount` DECIMAL(10,2) NOT NULL,
@@ -306,11 +301,10 @@ CREATE TABLE `leases` (
   `is_active` TINYINT(1) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
   KEY `apartment_id` (`apartment_id`),
-  KEY `tenant_id` (`tenant_id`),
-  KEY `agent_id` (`agent_id`)
+  KEY `tenant_id` (`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -322,7 +316,6 @@ CREATE TABLE `leases` (
 CREATE TABLE `payments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `lease_id` INT(11) NOT NULL,
-  `agent_id` INT(11) DEFAULT NULL,
   `amount` DECIMAL(10,2) NOT NULL,
   `payment_date` DATE NOT NULL,
   `due_date` DATE NOT NULL,
@@ -331,10 +324,9 @@ CREATE TABLE `payments` (
   `quittance_path` VARCHAR(255),
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME,
-  `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+  `deleted_at` DATETIME,
   PRIMARY KEY (`id`),
-  KEY `lease_id` (`lease_id`),
-  KEY `agent_id` (`agent_id`)
+  KEY `lease_id` (`lease_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -357,6 +349,83 @@ CREATE TABLE `audit_log` (
   KEY `idx_table_record` (`table_name`,`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `subscription_plans`
+--
+
+CREATE TABLE `subscription_plans` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL,
+  `max_buildings` INT(11),
+  `max_users` INT(11),
+  `features` JSON,
+  `description` TEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `subscriptions`
+--
+
+CREATE TABLE `subscriptions` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `agency_id` INT(11) NOT NULL,
+  `plan_id` INT(11) NOT NULL,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE,
+  `status` VARCHAR(20) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME,
+  PRIMARY KEY (`id`),
+  KEY `agency_id` (`agency_id`),
+  KEY `plan_id` (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `payment_methods`
+--
+
+CREATE TABLE `payment_methods` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `agency_id` INT(11) NOT NULL,
+  `type` VARCHAR(50) NOT NULL,
+  `details` JSON NOT NULL,
+  `is_default` TINYINT(1) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME,
+  PRIMARY KEY (`id`),
+  KEY `agency_id` (`agency_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `subscription_payments`
+--
+
+CREATE TABLE `subscription_payments` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `subscription_id` INT(11) NOT NULL,
+  `payment_method_id` INT(11) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `payment_date` DATE NOT NULL,
+  `status` VARCHAR(20) NOT NULL,
+  `transaction_id` VARCHAR(100),
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME,
+  PRIMARY KEY (`id`),
+  KEY `subscription_id` (`subscription_id`),
+  KEY `payment_method_id` (`payment_method_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Contraintes pour les tables déchargées
 --
@@ -372,26 +441,29 @@ ALTER TABLE `users`
 -- Contraintes pour la table `owners`
 --
 ALTER TABLE `owners`
-  ADD CONSTRAINT `owners_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `owners_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `owners_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT;
+
+--
+-- Contraintes pour la table `agencies`
+--
+ALTER TABLE `agencies`
+  ADD CONSTRAINT `agencies_ibfk_1` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE SET NULL;
 
 --
 -- Contraintes pour la table `buildings`
 --
 ALTER TABLE `buildings`
   ADD CONSTRAINT `buildings_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `buildings_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `buildings_ibfk_3` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `buildings_ibfk_4` FOREIGN KEY (`type_id`) REFERENCES `building_types` (`id`) ON DELETE RESTRICT;
+  ADD CONSTRAINT `buildings_ibfk_2` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `buildings_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `building_types` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `apartments`
 --
 ALTER TABLE `apartments`
   ADD CONSTRAINT `apartments_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `apartments_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `apartments_ibfk_3` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `apartments_ibfk_4` FOREIGN KEY (`type_id`) REFERENCES `apartment_types` (`id`) ON DELETE RESTRICT;
+  ADD CONSTRAINT `apartments_ibfk_2` FOREIGN KEY (`owner_id`) REFERENCES `owners` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `apartments_ibfk_3` FOREIGN KEY (`type_id`) REFERENCES `apartment_types` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `profile_images`
@@ -403,36 +475,52 @@ ALTER TABLE `profile_images`
 -- Contraintes pour la table `tenants`
 --
 ALTER TABLE `tenants`
-  ADD CONSTRAINT `tenants_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `tenants_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `tenants_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `buyers`
 --
 ALTER TABLE `buyers`
-  ADD CONSTRAINT `buyers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `buyers_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `buyers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `leases`
 --
 ALTER TABLE `leases`
   ADD CONSTRAINT `leases_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `leases_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `leases_ibfk_3` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `leases_ibfk_2` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`lease_id`) REFERENCES `leases` (`id`) ON DELETE RESTRICT,
-  ADD CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`agent_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`lease_id`) REFERENCES `leases` (`id`) ON DELETE RESTRICT;
 
 --
 -- Contraintes pour la table `audit_log`
 --
 ALTER TABLE `audit_log`
   ADD CONSTRAINT `audit_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Contraintes pour la table `subscriptions`
+--
+ALTER TABLE `subscriptions`
+  ADD CONSTRAINT `subscriptions_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `subscriptions_ibfk_2` FOREIGN KEY (`plan_id`) REFERENCES `subscription_plans` (`id`) ON DELETE RESTRICT;
+
+--
+-- Contraintes pour la table `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  ADD CONSTRAINT `payment_methods_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE RESTRICT;
+
+--
+-- Contraintes pour la table `subscription_payments`
+--
+ALTER TABLE `subscription_payments`
+  ADD CONSTRAINT `subscription_payments_ibfk_1` FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `subscription_payments_ibfk_2` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_methods` (`id`) ON DELETE RESTRICT;
 
 COMMIT;
 

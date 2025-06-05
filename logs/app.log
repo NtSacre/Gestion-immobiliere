@@ -6,3 +6,520 @@ Stack trace:
 Stack trace:
 #0 {main}
 ----------------------------------------
+[2025-06-05 03:12:59] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 83 {"exception":{},"uri":"agent\/buildings\/edit\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":83,"trace":"#0 {main}"}
+[2025-06-05 03:13:03] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 83 {"exception":{},"uri":"agent\/buildings\/edit\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":83,"trace":"#0 {main}"}
+[2025-06-05 03:13:04] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 83 {"exception":{},"uri":"agent\/buildings\/edit\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":83,"trace":"#0 {main}"}
+[2025-06-05 03:36:02] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/login","method":"GET"}
+[2025-06-05 03:36:12] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 03:36:12] ACCESS: Attempted action: home {"user_id":null,"action":"home","status":"success"}
+[2025-06-05 03:36:24] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/login","method":"GET"}
+[2025-06-05 03:36:27] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 03:36:27] ACCESS: Attempted action: auth.register {"user_id":null,"action":"auth.register","status":"success"}
+[2025-06-05 12:27:37] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 12:27:37] ACCESS: Attempted action: auth.register {"user_id":null,"action":"auth.register","status":"success"}
+[2025-06-05 12:34:41] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/register","method":"POST"}
+[2025-06-05 12:34:41] ACCESS: Attempted action: auth.register.post {"user_id":null,"action":"auth.register.post","status":"success"}
+[2025-06-05 12:34:41] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 12:34:41] ACCESS: Attempted action: auth.register {"user_id":null,"action":"auth.register","status":"success"}
+[2025-06-05 12:46:05] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 12:46:05] ACCESS: Attempted action: auth.register {"user_id":null,"action":"auth.register","status":"success"}
+[2025-06-05 12:47:10] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/register","method":"POST"}
+[2025-06-05 12:47:10] ACCESS: Attempted action: auth.register.post {"user_id":null,"action":"auth.register.post","status":"success"}
+[2025-06-05 12:57:34] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 12:57:34] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 13:04:24] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 13:04:24] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 14:28:16] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 14:28:16] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 14:33:16] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/logout","method":"GET"}
+[2025-06-05 14:33:16] ACCESS: Attempted action: auth.logout {"user_id":1,"action":"auth.logout","status":"success"}
+[2025-06-05 14:33:16] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/login","method":"GET"}
+[2025-06-05 14:33:37] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/login","method":"POST"}
+[2025-06-05 14:33:37] ACCESS: Attempted action: auth.login.post {"user_id":null,"action":"auth.login.post","status":"success"}
+[2025-06-05 14:33:37] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 14:33:37] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:24:53] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:24:53] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:26:17] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:26:17] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:27:02] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:27:02] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:27:13] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:27:14] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:27:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:27:21] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:29:38] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:29:38] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 15:29:52] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 15:29:52] ACCESS: Attempted action: admin.dashboard {"user_id":1,"action":"admin.dashboard","status":"success"}
+[2025-06-05 16:35:50] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 16:35:50] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 16:35:50] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 78 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":78,"trace":"#0 {main}"}
+[2025-06-05 16:37:37] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 16:37:37] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 16:37:37] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 78 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":78,"trace":"#0 {main}"}
+[2025-06-05 16:58:15] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 16:58:15] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 16:58:15] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 16:59:36] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 16:59:36] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 16:59:36] ACCESS: Attempted action: home {"user_id":1,"action":"home","status":"success"}
+[2025-06-05 16:59:41] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 16:59:41] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 16:59:41] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/403","method":"GET"}
+[2025-06-05 16:59:41] INFO: Route trouvée: '403' pour URI: '403' {"params":[]}
+[2025-06-05 16:59:41] ERROR: Contrôleur App\Controllers\Public\ErrorController introuvable (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 117 {"exception":{},"uri":"403","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":117,"trace":"#0 {main}"}
+[2025-06-05 17:02:59] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:02:59] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:02:59] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:03:09] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:03:09] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:03:09] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:06:58] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 17:06:58] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 17:06:58] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/403","method":"GET"}
+[2025-06-05 17:06:58] INFO: Route trouvée: '403' pour URI: '403' {"params":[]}
+[2025-06-05 17:06:58] ERROR: Contrôleur App\Controllers\Public\ErrorController introuvable (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 117 {"exception":{},"uri":"403","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":117,"trace":"#0 {main}"}
+[2025-06-05 17:07:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 17:07:00] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 17:07:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/403","method":"GET"}
+[2025-06-05 17:07:00] INFO: Route trouvée: '403' pour URI: '403' {"params":[]}
+[2025-06-05 17:07:00] ERROR: Contrôleur App\Controllers\Public\ErrorController introuvable (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 117 {"exception":{},"uri":"403","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":117,"trace":"#0 {main}"}
+[2025-06-05 17:14:58] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 17:14:58] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 17:14:58] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:14:58] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 17:14:58] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 17:15:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 17:15:00] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 17:15:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:15:00] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 17:15:00] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 17:18:29] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/403","method":"GET"}
+[2025-06-05 17:18:29] INFO: Route trouvée: '403' pour URI: '403' {"params":[]}
+[2025-06-05 17:18:29] ERROR: Contrôleur App\Controllers\Public\ErrorController introuvable (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 117 {"exception":{},"uri":"403","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":117,"trace":"#0 {main}"}
+[2025-06-05 17:18:30] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:18:30] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:18:30] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:18:43] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/buildings","method":"GET"}
+[2025-06-05 17:18:43] INFO: Route trouvée: 'buildings' pour URI: 'buildings' {"params":[]}
+[2025-06-05 17:18:43] ACCESS: Attempted action: buildings.index {"user_id":1,"action":"buildings.index","status":"success"}
+[2025-06-05 17:18:54] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/apartments","method":"GET"}
+[2025-06-05 17:18:54] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 17:18:54] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:18:54] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:18:54] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:18:54] INFO: Route trouvée: 'apartments' pour URI: 'apartments' {"params":[]}
+[2025-06-05 17:18:54] ACCESS: Attempted action: apartments.index {"user_id":1,"action":"apartments.index","status":"success"}
+[2025-06-05 17:19:05] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/agent\/apartments\/1","method":"GET"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:19:05] ERROR: Aucune route trouvée pour URI: 'agent/apartments/1' avec méthode: GET 
+[2025-06-05 17:19:05] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"agent\/apartments\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 17:44:17] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 17:44:17] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 17:44:17] INFO: Utilisateur connecté a tenté d'accéder à une route guest: '' {"user_id":1,"role":"admin"}
+[2025-06-05 17:44:17] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:44:17] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:44:17] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:44:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 17:44:21] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 17:44:21] INFO: Utilisateur connecté a tenté d'accéder à une route guest: '' {"user_id":1,"role":"admin"}
+[2025-06-05 17:44:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:44:21] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:44:21] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:44:31] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 17:44:31] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 17:44:31] INFO: Utilisateur connecté a tenté d'accéder à une route guest: '' {"user_id":1,"role":"admin"}
+[2025-06-05 17:44:31] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:44:31] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:44:31] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:46:06] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/agent\/buildings\/create","method":"GET"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 17:46:06] ERROR: Aucune route trouvée pour URI: 'agent/buildings/create' avec méthode: GET 
+[2025-06-05 17:46:06] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"agent\/buildings\/create","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 17:46:10] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 17:46:10] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 17:46:10] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 17:47:07] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 17:47:07] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 18:10:57] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 18:10:57] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 18:11:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 18:11:00] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 18:11:00] INFO: Utilisateur connecté a tenté d'accéder à une route guest: '' {"user_id":1,"role":"admin"}
+[2025-06-05 18:11:00] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 18:11:00] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 18:11:00] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 18:21:43] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 18:21:43] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 18:21:43] ACCESS: Attempted action: home {"user_id":1,"action":"home","status":"success"}
+[2025-06-05 18:21:47] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/","method":"GET"}
+[2025-06-05 18:21:47] INFO: Route trouvée: '' pour URI: '' {"params":[]}
+[2025-06-05 18:21:47] ACCESS: Attempted action: home {"user_id":1,"action":"home","status":"success"}
+[2025-06-05 18:21:51] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/auth\/register","method":"GET"}
+[2025-06-05 18:21:51] INFO: Route trouvée: 'auth/register' pour URI: 'auth/register' {"params":[]}
+[2025-06-05 18:21:51] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 18:21:51] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 18:21:51] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 18:23:40] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 18:23:40] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 18:23:40] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 18:26:04] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 18:26:04] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 18:26:04] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
+[2025-06-05 18:26:09] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/buildings","method":"GET"}
+[2025-06-05 18:26:09] INFO: Route trouvée: 'buildings' pour URI: 'buildings' {"params":[]}
+[2025-06-05 18:26:09] ACCESS: Attempted action: buildings.index {"user_id":1,"action":"buildings.index","status":"success"}
+[2025-06-05 18:26:11] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/apartments","method":"GET"}
+[2025-06-05 18:26:11] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 18:26:11] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:11] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:11] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:11] INFO: Route trouvée: 'apartments' pour URI: 'apartments' {"params":[]}
+[2025-06-05 18:26:11] ACCESS: Attempted action: apartments.index {"user_id":1,"action":"apartments.index","status":"success"}
+[2025-06-05 18:26:18] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/owners","method":"GET"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:18] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:18] INFO: Route trouvée: 'owners' pour URI: 'owners' {"params":[]}
+[2025-06-05 18:26:18] ACCESS: Attempted action: owners.index {"user_id":1,"action":"owners.index","status":"success"}
+[2025-06-05 18:26:32] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/admin\/dashboard","method":"GET"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buildings/:id' {"pattern":"buildings\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buildings/edit/:id' {"pattern":"buildings\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buildings/update/:id' {"pattern":"buildings\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buildings/delete/:id' {"pattern":"buildings\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartments/:id' {"pattern":"apartments\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartments/edit/:id' {"pattern":"apartments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartments/update/:id' {"pattern":"apartments\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartments/delete/:id' {"pattern":"apartments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'leases/:id' {"pattern":"leases\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'leases/edit/:id' {"pattern":"leases\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'leases/update/:id' {"pattern":"leases\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'leases/delete/:id' {"pattern":"leases\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'payments/:id' {"pattern":"payments\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'payments/edit/:id' {"pattern":"payments\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'payments/update/:id' {"pattern":"payments\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'payments/delete/:id' {"pattern":"payments\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'payments/quittance/:id' {"pattern":"payments\\\/quittance\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'clients/:id' {"pattern":"clients\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'clients/edit/:id' {"pattern":"clients\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'clients/update/:id' {"pattern":"clients\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'clients/delete/:id' {"pattern":"clients\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'owners/:id' {"pattern":"owners\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'owners/edit/:id' {"pattern":"owners\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'owners/update/:id' {"pattern":"owners\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'owners/delete/:id' {"pattern":"owners\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'tenants/:id' {"pattern":"tenants\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'tenants/edit/:id' {"pattern":"tenants\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'tenants/update/:id' {"pattern":"tenants\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'tenants/delete/:id' {"pattern":"tenants\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buyers/:id' {"pattern":"buyers\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buyers/edit/:id' {"pattern":"buyers\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buyers/update/:id' {"pattern":"buyers\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'buyers/delete/:id' {"pattern":"buyers\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'building-types/:id' {"pattern":"building\\-types\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'building-types/edit/:id' {"pattern":"building\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'building-types/update/:id' {"pattern":"building\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'building-types/delete/:id' {"pattern":"building\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartment-types/:id' {"pattern":"apartment\\-types\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartment-types/edit/:id' {"pattern":"apartment\\-types\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartment-types/update/:id' {"pattern":"apartment\\-types\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'apartment-types/delete/:id' {"pattern":"apartment\\-types\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'agencies/:id' {"pattern":"agencies\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'agencies/edit/:id' {"pattern":"agencies\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'agencies/update/:id' {"pattern":"agencies\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'agencies/delete/:id' {"pattern":"agencies\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'users/:id' {"pattern":"users\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'users/edit/:id' {"pattern":"users\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'users/update/:id' {"pattern":"users\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'users/delete/:id' {"pattern":"users\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'roles/:id' {"pattern":"roles\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'roles/edit/:id' {"pattern":"roles\\\/edit\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'roles/update/:id' {"pattern":"roles\\\/update\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Motif regex invalide pour la route: 'roles/delete/:id' {"pattern":"roles\\\/delete\\\/([^\/]+)"}
+[2025-06-05 18:26:32] ERROR: Aucune route trouvée pour URI: 'admin/dashboard' avec méthode: GET 
+[2025-06-05 18:26:32] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 93 {"exception":{},"uri":"admin\/dashboard","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":93,"trace":"#0 {main}"}
+[2025-06-05 18:26:34] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
+[2025-06-05 18:26:34] INFO: Route trouvée: 'dashboard' pour URI: 'dashboard' {"params":[]}
+[2025-06-05 18:26:34] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}

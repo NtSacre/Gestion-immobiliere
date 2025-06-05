@@ -3,4 +3,4 @@ php -d display_errors=1 -d display_startup_errors=1 -d error_reporting=E_ALL -S 
 ##le rendre excecutable avec ceci chmod +x start-server.sh ensuite lance ci sur le terminale
 
 ## pour l'autoload
-composer dump-autoload
+##composer dump-autoload

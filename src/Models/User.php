@@ -90,7 +90,7 @@ class User
     {
          try {
              $pdo = Database::getInstance();
-             $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? AND deleted_at IS NULL');
+             $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? AND is_deleted IS FALSE');
              $stmt->execute([$id]);
              $data = $stmt->fetch(PDO::FETCH_ASSOC);
              return $data ? self::fromData($data) : null;

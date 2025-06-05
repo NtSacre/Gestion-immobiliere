@@ -1,10 +1,13 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Apartment;
+
 class ApartmentController
 {
     public function index()
     {
+       
         $content_view = 'admin/apartments/index.php';
         require_once dirname(__DIR__) . '/Views/layouts/admin_layout.php';
     }

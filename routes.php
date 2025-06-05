@@ -1,334 +1,751 @@
 <?php
-// routes.php
-// Définit les routes de l'application, mappant les URLs aux contrôleurs et actions.
-// Organisé par rôle : publiques (tous), agent (agent immobilier).
-// Chaque route inclut le contrôleur, l'action, la méthode HTTP et un nom pour générer des URLs.
 
 $routes = [
-    // Routes publiques
+    // Routes publiques (accessibles à tous ou aux non-authentifiés)
     '' => [
         'controller' => 'App\Controllers\Public\HomeController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'home'
+        'name' => 'home',
+        'allowed_roles' => ['guest', 'superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
     'auth/login' => [
         'controller' => 'App\Controllers\Public\AuthController',
         'action' => 'showLogin',
         'method' => 'GET',
-        'name' => 'auth.login'
+        'name' => 'auth.login',
+        'allowed_roles' => ['guest']
     ],
     'login' => [
         'controller' => 'App\Controllers\Public\AuthController',
         'action' => 'login',
         'method' => 'POST',
-        'name' => 'auth.login.post'
+        'name' => 'auth.login.post',
+        'allowed_roles' => ['guest']
     ],
     'auth/register' => [
         'controller' => 'App\Controllers\Public\AuthController',
         'action' => 'showRegister',
         'method' => 'GET',
-        'name' => 'auth.register'
+        'name' => 'auth.register',
+        'allowed_roles' => ['guest']
     ],
     'register' => [
         'controller' => 'App\Controllers\Public\AuthController',
         'action' => 'register',
         'method' => 'POST',
-        'name' => 'auth.register.post'
+        'name' => 'auth.register.post',
+        'allowed_roles' => ['guest']
     ],
     'logout' => [
         'controller' => 'App\Controllers\Public\AuthController',
         'action' => 'logout',
         'method' => 'GET',
-        'name' => 'auth.logout'
+        'name' => 'auth.logout',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
+    '403' => [
+        'controller' => 'App\Controllers\Public\ErrorController',
+        'action' => 'forbidden',
+        'method' => 'GET',
+        'name' => 'error.forbidden',
+        'allowed_roles' => ['guest', 'superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
 
-    // Route admin
-    'admin/dashboard' => [
-    'controller' => 'App\Controllers\DashboardController',
-    'action' => 'index',
-    'method' => 'GET',
-    'name' => 'admin.dashboard'
-    ],
-
-    // Routes agent
-    'agent/dashboard' => [
+    // Routes génériques (accès selon rôle)
+    'dashboard' => [
         'controller' => 'App\Controllers\DashboardController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'agent.dashboard'
+        'name' => 'dashboard',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
-
-    // Building
-    'agent/buildings' => [
+    'profile' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'profile',
+        'method' => 'GET',
+        'name' => 'profile',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
+    'profile/update' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'updateProfile',
+        'method' => 'POST',
+        'name' => 'profile.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
+    'buildings' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'agent.buildings.index'
+        'name' => 'buildings.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'acheteur']
     ],
-    'agent/buildings/create' => [
+    'buildings/create' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'create',
         'method' => 'GET',
-        'name' => 'agent.buildings.create'
+        'name' => 'buildings.create',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/buildings/store' => [
+    'buildings/store' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'store',
         'method' => 'POST',
-        'name' => 'agent.buildings.store'
+        'name' => 'buildings.store',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/buildings/:id' => [
+    'buildings/:id' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'show',
         'method' => 'GET',
-        'name' => 'agent.buildings.show'
+        'name' => 'buildings.show',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'acheteur']
     ],
-    'agent/buildings/edit/:id' => [
+    'buildings/edit/:id' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'edit',
         'method' => 'GET',
-        'name' => 'agent.buildings.edit'
+        'name' => 'buildings.edit',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/buildings/update/:id' => [
+    'buildings/update/:id' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'update',
         'method' => 'POST',
-        'name' => 'agent.buildings.update'
+        'name' => 'buildings.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/buildings/delete/:id' => [
+    'buildings/delete/:id' => [
         'controller' => 'App\Controllers\BuildingController',
         'action' => 'delete',
         'method' => 'POST',
-        'name' => 'agent.buildings.delete'
+        'name' => 'buildings.delete',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-
-    // Apartment
-    'agent/apartments' => [
+    'apartments' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'agent.apartments.index'
+        'name' => 'apartments.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
-    'agent/apartments/create' => [
+    'apartments/create' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'create',
         'method' => 'GET',
-        'name' => 'agent.apartments.create'
+        'name' => 'apartments.create',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/apartments/store' => [
+    'apartments/store' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'store',
         'method' => 'POST',
-        'name' => 'agent.apartments.store'
+        'name' => 'apartments.store',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/apartments/:id' => [
+    'apartments/:id' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'show',
         'method' => 'GET',
-        'name' => 'agent.apartments.show'
+        'name' => 'apartments.show',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
-    'agent/apartments/edit/:id' => [
+    'apartments/edit/:id' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'edit',
         'method' => 'GET',
-        'name' => 'agent.apartments.edit'
+        'name' => 'apartments.edit',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/apartments/update/:id' => [
+    'apartments/update/:id' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'update',
         'method' => 'POST',
-        'name' => 'agent.apartments.update'
+        'name' => 'apartments.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/apartments/delete/:id' => [
+    'apartments/delete/:id' => [
         'controller' => 'App\Controllers\ApartmentController',
         'action' => 'delete',
         'method' => 'POST',
-        'name' => 'agent.apartments.delete'
+        'name' => 'apartments.delete',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-
-    // Tenant
-    'agent/tenants' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'index',
-        'method' => 'GET',
-        'name' => 'agent.tenants.index'
-    ],
-    'agent/tenants/create' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'create',
-        'method' => 'GET',
-        'name' => 'agent.tenants.create'
-    ],
-    'agent/tenants/store' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'store',
-        'method' => 'POST',
-        'name' => 'agent.tenants.store'
-    ],
-    'agent/tenants/:id' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'show',
-        'method' => 'GET',
-        'name' => 'agent.tenants.show'
-    ],
-    'agent/tenants/edit/:id' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'edit',
-        'method' => 'GET',
-        'name' => 'agent.tenants.edit'
-    ],
-    'agent/tenants/update/:id' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'update',
-        'method' => 'POST',
-        'name' => 'agent.tenants.update'
-    ],
-    'agent/tenants/delete/:id' => [
-        'controller' => 'App\Controllers\TenantController',
-        'action' => 'delete',
-        'method' => 'POST',
-        'name' => 'agent.tenants.delete'
-    ],
-
-    // Lease
-    'agent/leases' => [
+    'leases' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'agent.leases.index'
+        'name' => 'leases.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire']
     ],
-    'agent/leases/create' => [
+    'leases/create' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'create',
         'method' => 'GET',
-        'name' => 'agent.leases.create'
+        'name' => 'leases.create',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/leases/store' => [
+    'leases/store' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'store',
         'method' => 'POST',
-        'name' => 'agent.leases.store'
+        'name' => 'leases.store',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/leases/:id' => [
+    'leases/:id' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'show',
         'method' => 'GET',
-        'name' => 'agent.leases.show'
+        'name' => 'leases.show',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire']
     ],
-    'agent/leases/edit/:id' => [
+    'leases/edit/:id' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'edit',
         'method' => 'GET',
-        'name' => 'agent.leases.edit'
+        'name' => 'leases.edit',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/leases/update/:id' => [
+    'leases/update/:id' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'update',
         'method' => 'POST',
-        'name' => 'agent.leases.update'
+        'name' => 'leases.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/leases/delete/:id' => [
+    'leases/delete/:id' => [
         'controller' => 'App\Controllers\LeaseController',
         'action' => 'delete',
         'method' => 'POST',
-        'name' => 'agent.leases.delete'
+        'name' => 'leases.delete',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-
-    // Owner
-    'agent/owners' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'index',
+    'leases/download' => [
+        'controller' => 'App\Controllers\LeaseController',
+        'action' => 'download',
         'method' => 'GET',
-        'name' => 'agent.owners.index'
+        'name' => 'leases.download',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
-    'agent/owners/create' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'create',
-        'method' => 'GET',
-        'name' => 'agent.owners.create'
-    ],
-    'agent/owners/store' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'store',
-        'method' => 'POST',
-        'name' => 'agent.owners.store'
-    ],
-    'agent/owners/:id' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'show',
-        'method' => 'GET',
-        'name' => 'agent.owners.show'
-    ],
-    'agent/owners/edit/:id' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'edit',
-        'method' => 'GET',
-        'name' => 'agent.owners.edit'
-    ],
-    'agent/owners/update/:id' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'update',
-        'method' => 'POST',
-        'name' => 'agent.owners.update'
-    ],
-    'agent/owners/delete/:id' => [
-        'controller' => 'App\Controllers\OwnerController',
-        'action' => 'delete',
-        'method' => 'POST',
-        'name' => 'agent.owners.delete'
-    ],
-
-    // Payment
-    'agent/payments' => [
+    'payments' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'index',
         'method' => 'GET',
-        'name' => 'agent.payments.index'
+        'name' => 'payments.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire']
     ],
-    'agent/payments/create' => [
+    'payments/create' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'create',
         'method' => 'GET',
-        'name' => 'agent.payments.create'
+        'name' => 'payments.create',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/payments/store' => [
+    'payments/store' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'store',
         'method' => 'POST',
-        'name' => 'agent.payments.store'
+        'name' => 'payments.store',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/payments/:id' => [
+    'payments/:id' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'show',
         'method' => 'GET',
-        'name' => 'agent.payments.show'
+        'name' => 'payments.show',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire']
     ],
-    'agent/payments/edit/:id' => [
+    'payments/edit/:id' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'edit',
         'method' => 'GET',
-        'name' => 'agent.payments.edit'
+        'name' => 'payments.edit',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/payments/update/:id' => [
+    'payments/update/:id' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'update',
         'method' => 'POST',
-        'name' => 'agent.payments.update'
+        'name' => 'payments.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/payments/delete/:id' => [
+    'payments/delete/:id' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'delete',
         'method' => 'POST',
-        'name' => 'agent.payments.delete'
+        'name' => 'payments.delete',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
-    'agent/payments/quittance/:id' => [
+    'payments/quittance/:id' => [
         'controller' => 'App\Controllers\PaymentController',
         'action' => 'createQuittance',
         'method' => 'GET',
-        'name' => 'agent.payments.quittance'
+        'name' => 'payments.quittance',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
+    'clients' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'clients.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/create' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'clients.create',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/store' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'clients.store',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/:id' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'clients.show',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/edit/:id' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'clients.edit',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/update/:id' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'clients.update',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'clients/delete/:id' => [
+        'controller' => 'App\Controllers\ClientController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'clients.delete',
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
+    ],
+    'owners' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'owners.index',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/create' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'owners.create',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/store' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'owners.store',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/:id' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'owners.show',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/edit/:id' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'owners.edit',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/update/:id' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'owners.update',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'owners/delete/:id' => [
+        'controller' => 'App\Controllers\OwnerController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'owners.delete',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'tenants.index',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/create' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'tenants.create',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/store' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'tenants.store',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/:id' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'tenants.show',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/edit/:id' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'tenants.edit',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/update/:id' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'tenants.update',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'tenants/delete/:id' => [
+        'controller' => 'App\Controllers\TenantController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'tenants.delete',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'buyers.index',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/create' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'buyers.create',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/store' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'buyers.store',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/:id' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'buyers.show',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/edit/:id' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'buyers.edit',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/update/:id' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'buyers.update',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'buyers/delete/:id' => [
+        'controller' => 'App\Controllers\BuyerController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'buyers.delete',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'audit-log' => [
+        'controller' => 'App\Controllers\AuditLogController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'audit-log.index',
+        'allowed_roles' => ['superadmin', 'admin']
+    ],
+    'building-types' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'building-types.index',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/create' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'building-types.create',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/store' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'building-types.store',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/:id' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'building-types.show',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/edit/:id' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'building-types.edit',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/update/:id' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'building-types.update',
+        'allowed_roles' => ['superadmin']
+    ],
+    'building-types/delete/:id' => [
+        'controller' => 'App\Controllers\BuildingTypeController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'building-types.delete',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'apartment-types.index',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/create' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'apartment-types.create',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/store' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'apartment-types.store',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/:id' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'apartment-types.show',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/edit/:id' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'apartment-types.edit',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/update/:id' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'apartment-types.update',
+        'allowed_roles' => ['superadmin']
+    ],
+    'apartment-types/delete/:id' => [
+        'controller' => 'App\Controllers\ApartmentTypeController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'apartment-types.delete',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'agencies.index',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/create' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'agencies.create',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/store' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'agencies.store',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/:id' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'agencies.show',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/edit/:id' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'agencies.edit',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/update/:id' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'agencies.update',
+        'allowed_roles' => ['superadmin']
+    ],
+    'agencies/delete/:id' => [
+        'controller' => 'App\Controllers\AgencyController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'agencies.delete',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'users.index',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/create' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'users.create',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/store' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'users.store',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/:id' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'users.show',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/edit/:id' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'users.edit',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/update/:id' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'users.update',
+        'allowed_roles' => ['superadmin']
+    ],
+    'users/delete/:id' => [
+        'controller' => 'App\Controllers\UserController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'users.delete',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'roles.index',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/create' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'create',
+        'method' => 'GET',
+        'name' => 'roles.create',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/store' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'store',
+        'method' => 'POST',
+        'name' => 'roles.store',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/:id' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'show',
+        'method' => 'GET',
+        'name' => 'roles.show',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/edit/:id' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'edit',
+        'method' => 'GET',
+        'name' => 'roles.edit',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/update/:id' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'update',
+        'method' => 'POST',
+        'name' => 'roles.update',
+        'allowed_roles' => ['superadmin']
+    ],
+    'roles/delete/:id' => [
+        'controller' => 'App\Controllers\RoleController',
+        'action' => 'delete',
+        'method' => 'POST',
+        'name' => 'roles.delete',
+        'allowed_roles' => ['superadmin']
+    ],
+    'reports' => [
+        'controller' => 'App\Controllers\ReportController',
+        'action' => 'index',
+        'method' => 'GET',
+        'name' => 'reports.index',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
+    'export' => [
+        'controller' => 'App\Controllers\ExportController',
+        'action' => 'export',
+        'method' => 'GET',
+        'name' => 'export',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ]
 ];
 
 return $routes;
-?>

@@ -17,6 +17,7 @@
             </thead>
             <tbody>
                 <tr>
+                   
                     <td class="p-4">3B</td>
                     <td class="p-4">3</td>
                     <td class="p-4">75</td>

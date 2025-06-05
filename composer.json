@@ -6,7 +6,7 @@
         "psr-4": {
             "App\\": "src/",
             "App\\Config\\": "config/",
-            "App\\Models\\": "src/Models"
+            "App\\Models\\": "src/Models/"
 
         },
         "files": [
