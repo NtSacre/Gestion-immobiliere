@@ -15,16 +15,25 @@ class Helpers
         return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
     }
 
-    public function csrf_token(): string
+    public function csrf_token(string $form_id = 'default'): string
     {
         $token = bin2hex(random_bytes(32));
-        $_SESSION['csrf_token'] = $token;
+        $_SESSION['csrf_tokens'][$form_id] = $token;
+        $logger = new Logger();
+        $logger->error("CSRF Token généré pour $form_id: $token");
         return $token;
     }
 
-    public function csrf_verify(string $token): bool
+    public function csrf_verify(string $token, string $form_id = 'default'): bool
     {
-        return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+        $session_token = $_SESSION['csrf_tokens'][$form_id] ?? null;
+        $logger = new Logger();
+        $logger->error("CSRF Verify - Form: '$form_id', Token envoyé: '$token', Token session: '$session_token'");
+        if (isset($session_token) && hash_equals($session_token, $token)) {
+            unset($_SESSION['csrf_tokens'][$form_id]); // Supprimer après vérification
+            return true;
+        }
+        return false;
     }
 
     public function redirect(string $url): void

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Utils;
 
 use App\Models\User;
@@ -15,7 +16,7 @@ class Auth
         $this->loadUser();
     }
 
-private function loadUser()
+    private function loadUser()
     {
         if (isset($_SESSION['user_id'])) {
             $userModel = new User();
@@ -33,19 +34,22 @@ private function loadUser()
                     'phone' => $userObject->getPhone(),
                     'created_at' => $userObject->getCreatedAt(),
                     'updated_at' => $userObject->getUpdatedAt(),
-                    'deleted_at' => $userObject->getDeletedAt(),
+                    'is_deleted' => $userObject->getIsDeleted(),
                     // Ajouter les données de session
                     'role' => $_SESSION['role'] ?? null,
                     'owner_id' => $_SESSION['owner_id'] ?? null,
                     'tenant_id' => $_SESSION['tenant_id'] ?? null
                 ];
+            } else {
+                // Utilisateur non trouvé dans la base, déconnexion automatique
+                $this->logout();
             }
         }
     }
 
     public function check(): bool
     {
-        return isset($_SESSION['user_id']) && $this->user !== null;
+        return $this->user !== null;
     }
 
     public function user(): ?array
@@ -67,20 +71,17 @@ private function loadUser()
     {
         // Autoriser l'accès pour 'guest' si non authentifié
         if (in_array('guest', $allowedRoles, true) && !$this->check()) {
-           // error_log("Accès autorisé pour guest, non authentifié, roles: " . implode(',', $allowedRoles));
             return;
         }
 
         // Rediriger si non authentifié
         if (!$this->check()) {
-           // error_log("Redirection vers /auth/login, non authentifié, roles: " . implode(',', $allowedRoles));
             $helpers = new Helpers();
             $helpers->redirect('/auth/login');
         }
 
         // Rediriger si rôle non autorisé
         if (!in_array($this->user['role'], $allowedRoles, true)) {
-           // error_log("Redirection vers /403, rôle non autorisé: " . ($this->user['role'] ?? 'aucun') . ", roles attendus: " . implode(',', $allowedRoles));
             $flash = new Flash();
             $flash->flash('error', 'Accès non autorisé.');
             $helpers = new Helpers();
@@ -115,8 +116,5 @@ private function loadUser()
     {
         session_destroy();
         $this->user = null;
-        $helpers = new Helpers();
-        $helpers->redirect('/auth/login');
     }
 }
-?>

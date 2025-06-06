@@ -10,7 +10,7 @@ use PDOException;
  * ImmoApp (L2GIB, 2024-2025)
  * Représente un paiement lié à un contrat de location (loyer, charges, dépôt, etc.)
  */
-class Payments
+class Payment
 {
     private $pdo;
     protected $id;
@@ -57,11 +57,11 @@ class Payments
     protected function setDeletedAt($deleted_at) { $this->deleted_at = $deleted_at; }
 
     /**
-     * Crée un objet Payments à partir des données de la base
+     * Crée un objet Payment à partir des données de la base
      * @param array $data
-     * @return Payments
+     * @return Payment
      */
-    protected static function fromData(array $data): Payments
+    protected static function fromData(array $data): Payment
     {
         $payment = new self();
         $payment->setId($data['id']);
@@ -81,13 +81,13 @@ class Payments
     /**
      * Trouve un paiement par ID
      * @param int $id
-     * @return Payments|null
+     * @return Payment|null
      */
     public static function find($id)
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM payments WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM payments WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -99,7 +99,7 @@ class Payments
     /**
      * Alias pour find
      * @param int $id
-     * @return Payments|null
+     * @return Payment|null
      */
     public static function findById($id)
     {
@@ -114,7 +114,7 @@ class Payments
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM payments WHERE deleted_at IS NULL ORDER BY payment_date DESC');
+            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted IS FALSE ORDER BY payment_date DESC');
             $payments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $payments[] = self::fromData($data);
@@ -127,13 +127,13 @@ class Payments
 
     /**
      * Récupère le premier paiement (par date de paiement)
-     * @return Payments|null
+     * @return Payment|null
      */
     public static function first()
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM payments WHERE deleted_at IS NULL ORDER BY payment_date ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted IS FALSE ORDER BY payment_date ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -144,7 +144,7 @@ class Payments
     /**
      * Crée un nouveau paiement
      * @param array $data
-     * @return Payments
+     * @return Payment
      */
     public static function create(array $data)
     {
@@ -185,7 +185,7 @@ class Payments
      * Met à jour un paiement
      * @param int $id
      * @param array $data
-     * @return Payments|null
+     * @return Payment|null
      */
     public static function update($id, array $data)
     {
@@ -253,7 +253,7 @@ class Payments
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM payments WHERE lease_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM payments WHERE lease_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$leaseId]);
             $payments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -272,5 +272,108 @@ class Payments
     public function lease()
     {
         return Lease::find($this->lease_id);
+    }
+
+     /**
+     * Compte le nombre de paiements en attente (global).
+     *
+     * @return int Nombre de paiements en attente
+     */
+    public static function countPending()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments
+                WHERE status = 'pending'
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements en attente : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de paiements en attente pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de paiements en attente
+     */
+    public static function countPendingByAgency($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE p.status = 'pending' AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements en attente pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de paiements en attente pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de paiements en attente
+     */
+    public static function countPendingByAgent($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE p.status = 'pending' AND l.agent_id = ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id, $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements en attente pour un agent spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de paiements effectués pour un locataire spécifique.
+     *
+     * @param int $tenant_id ID du locataire
+     * @return int Nombre de paiements effectués
+     */
+    public static function countPaidByTenant($tenant_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                WHERE l.tenant_id = ? AND p.status = 'paid'
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$tenant_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements effectués pour un locataire spécifique : " . $e->getMessage());
+        }
     }
 }

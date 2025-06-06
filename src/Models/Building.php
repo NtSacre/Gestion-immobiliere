@@ -91,7 +91,7 @@ class Building
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM buildings WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM buildings WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -118,7 +118,7 @@ class Building
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM buildings WHERE deleted_at IS NULL ORDER BY name ASC');
+            $stmt = $pdo->query('SELECT * FROM buildings WHERE is_deleted IS FALSE ORDER BY name ASC');
             $buildings = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $buildings[] = self::fromData($data);
@@ -137,7 +137,7 @@ class Building
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM buildings WHERE deleted_at IS NULL ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM buildings WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -248,7 +248,7 @@ class Building
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM buildings WHERE agency_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM buildings WHERE agency_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$agencyId]);
             $buildings = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -276,5 +276,91 @@ class Building
     public function apartments()
     {
         return Apartment::findByBuildingId($this->id);
+    }
+
+/**
+ * Compte le nombre total de bâtiments gérés (non supprimés)
+ * @return int
+ */
+public static function countAll()
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM buildings WHERE is_deleted = 0');
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors du comptage des bâtiments : " . $e->getMessage());
+    }
+}
+
+/**
+ * Compte les nouveaux bâtiments ajoutés ce mois
+ * @return int
+ */
+public static function countNewThisMonth()
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('
+            SELECT COUNT(*) 
+            FROM buildings 
+            WHERE is_deleted = 0 
+            AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        ');
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors du comptage des nouveaux bâtiments : " . $e->getMessage());
+    }
+}
+
+ /**
+     * Compte le nombre de bâtiments pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de bâtiments
+     */
+    public static function countByAgency($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM buildings
+                WHERE agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des bâtiments pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de bâtiments pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de bâtiments
+     */
+    public static function countByAgent($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM buildings
+                WHERE agent_id = ? AND agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id, $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des bâtiments pour un agent spécifique : " . $e->getMessage());
+        }
     }
 }

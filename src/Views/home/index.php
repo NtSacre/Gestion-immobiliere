@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImmoApp - Gestion Immobilière Professionnelle</title>
+     <link rel="icon" href="/assets/images/favicon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {

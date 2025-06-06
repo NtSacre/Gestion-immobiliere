@@ -31,7 +31,7 @@ class Owner
     public function getId() { return $this->id; }
     public function getUserId() { return $this->user_id; }
     public function getType() { return $this->type; }
-    public function getName() { return $this->name; }
+
     public function getSiret() { return $this->siret; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
@@ -41,7 +41,6 @@ class Owner
     protected function setId($id) { $this->id = $id; }
     protected function setUserId($user_id) { $this->user_id = $user_id; }
     protected function setType($type) { $this->type = $type; }
-    protected function setName($name) { $this->name = $name; }
     protected function setSiret($siret) { $this->siret = $siret; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
     protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
@@ -58,7 +57,6 @@ class Owner
         $owner->setId($data['id']);
         $owner->setUserId($data['user_id']);
         $owner->setType($data['type']);
-        $owner->setName($data['name']);
         $owner->setSiret($data['siret'] ?? null);
         $owner->setCreatedAt($data['created_at']);
         $owner->setUpdatedAt($data['updated_at'] ?? null);
@@ -75,7 +73,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM owners WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM owners WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -102,7 +100,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM owners WHERE deleted_at IS NULL ORDER BY name');
+            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY name');
             $owners = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $owners[] = self::fromData($data);
@@ -121,7 +119,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM owners WHERE deleted_at IS NULL ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -143,19 +141,69 @@ class Owner
                 throw new PDOException("User ID invalide");
             }
             $stmt = $pdo->prepare('
-                INSERT INTO owners (user_id, type, name, siret, created_at, updated_at)
-                VALUES (?, ?, ?, ?, NOW(), NOW())
+                INSERT INTO owners (user_id, type,  siret, created_at, updated_at)
+                VALUES (?, ?,  ?, NOW(), NOW())
             ');
             $stmt->execute([
                 $data['user_id'],
                 $data['type'],
-                $data['name'],
                 $data['siret'] ?? null
             ]);
             $id = $pdo->lastInsertId();
             return self::find($id);
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la création du propriétaire : " . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Supprime un propriétaire par user_id (suppression physique)
+     * @param int $userId
+     * @return bool
+     */
+    public static function deleteByUserId($userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('DELETE FROM owners WHERE user_id = ?');
+            return $stmt->execute([$userId]);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la suppression du propriétaire : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Effectue une suppression logique d’un propriétaire par user_id
+     * @param int $userId
+     * @return bool
+     */
+    public static function softDeleteByUserId($userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('UPDATE owners SET is_deleted = 1, updated_at = NOW() WHERE user_id = ?');
+            return $stmt->execute([$userId]);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la suppression logique du propriétaire : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifie si un propriétaire a été créé par un agent spécifique
+     * @param int $agentId
+     * @param int $userId
+     * @return bool
+     */
+    public static function isCreatedByAgent($agentId, $userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM owners WHERE user_id = ? AND agent_id = ? AND is_deleted = 0');
+            $stmt->execute([$userId, $agentId]);
+            return (int) $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la vérification de l’agent du propriétaire : " . $e->getMessage());
         }
     }
 
@@ -180,13 +228,13 @@ class Owner
                 throw new PDOException("User ID invalide");
             }
             $stmt = $pdo->prepare('
-                UPDATE owners SET user_id = ?, type = ?, name = ?, siret = ?, updated_at = NOW()
+                UPDATE owners SET user_id = ?, type = ?, siret = ?, updated_at = NOW()
                 WHERE id = ?
             ');
             $stmt->execute([
                 $data['user_id'] ?? $user->getUserId(),
                 $data['type'] ?? $user->getType(),
-                $data['name'] ?? $user->getName(),
+               
                 $data['siret'] ?? $user->getSiret(),
                 $id
             ]);
@@ -221,7 +269,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM owners WHERE user_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM owners WHERE user_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$userId]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -237,5 +285,55 @@ class Owner
     public function user()
     {
         return User::find($this->user_id);
+    }
+
+        /**
+     * Compte le nombre de propriétaires associés à une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de propriétaires
+     */
+    public static function countByAgency($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(DISTINCT o.id)
+                FROM owners o
+                JOIN apartments a ON a.owner_id = o.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des propriétaires pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de propriétaires gérés par un agent spécifique.
+     *
+     * @param int $agent_id ID de l'agent
+     * @return int Nombre de propriétaires
+     */
+    public static function countByAgent($agent_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM owners
+                WHERE agent_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des propriétaires pour un agent spécifique : " . $e->getMessage());
+        }
     }
 }

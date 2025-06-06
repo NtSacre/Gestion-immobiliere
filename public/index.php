@@ -1,5 +1,4 @@
 <?php
-
 // Activer le débogage en développement seulement
 if (getenv('APP_ENV') !== 'production') {
     ini_set('display_errors', 1);
@@ -56,35 +55,44 @@ try {
 
     // Parcourir les routes pour trouver une correspondance
     foreach ($routes as $route_pattern => $route) {
-        // Échapper les caractères spéciaux pour la regex
-        $pattern = preg_quote($route_pattern, '/');
-        
-        // Remplacer les paramètres :param par des groupes de capture
-        $pattern = preg_replace('/\\\\:([a-zA-Z_][a-zA-Z0-9_]*)/', '([^/]+)', $pattern);
-        
-        // Valider le motif pour éviter les caractères problématiques
-        if (preg_match('/[\[\]\{\}\(\)\*\+]/', $pattern)) {
-            $logger->error("Motif regex invalide pour la route: '$route_pattern'", ['pattern' => $pattern]);
-            continue;
+        // Vérifier d'abord si c'est une correspondance exacte (pour les routes sans paramètres)
+        if ($route_pattern === $uri && $route['method'] === $method) {
+            $matched_route = $route;
+            $params = [];
+            $logger->info("Route exacte trouvée: '$route_pattern' pour URI: '$uri'");
+            break;
         }
         
-        // Ancrer le pattern
-        $pattern = '/^' . $pattern . '$/';
-        
-        try {
-            if (preg_match($pattern, $uri, $matches) && $route['method'] === $method) {
-                $matched_route = $route;
-                array_shift($matches); // Supprimer la correspondance complète
-                $params = $matches; // Capturer les paramètres
-                $logger->info("Route trouvée: '$route_pattern' pour URI: '$uri'", ['params' => $params]);
-                break;
+        // Si la route contient des paramètres (:param)
+        if (strpos($route_pattern, ':') !== false) {
+            // Échapper les caractères spéciaux pour la regex, en gardant les tirets et slashes
+            $pattern = str_replace(['/', '-'], ['\/', '\-'], $route_pattern);
+            
+            // Remplacer les paramètres :param par des groupes de capture
+           $pattern = preg_replace('/:([a-zA-Z_][a-zA-Z0-9_]*)/', '([^\/]+)', $pattern);
+
+            
+            // Ancrer le pattern
+            $pattern = '/^' . $pattern . '$/';
+            
+            try {
+                if (preg_match($pattern, $uri, $matches) && $route['method'] === $method) {
+                    $matched_route = $route;
+                    array_shift($matches); // Supprimer la correspondance complète
+                    $params = $matches; // Capturer les paramètres
+                    $logger->info("Route avec paramètres trouvée: '$route_pattern' pour URI: '$uri'", [
+                        'pattern' => $pattern,
+                        'params' => $params
+                    ]);
+                    break;
+                }
+            } catch (Exception $e) {
+                $logger->error("Erreur preg_match pour la route: '$route_pattern'", [
+                    'pattern' => $pattern,
+                    'error' => $e->getMessage()
+                ]);
+                continue;
             }
-        } catch (Exception $e) {
-            $logger->error("Erreur preg_match pour la route: '$route_pattern'", [
-                'pattern' => $pattern,
-                'error' => $e->getMessage()
-            ]);
-            continue;
         }
     }
 
@@ -94,28 +102,24 @@ try {
     }
 
     // Middleware : Vérifier les restrictions d'accès
-    if (isset($matched_route['allowed_roles']) && !in_array($uri, ['auth/login', 'auth/register', 'login', 'register', '403'])) {
-        if (in_array('guest', $matched_route['allowed_roles']) && $auth->check() && $uri !== '') {
-            // Rediriger les utilisateurs connectés vers le dashboard, sauf pour la route '/'
-            $logger->info("Utilisateur connecté a tenté d'accéder à une route guest: '$uri'", [
-                'user_id' => $auth->id(),
-                'role' => $auth->user()['role'] ?? 'guest'
-            ]);
-            $flash->flash('info', 'Vous êtes déjà connecté.');
-            $helpers->redirect('/dashboard');
+    if (isset($matched_route['allowed_roles'])) {
+        // Autoriser les routes publiques sans redirection
+        if (!in_array($uri, ['auth/login', 'auth/register', 'login', 'register', '403'])) {
+            $auth->restrict($matched_route['allowed_roles']);
+            $logger->access($auth->id(), $matched_route['name'], 'success');
         }
-        $auth->restrict($matched_route['allowed_roles']);
-        $logger->access($auth->id(), $matched_route['name'], 'success');
-    } elseif (!isset($matched_route['allowed_roles'])) {
+    } else {
         throw new Exception('Rôles non définis pour la route ' . $uri, 500);
     }
 
     // Middleware : Vérifier CSRF pour les requêtes POST
     if ($method === 'POST') {
         $token = $_POST['csrf_token'] ?? '';
-        if (!$helpers->csrf_verify($token)) {
+        // Utiliser le nom de la route comme form_id
+        $form_id = $matched_route['name'];
+        if (!$helpers->csrf_verify($token, $form_id)) {
             $flash->flash('error', 'Jeton CSRF invalide.');
-            $logger->error('Jeton CSRF invalide pour ' . $uri, ['uri' => $uri]);
+            $logger->error("Jeton CSRF invalide pour '$uri' (form_id: $form_id)", ['uri' => $uri, 'token' => $token]);
             $helpers->redirect('/403');
         }
     }
@@ -156,7 +160,7 @@ try {
         'line' => $e->getLine()
     ]);
 
-    // Déterminer le code d’erreur
+    // Déterminer le code d'erreur
     $code = $e->getCode();
     if (!in_array($code, [404, 403, 500])) {
         $code = 500;
@@ -179,3 +183,4 @@ try {
         require_once dirname(__DIR__) . '/src/Views/layouts/public_layout.php';
     }
 }
+?>

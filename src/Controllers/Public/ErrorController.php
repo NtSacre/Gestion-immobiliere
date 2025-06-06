@@ -44,6 +44,6 @@ class ErrorController
 
         // Charger la vue avec le layout public
         http_response_code(403);
-        require_once dirname(__DIR__, 3) . '/Views/layouts/public_layout.php';
+        require_once dirname(__DIR__, 2) . '/Views/layouts/public_layout.php';
     }
 }

@@ -79,7 +79,7 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM agencies WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM agencies WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -106,7 +106,7 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM agencies WHERE deleted_at IS NULL ORDER BY name ASC');
+            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE ORDER BY name ASC');
             $agencies = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $agencies[] = self::fromData($data);
@@ -125,7 +125,7 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM agencies WHERE deleted_at IS NULL ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -218,7 +218,7 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM agencies WHERE email = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM agencies WHERE email = ? AND is_deleted IS FALSE');
             $stmt->execute([$email]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;

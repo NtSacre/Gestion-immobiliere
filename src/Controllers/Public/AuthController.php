@@ -37,11 +37,11 @@ class AuthController
         }
 
         // Génère un jeton CSRF pour la vue
-        $csrf_token = $this->helpers->csrf_token();
+        $csrf_token = $this->helpers->csrf_token('auth.login.post');
 
         // Charge la vue login.php
         $content_view = 'auth/login.php';
-        require_once dirname(__DIR__, 3) . '/Views/layouts/public_layout.php';
+        require_once dirname(__DIR__, 2) . '/Views/layouts/public_layout.php';
     }
 
     /**
@@ -50,7 +50,7 @@ class AuthController
     public function login()
     {
         // Vérifie la méthode POST et le jeton CSRF
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->helpers->csrf_verify($_POST['csrf_token'] ?? '')) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->flash->flash('error', 'Requête inappropriée.');
             $this->helpers->redirect('/');
             return;
@@ -110,11 +110,11 @@ class AuthController
         }
 
         // Génère un jeton CSRF pour la vue
-        $csrf_token = $this->helpers->csrf_token();
+        $csrf_token = $this->helpers->csrf_token('auth.register.post');
 
         // Charge la vue register.php
         $content_view = 'auth/register.php';
-        require_once dirname(__DIR__, 3) . '/Views/layouts/public_layout.php';
+        require_once dirname(__DIR__, 2) . '/Views/layouts/public_layout.php';
     }
 
     /**
@@ -123,7 +123,7 @@ class AuthController
     public function register()
     {
         // Vérifie la méthode POST et le jeton CSRF
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->helpers->csrf_verify($_POST['csrf_token'] ?? '')) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->flash->flash('error', 'Requête inappropriée.');
             $this->helpers->redirect('/auth/register');
             return;

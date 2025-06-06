@@ -639,49 +639,49 @@ $routes = [
         'action' => 'index',
         'method' => 'GET',
         'name' => 'users.index',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/create' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'create',
         'method' => 'GET',
         'name' => 'users.create',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/store' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'store',
         'method' => 'POST',
         'name' => 'users.store',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/:id' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'show',
         'method' => 'GET',
         'name' => 'users.show',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/edit/:id' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'edit',
         'method' => 'GET',
         'name' => 'users.edit',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/update/:id' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'update',
         'method' => 'POST',
         'name' => 'users.update',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'users/delete/:id' => [
         'controller' => 'App\Controllers\UserController',
         'action' => 'delete',
         'method' => 'POST',
         'name' => 'users.delete',
-        'allowed_roles' => ['superadmin']
+        'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
     'roles' => [
         'controller' => 'App\Controllers\RoleController',

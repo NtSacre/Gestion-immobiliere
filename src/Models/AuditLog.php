@@ -279,4 +279,173 @@ class AuditLog
     {
         return User::find($this->user_id);
     }
+
+/**
+ * Récupère les activités récentes (3 dernières, triées par date)
+ * @param int $limit Nombre maximum d'activités à retourner
+ * @return array Liste des activités récentes
+ */
+public static function getRecentActivities($limit = 3)
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('
+            SELECT a.*, u.first_name, u.last_name
+            FROM audit_log a
+            LEFT JOIN users u ON a.user_id = u.id
+            WHERE a.action IN ("create", "add")
+            AND a.table_name IN ("buildings", "leases", "tenants")
+            AND a.is_deleted = 0
+            ORDER BY a.created_at DESC
+            LIMIT ?
+        ');
+        $stmt->execute([$limit]);
+        $logs = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $log = [
+                'id' => $row['id'],
+                'type' => $row['table_name'],
+                'description' => '',
+                'details' => '',
+                'timestamp' => $row['created_at'],
+                'icon_class' => 'bg-gray-100',
+                'icon_text_class' => 'text-gray-600',
+                'icon' => '📋'
+            ];
+            if ($row['table_name'] === 'buildings') {
+                $log['description'] = 'Nouveau bâtiment ajouté';
+                $log['details'] = 'Bâtiment ID: ' . $row['record_id'];
+                $log['icon_class'] = 'bg-green-100';
+                $log['icon_text_class'] = 'text-green-600';
+                $log['icon'] = '🏢';
+            } elseif ($row['table_name'] === 'leases') {
+                $log['description'] = 'Contrat signé';
+                $log['details'] = 'Bail ID: ' . $row['record_id'];
+                $log['icon_class'] = 'bg-blue-100';
+                $log['icon_text_class'] = 'text-blue-600';
+                $log['icon'] = '📄';
+            } elseif ($row['table_name'] === 'tenants') {
+                $log['description'] = 'Locataire ajouté';
+                $log['details'] = $row['first_name'] . ' ' . $row['last_name'];
+                $log['icon_class'] = 'bg-purple-100';
+                $log['icon_text_class'] = 'text-purple-600';
+                $log['icon'] = '👤';
+            }
+            $logs[] = $log;
+        }
+        return $logs;
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la récupération des activités récentes : " . $e->getMessage());
+    }
+}
+
+    /**
+     * Récupère les 3 dernières activités de l'audit log pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return array Tableau associatif des 3 dernières activités
+     */
+    public static function getRecentActivitiesByAgency($agency_id)
+    {
+        try {
+           
+        
+        $pdo = Database::getInstance();
+        $query = "
+            SELECT al.action, al.table_name, al.created_at
+            FROM audit_log al
+            LEFT JOIN leases l ON al.table_name = 'leases' AND al.record_id = l.id
+            LEFT JOIN apartments a ON al.table_name = 'apartments' AND al.record_id = a.id OR l.apartment_id = a.id
+            LEFT JOIN buildings b ON al.table_name = 'buildings' AND al.record_id = b.id OR a.building_id = b.id
+            WHERE b.agency_id = ?
+            ORDER BY al.created_at DESC
+            LIMIT 3
+        ";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([$agency_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la récupèration des 3 dernières activités de l'audit log pour une agence spécifique : " . $e->getMessage());
+
+        }
+    }
+
+    /**
+     * Récupère les tâches urgentes (baux en attente) pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return array Tableau associatif avec le nombre de baux en attente
+     */
+    public static function getUrgentTasksByAgency($agency_id)
+    {
+        try {
+
+                $pdo = Database::getInstance();
+                $query = "
+                    SELECT COUNT(*) as pendingLeases
+                    FROM leases l
+                    JOIN apartments a ON l.apartment_id = a.id
+                    JOIN buildings b ON a.building_id = b.id
+                    WHERE l.is_active = 0 AND b.agency_id = ?
+                ";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute([$agency_id]);
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return ['pendingLeases' => (int) $result['pendingLeases']];
+
+        } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la récupèration des tâches urgentes (baux en attente) pour une agence spécifique : " . $e->getMessage());
+
+        }
+    }
+
+        /**
+     * Récupère les tâches urgentes (baux en attente) pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return array Tableau associatif avec le nombre de baux en attente
+     */
+    public static function getUrgentTasksByAgent($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*) as pendingLeases
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.is_active = 0 AND l.agent_id = ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id, $agency_id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return ['pendingLeases' => (int) $result['pendingLeases']];
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la récupération des tâches urgentes pour un agent spécifique : " . $e->getMessage());
+        }
+    }
+
+/**
+ * Récupère les tâches urgentes (contrats à valider uniquement)
+ * @return array
+ */
+public static function getUrgentTasks()
+{
+    try {
+        $pdo = Database::getInstance();
+        // Contrats en attente (suppose is_active = 0 pour "en attente")
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM leases WHERE is_active = 0 AND is_deleted = 0');
+        $stmt->execute();
+        $pendingLeases = (int) $stmt->fetchColumn();
+
+        return [
+            'pendingLeases' => $pendingLeases,
+            'pendingInspections' => 0 // Pas d'inspections, car inspection_date n'existe pas
+        ];
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la récupération des tâches urgentes : " . $e->getMessage());
+    }
+}
 }

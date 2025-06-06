@@ -67,7 +67,7 @@ class ApartmentType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM apartment_types WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM apartment_types WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -94,7 +94,7 @@ class ApartmentType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM apartment_types WHERE deleted_at IS NULL ORDER BY name ASC');
+            $stmt = $pdo->query('SELECT * FROM apartment_types WHERE is_deleted IS FALSE ORDER BY name ASC');
             $apartmentTypes = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $apartmentTypes[] = self::fromData($data);
@@ -113,7 +113,7 @@ class ApartmentType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM apartment_types WHERE deleted_at IS NULL ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM apartment_types WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -200,7 +200,7 @@ class ApartmentType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM apartment_types WHERE name = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM apartment_types WHERE name = ? AND is_deleted IS FALSE');
             $stmt->execute([$name]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;

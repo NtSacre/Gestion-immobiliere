@@ -95,7 +95,7 @@ class Lease
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM leases WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM leases WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -122,7 +122,7 @@ class Lease
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM leases WHERE deleted_at IS NULL ORDER BY created_at DESC');
+            $stmt = $pdo->query('SELECT * FROM leases WHERE is_deleted IS FALSE ORDER BY created_at DESC');
             $leases = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $leases[] = self::fromData($data);
@@ -141,7 +141,7 @@ class Lease
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM leases WHERE deleted_at IS NULL ORDER BY created_at ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM leases WHERE is_deleted IS FALSE ORDER BY created_at ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -259,7 +259,7 @@ class Lease
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM leases WHERE tenant_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM leases WHERE tenant_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$tenantId]);
             $leases = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -280,7 +280,7 @@ class Lease
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM leases WHERE apartment_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM leases WHERE apartment_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$apartmentId]);
             $leases = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -309,4 +309,341 @@ class Lease
     {
         return Tenant::find($this->tenant_id);
     }
+    /**
+ * Vérifie si un acheteur a des baux associés via son tenant_id
+ * @param int $userId
+ * @return bool
+ */
+public static function hasLeasesForBuyer($userId)
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('
+            SELECT COUNT(*) 
+            FROM leases 
+            WHERE tenant_id = (SELECT id FROM tenants WHERE user_id = ?)
+            AND is_deleted IS FALSE
+        ');
+        $stmt->execute([$userId]);
+        return $stmt->fetchColumn() > 0;
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la vérification des baux pour l'acheteur : " . $e->getMessage());
+    }
 }
+
+/**
+ * Compte les locations actives (non supprimées, is_active = 1)
+ * @return int
+ */
+public static function countActive()
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM leases WHERE is_active = 1 AND is_deleted = 0');
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors du comptage des locations actives : " . $e->getMessage());
+    }
+}
+
+/**
+ * Compte les nouvelles locations actives créées ce mois
+ * @return int
+ */
+public static function countNewActiveThisMonth()
+{
+    try {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare('
+            SELECT COUNT(*) 
+            FROM leases 
+            WHERE is_active = 1 
+            AND is_deleted = 0 
+            AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        ');
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors du comptage des nouvelles locations actives : " . $e->getMessage());
+    }
+}
+
+    /**
+     * Calcule le chiffre d'affaires total (somme des loyers actifs)
+     * @return float
+     */
+    public static function calculateTotalRevenue()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT SUM(rent_amount) 
+                FROM leases 
+                WHERE is_active = 1 
+                AND is_deleted = 0
+            ');
+            $stmt->execute();
+            return (float) ($stmt->fetchColumn() ?? 0);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du calcul du chiffre d'affaires : " . $e->getMessage());
+        }
+    }
+
+        /**
+     * Calcule le revenu total des baux pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Montant total en FCFA
+     */
+    public static function calculateTotalRevenueByAgency($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT SUM(l.rent_amount)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) ($result ?: 0);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du calcul du revenu total des baux pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux actifs pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de baux actifs
+     */
+    public static function countActiveByAgency($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.is_active = 1 AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux actifs pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+        /**
+     * Calcule le revenu total des baux pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return int Montant total en FCFA
+     */
+    public static function calculateTotalRevenueByAgent($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT SUM(l.rent_amount)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.agent_id = ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id, $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) ($result ?: 0);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du calcul du revenu total des baux pour un agent spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux actifs pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de baux actifs
+     */
+    public static function countActiveByAgent($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.is_active = 1 AND l.agent_id = ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$agent_id, $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux actifs pour un agent spécifique : " . $e->getMessage());
+        }
+    }
+
+        /**
+     * Calcule le revenu total des baux pour un propriétaire spécifique.
+     *
+     * @param int $owner_id ID du propriétaire
+     * @return int Montant total en FCFA
+     */
+    public static function calculateRevenueByOwner($owner_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT SUM(l.rent_amount)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                WHERE a.owner_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$owner_id]);
+            $result = $stmt->fetchColumn();
+            return (int) ($result ?: 0);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du calcul du revenu total des baux pour un propriétaire spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère le montant du loyer d'un bail actif pour un locataire spécifique.
+     *
+     * @param int $tenant_id ID du locataire
+     * @return int Montant du loyer en FCFA
+     */
+    public static function getRentAmountByTenant($tenant_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT l.rent_amount
+                FROM leases l
+                WHERE l.tenant_id = ? AND l.is_active = 1
+                LIMIT 1
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$tenant_id]);
+            $result = $stmt->fetchColumn();
+            return (int) ($result ?: 0);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la récupération du montant du loyer pour un locataire spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux actifs pour un locataire spécifique.
+     *
+     * @param int $tenant_id ID du locataire
+     * @return int Nombre de baux actifs
+     */
+    public static function countActiveByTenant($tenant_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases
+                WHERE tenant_id = ? AND is_active = 1
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([$tenant_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux actifs pour un locataire spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux créés ce mois (global).
+     *
+     * @return int Nombre de baux créés
+     */
+    public static function countNewThisMonth()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases
+                WHERE created_at >= ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([date('Y-m-01')]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux créés ce mois : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux créés ce mois pour une agence spécifique.
+     *
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de baux créés
+     */
+    public static function countNewByAgencyThisMonth($agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.created_at >= ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([date('Y-m-01'), $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux créés ce mois pour une agence spécifique : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte le nombre de baux créés ce mois pour un agent spécifique dans une agence.
+     *
+     * @param int $agent_id ID de l'agent
+     * @param int $agency_id ID de l'agence
+     * @return int Nombre de baux créés
+     */
+    public static function countNewByAgentThisMonth($agent_id, $agency_id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM leases l
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.created_at >= ? AND l.agent_id = ? AND b.agency_id = ?
+            ";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute([date('Y-m-01'), $agent_id, $agency_id]);
+            $result = $stmt->fetchColumn();
+            return (int) $result;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des baux créés ce mois pour un agent spécifique : " . $e->getMessage());
+        }
+    }
+}
+

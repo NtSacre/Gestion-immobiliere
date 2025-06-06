@@ -1,9 +1,10 @@
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 06 juin 2025 à 00:41
+-- Généré le : ven. 06 juin 2025 à 21:05
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -22,6 +23,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `immo_db`
 --
+DROP DATABASE IF EXISTS `immo_db`;
 CREATE DATABASE IF NOT EXISTS `immo_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `immo_db`;
 
@@ -70,6 +72,12 @@ CREATE TABLE `agencies` (
   UNIQUE KEY `siret` (`siret`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `agencies`
+--
+INSERT INTO `agencies` (`name`, `address`, `siret`, `phone`, `email`, `created_at`, `is_deleted`) VALUES
+('Agence Principale', '123 Rue Principale, 75001 Paris, France', '12345678900012', '+33 1 23 45 67 89', 'contact@agenceprincipale.fr', CURRENT_TIMESTAMP, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -95,6 +103,33 @@ CREATE TABLE `users` (
   KEY `agency_id` (`agency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Déchargement des données de la table `users`
+--
+INSERT INTO `users` (
+    `username`,
+    `email`,
+    `password`,
+    `role_id`,
+    `agency_id`,
+    `first_name`,
+    `last_name`,
+    `phone`,
+    `created_at`,
+    `is_deleted`
+) VALUES (
+    'superadmin',
+    'superadmin@immo.fr',
+    '$2y$10$8J6Y7uK5vL9mN3pQ2rT8O.7xZ8W4A9B6C5D4E3F2G1H0I9J8K7L6M', -- Mot de passe: Admin123!
+    1,
+    1,
+    'Admin',
+    'Principal',
+    '+33 6 12 34 56 78',
+    CURRENT_TIMESTAMP,
+    0
+);
+
 -- --------------------------------------------------------
 
 --
@@ -106,13 +141,13 @@ CREATE TABLE `owners` (
   `agent_id` INT(11) DEFAULT NULL,
   `agency_id` INT(11) DEFAULT NULL,
   `siret` VARCHAR(20),
-  `type` VARCHAR(20) NOT NULL,
+  `type` ENUM('particulier', 'professionnel') NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
   `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `siret` (`siret`)
+  UNIQUE KEY `siret` (`siret`),
   KEY `agent_id` (`agent_id`),
   KEY `agency_id` (`agency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -154,10 +189,10 @@ CREATE TABLE `buildings` (
   `floors` INT(11) NOT NULL,
   `apartment_count` INT(11) NOT NULL,
   `land_area` DECIMAL(10,2) DEFAULT NULL,
-  `parking` VARCHAR(50) NOT NULL,
+  `parking` ENUM('aucun', 'souterrain', 'extérieur', 'couvert') NOT NULL,
   `type_id` INT(11) NOT NULL,
   `year_built` INT(11) DEFAULT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `status` ENUM('disponible', 'vendu', 'en_construction', 'en_rénovation') NOT NULL,
   `price` DECIMAL(12,2) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -217,7 +252,7 @@ CREATE TABLE `apartments` (
   `type_id` INT(11) NOT NULL,
   `rent_amount` DECIMAL(10,2) DEFAULT NULL,
   `charges_amount` DECIMAL(10,2) DEFAULT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `status` ENUM('disponible', 'loué', 'vendu', 'en_rénovation') NOT NULL,
   `price` DECIMAL(12,2) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -239,7 +274,7 @@ CREATE TABLE `apartments` (
 --
 CREATE TABLE `images` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `entity_type` VARCHAR(20) NOT NULL,
+  `entity_type` ENUM('building', 'apartment', 'profile') NOT NULL,
   `entity_id` INT(11) NOT NULL,
   `path` VARCHAR(255) NOT NULL,
   `alt_text` VARCHAR(100) DEFAULT NULL,
@@ -343,8 +378,8 @@ CREATE TABLE `payments` (
   `amount` DECIMAL(10,2) NOT NULL,
   `payment_date` DATE NOT NULL,
   `due_date` DATE NOT NULL,
-  `type` VARCHAR(50) NOT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `type` ENUM('loyer', 'charges', 'depot', 'autre') NOT NULL,
+  `status` ENUM('payé', 'en_attente', 'en_retard', 'annulé') NOT NULL,
   `quittance_path` VARCHAR(255) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -364,7 +399,7 @@ CREATE TABLE `notifications` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `agency_id` INT(11) DEFAULT NULL,
-  `type` VARCHAR(20) NOT NULL,
+  `type` ENUM('info', 'alerte', 'rappel', 'action') NOT NULL,
   `title` VARCHAR(100) NOT NULL,
   `message` TEXT NOT NULL,
   `link` VARCHAR(255) DEFAULT NULL,
@@ -384,7 +419,7 @@ CREATE TABLE `audit_log` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) DEFAULT NULL,
   `agency_id` INT(11) DEFAULT NULL,
-  `action` VARCHAR(50) NOT NULL,
+  `action` ENUM('create', 'update', 'delete', 'view') NOT NULL,
   `table_name` VARCHAR(50) NOT NULL,
   `record_id` INT(11) NOT NULL,
   `old_data` JSON DEFAULT NULL,
@@ -498,3 +533,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+```

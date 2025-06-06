@@ -14,7 +14,7 @@ class Role
     private $pdo;
     protected $id;
     protected $name;
-     protected $description;
+    protected $description;
     protected $created_at;
     protected $updated_at;
 
@@ -26,15 +26,32 @@ class Role
     // Getters
     public function getId() { return $this->id; }
     public function getName() { return $this->name; }
-       public function getDescription() { return $this->description; }
+    public function getDescription() { return $this->description; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
 
-    // Setters
-    public function setName($name) { $this->name = $name; }
-   public function setDescription($description) { $this->description = $description; }
-    public function setCreatedAt($created_at) { $this->created_at = $created_at; }
-    public function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
+    // Protected setters
+    protected function setId($id) { $this->id = $id; }
+    protected function setName($name) { $this->name = $name; }
+    protected function setDescription(?string $description) { $this->description = $description; }
+    protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
+    protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
+
+    /**
+     * Crée un objet Role à partir des données de la base
+     * @param array $data
+     * @return Role
+     */
+    protected static function fromData(array $data): Role
+    {
+        $role = new self();
+        $role->setId($data['id']);
+        $role->setName($data['name']);
+        $role->setDescription($data['description'] ?? null);
+        $role->setCreatedAt($data['created_at']);
+        $role->setUpdatedAt($data['updated_at'] ?? null);
+        return $role;
+    }
 
     /**
      * Trouve un rôle par ID
@@ -48,16 +65,7 @@ class Role
             $stmt = $pdo->prepare('SELECT * FROM roles WHERE id = ?');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($data) {
-                $role = new self();
-                $role->id = $data['id'];
-                $role->name = $data['name'];
-                $role->description = $data['description'];
-                $role->created_at = $data['created_at'];
-                $role->updated_at = $data['updated_at'];
-                return $role;
-            }
-            return null;
+            return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la recherche du rôle : " . $e->getMessage());
         }
@@ -74,23 +82,35 @@ class Role
     }
 
     /**
-     * Récupère tous les rôles
-     * @return array
+     * Trouve un rôle par nom
+     * @param string $name
+     * @return Role|null
      */
-    public static function get()
+    public static function findByName($name)
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM roles ORDER BY name');
+            $stmt = $pdo->prepare('SELECT * FROM roles WHERE name = ?');
+            $stmt->execute([$name]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $data ? self::fromData($data) : null;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche du rôle par nom : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère tous les rôles
+     * @return array Liste des rôles
+     */
+    public static function getAll()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->query('SELECT * FROM roles ORDER BY name ASC');
             $roles = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $role = new self();
-                $role->id = $data['id'];
-                $role->name = $data['name'];
-                $role->description = $data['description'];
-                $role->created_at = $data['created_at'];
-                $role->updated_at = $data['updated_at'];
-                $roles[] = $role;
+                $roles[] = self::fromData($data);
             }
             return $roles;
         } catch (PDOException $e) {
@@ -106,20 +126,65 @@ class Role
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM roles ORDER BY name LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM roles ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($data) {
-                $role = new self();
-                $role->id = $data['id'];
-                $role->name = $data['name'];
-                $role->description = $data['description'];
-                $role->created_at = $data['created_at'];
-                $role->updated_at = $data['updated_at'];
-                return $role;
-            }
-            return null;
+            return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la récupération du premier rôle : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les rôles par noms
+     * @param array $names Liste des noms de rôles
+     * @return array Liste des rôles correspondants
+     */
+    public static function getByNames(array $names)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $placeholders = implode(',', array_fill(0, count($names), '?'));
+            $stmt = $pdo->prepare("SELECT * FROM roles WHERE name IN ($placeholders) ORDER BY name ASC");
+            $stmt->execute($names);
+            $roles = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $roles[] = self::fromData($data);
+            }
+            return $roles;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la récupération des rôles par noms : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifie si un rôle existe par ID
+     * @param int $id
+     * @return bool
+     */
+    public static function exists($id)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM roles WHERE id = ?');
+            $stmt->execute([$id]);
+            return (int) $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la vérification de l'existence du rôle : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère le nom d’un rôle par ID
+     * @param int $id
+     * @return string|null
+     */
+    public static function getNameById($id)
+    {
+        try {
+            $role = self::find($id);
+            return $role ? $role->getName() : null;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la récupération du nom du rôle : " . $e->getMessage());
         }
     }
 
@@ -132,11 +197,14 @@ class Role
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('INSERT INTO roles (name, description, created_at, updated_at) VALUES (?, ?, NOW(), NOW())');
+            $stmt = $pdo->prepare('
+                INSERT INTO roles (name, description, created_at, updated_at)
+                VALUES (?, ?, NOW(), NOW())
+            ');
             $stmt->execute([
-    'name' => $data['name'],
-    'description' => $data['description']
-]);
+                $data['name'],
+                $data['description'] ?? null
+            ]);
             $id = $pdo->lastInsertId();
             return self::find($id);
         } catch (PDOException $e) {
@@ -154,8 +222,16 @@ class Role
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('UPDATE roles SET name = ?, updated_at = NOW() WHERE id = ?');
-            $stmt->execute([$data['name'], $id]);
+            $stmt = $pdo->prepare('
+                UPDATE roles 
+                SET name = ?, description = ?, updated_at = NOW() 
+                WHERE id = ?
+            ');
+            $stmt->execute([
+                $data['name'],
+                $data['description'] ?? null,
+                $id
+            ]);
             return self::find($id);
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la mise à jour du rôle : " . $e->getMessage());
@@ -177,30 +253,5 @@ class Role
             throw new PDOException("Erreur lors de la suppression du rôle : " . $e->getMessage());
         }
     }
-
-    /**
-     * Trouve un rôle par nom
-     * @param string $name
-     * @return Role|null
-     */
-    public static function findByName($name)
-    {
-        try {
-            $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM roles WHERE name = ?');
-            $stmt->execute([$name]);
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($data) {
-                $role = new self();
-                $role->id = $data['id'];
-                $role->name = $data['name'];
-                $role->created_at = $data['created_at'];
-                $role->updated_at = $data['updated_at'];
-                return $role;
-            }
-            return null;
-        } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la recherche du rôle par nom : " . $e->getMessage());
-        }
-    }
 }
+?>

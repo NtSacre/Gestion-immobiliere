@@ -63,7 +63,7 @@ class Buyer
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM buyers WHERE id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM buyers WHERE id = ? AND is_deleted IS FALSE');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -90,7 +90,7 @@ class Buyer
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM buyers WHERE deleted_at IS NULL ORDER BY created_at DESC');
+            $stmt = $pdo->query('SELECT * FROM buyers WHERE is_deleted IS FALSE ORDER BY created_at DESC');
             $buyers = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $buyers[] = self::fromData($data);
@@ -109,7 +109,7 @@ class Buyer
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM buyers WHERE deleted_at IS NULL ORDER BY created_at ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM buyers WHERE is_deleted IS FALSE ORDER BY created_at ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -117,30 +117,6 @@ class Buyer
         }
     }
 
-    /**
-     * Crée un nouvel acheteur
-     * @param array $data
-     * @return Buyer
-     */
-    public static function create(array $data)
-    {
-        try {
-            $pdo = Database::getInstance();
-            // Vérifier l’existence de l’utilisateur
-            if (!User::find($data['user_id'])) {
-                throw new PDOException("User ID invalide");
-            }
-            $stmt = $pdo->prepare('
-                INSERT INTO buyers (user_id, created_at, updated_at)
-                VALUES (?, NOW(), NOW())
-            ');
-            $stmt->execute([$data['user_id']]);
-            $id = $pdo->lastInsertId();
-            return self::find($id);
-        } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la création de l’acheteur : " . $e->getMessage());
-        }
-    }
 
     /**
      * Met à jour un acheteur
@@ -199,7 +175,7 @@ class Buyer
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM buyers WHERE user_id = ? AND deleted_at IS NULL');
+            $stmt = $pdo->prepare('SELECT * FROM buyers WHERE user_id = ? AND is_deleted IS FALSE');
             $stmt->execute([$userId]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -215,5 +191,82 @@ class Buyer
     public function user()
     {
         return User::find($this->user_id);
+    }
+    /**
+     * Crée un nouvel acheteur
+     * @param array $data
+     * @return Buyer
+     */
+    public static function create(array $data)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                INSERT INTO buyers (user_id, agent_id, agency_id, created_at, updated_at)
+                VALUES (?, ?, ?, NOW(), NOW())
+            ');
+            $stmt->execute([
+                $data['user_id'],
+                $data['agent_id'] ?? null,
+                $data['agency_id'] ?? null
+            ]);
+            $id = $pdo->lastInsertId();
+            $stmt = $pdo->prepare('SELECT * FROM buyers WHERE id = ?');
+            $stmt->execute([$id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            return self::fromData($data);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la création de l’acheteur : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime un acheteur par user_id (suppression physique)
+     * @param int $userId
+     * @return bool
+     */
+    public static function deleteByUserId($userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('DELETE FROM buyers WHERE user_id = ?');
+            return $stmt->execute([$userId]);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la suppression de l’acheteur : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Effectue une suppression logique d’un acheteur par user_id
+     * @param int $userId
+     * @return bool
+     */
+    public static function softDeleteByUserId($userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('UPDATE buyers SET is_deleted = 1, updated_at = NOW() WHERE user_id = ?');
+            return $stmt->execute([$userId]);
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la suppression logique de l’acheteur : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifie si un acheteur a été créé par un agent spécifique
+     * @param int $agentId
+     * @param int $userId
+     * @return bool
+     */
+    public static function isCreatedByAgent($agentId, $userId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM buyers WHERE user_id = ? AND agent_id = ? AND is_deleted = 0');
+            $stmt->execute([$userId, $agentId]);
+            return (int) $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la vérification de l’agent de l’acheteur : " . $e->getMessage());
+        }
     }
 }
