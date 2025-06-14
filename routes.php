@@ -745,7 +745,24 @@ $routes = [
         'method' => 'GET',
         'name' => 'export',
         'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
-    ]
+    ],
+
+// Ajout des routes pour les baux
+'routes' => [
+    // Routes existantes (à conserver)
+    // ...
+
+    // Routes pour les baux
+    'GET /leases' => ['controller' => 'LeaseController', 'method' => 'index'],
+    'GET /leases/create' => ['controller' => 'LeaseController', 'method' => 'create'],
+    'POST /leases/store' => ['controller' => 'LeaseController', 'method' => 'store'],
+    'GET /leases/show/(\d+)' => ['controller' => 'LeaseController', 'method' => 'show'],
+    'GET /leases/edit/(\d+)' => ['controller' => 'LeaseController', 'method' => 'edit'],
+    'POST /leases/update/(\d+)' => ['controller' => 'LeaseController', 'method' => 'update'],
+    'POST /leases/delete/(\d+)' => ['controller' => 'LeaseController', 'method' => 'delete'],
+]
+
+
 ];
 
 return $routes;

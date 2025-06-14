@@ -1,44 +1,83 @@
-<div class="bg-white p-6 rounded-xl shadow-lg">
-    <h3 class="text-xl font-bold text-construction-black mb-6">Modifier une location</h3>
-    <form action="/agent/leases/update/1" method="POST" class="space-y-6">
+<?php
+$title = 'Modifier le bail';
+?>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-construction-black mb-6">Modifier le bail</h1>
+
+    <!-- Messages flash -->
+    <?php if ($flash = $this->flash->get('error')): ?>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl">
+            <?php echo htmlspecialchars($flash); ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Formulaire de modification -->
+    <form action="/leases/update/<?php echo $lease->getId(); ?>" method="POST" class="bg-white rounded-xl shadow-lg p-6">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label for="tenant" class="block text-sm font-medium text-gray-700">Locataire</label>
-                <select id="tenant" name="tenant" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
-                    <option value="1" selected>Sophie Durand</option>
-                    <option value="2">Pierre Martin</option>
+                <label for="apartment_id" class="block text-sm font-medium text-gray-700">Appartement</label>
+                <select name="apartment_id" id="apartment_id" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Sélectionner un appartement</option>
+                    <?php foreach ($apartments as $apartment): ?>
+                        <option value="<?php echo $apartment->getId(); ?>" <?php echo $apartment->getId() === $lease->getApartmentId() ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($apartment->getNumber()); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div>
-                <label for="apartment" class="block text-sm font-medium text-gray-700">Appartement</label>
-                <select id="apartment" name="apartment" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
-                    <option value="1" selected>3B - Résidence Victor Hugo</option>
-                    <option value="2">5A - Tour Eiffel</option>
+                <label for="tenant_id" class="block text-sm font-medium text-gray-700">Locataire</label>
+                <select name="tenant_id" id="tenant_id" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Sélectionner un locataire</option>
+                    <?php foreach ($tenants as $tenant): ?>
+                        <option value="<?php echo $tenant->getId(); ?>" <?php echo $tenant->getId() === $lease->getTenantId() ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($tenant->user()->getFirstName() . ' ' . $tenant->user()->getLastName()); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div>
                 <label for="start_date" class="block text-sm font-medium text-gray-700">Date de début</label>
-                <input type="date" id="start_date" name="start_date" value="2025-01-01" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
+                <input type="date" name="start_date" id="start_date" value="<?php echo htmlspecialchars($lease->getStartDate()); ?>" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
-                <label for="end_date" class="block text-sm font-medium text-gray-700">Date de fin</label>
-                <input type="date" id="end_date" name="end_date" value="2026-01-01" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
+                <label for="end_date" class="block text-sm font-medium text-gray-700">Date de fin (optionnel)</label>
+                <input type="date" name="end_date" id="end_date" value="<?php echo htmlspecialchars($lease->getEndDate()); ?>" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
-                <label for="rent" class="block text-sm font-medium text-gray-700">Loyer (€)</label>
-                <input type="number" id="rent" name="rent" value="1200" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
+                <label for="rent_amount" class="block text-sm font-medium text-gray-700">Loyer (FCFA)</label>
+                <input type="number" name="rent_amount" id="rent_amount" step="0.01" value="<?php echo htmlspecialchars($lease->getRentAmount()); ?>" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="charges_amount" class="block text-sm font-medium text-gray-700">Charges (FCFA)</label>
+                <input type="number" name="charges_amount" id="charges_amount" step="0.01" value="<?php echo htmlspecialchars($lease->getChargesAmount()); ?>" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="deposit_amount" class="block text-sm font-medium text-gray-700">Dépôt (FCFA)</label>
+                <input type="number" name="deposit_amount" id="deposit_amount" step="0.01" value="<?php echo htmlspecialchars($lease->getDepositAmount()); ?>" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="payment_frequency" class="block text-sm font-medium text-gray-700">Fréquence de paiement</label>
+                <select name="payment_frequency" id="payment_frequency" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="mensuel" <?php echo $lease->getPaymentFrequency() === 'mensuel' ? 'selected' : ''; ?>>Mensuel</option>
+                    <option value="trimestriel" <?php echo $lease->getPaymentFrequency() === 'trimestriel' ? 'selected' : ''; ?>>Trimestriel</option>
+                    <option value="annuel" <?php echo $lease->getPaymentFrequency() === 'annuel' ? 'selected' : ''; ?>>Annuel</option>
+                </select>
             </div>
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700">Statut</label>
-                <select id="status" name="status" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg input-focus" readonly>
-                    <option value="actif" selected>Actif</option>
-                    <option value="termine">Terminé</option>
+                <select name="status" id="status" class="w-full p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="actif" <?php echo $lease->getStatus() === 'actif' ? 'selected' : ''; ?>>Actif</option>
+                    <option value="terminé" <?php echo $lease->getStatus() === 'terminé' ? 'selected' : ''; ?>>Terminé</option>
+                    <option value="annulé" <?php echo $lease->getStatus() === 'annulé' ? 'selected' : ''; ?>>Annulé</option>
                 </select>
             </div>
         </div>
-        <div class="flex justify-end space-x-3">
-            <a href="/agent/leases" class="btn-secondary px-4 py-2 rounded-lg">Annuler</a>
-            <button type="submit" class="btn-primary px-4 py-2 rounded-lg">Mettre à jour</button>
+        <div class="mt-6">
+            <button type="submit" class="btn-primary">Mettre à jour</button>
+            <a href="/leases" class="btn-secondary">Annuler</a>
         </div>
     </form>
 </div>

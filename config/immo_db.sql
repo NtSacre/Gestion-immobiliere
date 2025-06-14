@@ -1,18 +1,18 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- Version: 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le : ven. 06 juin 2025 à 00:41
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- Host: 127.0.0.1
+-- Generated on: Fri, 06 Jun 2025 21:05
+-- Server version: 10.4.32-MariaDB
+-- PHP version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 --
--- Configuration du codage des caractères
+-- Character set configuration
 --
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -20,15 +20,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `immo_db`
+-- Database: `immo_db`
 --
+DROP DATABASE IF EXISTS `immo_db`;
 CREATE DATABASE IF NOT EXISTS `immo_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `immo_db`;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `roles`
+-- Table structure for `roles`
 --
 CREATE TABLE `roles` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -40,7 +41,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `roles`
+-- Dumping data for table `roles`
 --
 INSERT INTO `roles` (`id`, `name`, `description`, `created_at`) VALUES
 (1, 'superadmin', 'Super Administrateur du système', '2025-06-04 20:54:00'),
@@ -53,7 +54,7 @@ INSERT INTO `roles` (`id`, `name`, `description`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `agencies`
+-- Table structure for `agencies`
 --
 CREATE TABLE `agencies` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -70,10 +71,16 @@ CREATE TABLE `agencies` (
   UNIQUE KEY `siret` (`siret`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `agencies`
+--
+INSERT INTO `agencies` (`name`, `address`, `siret`, `phone`, `email`, `created_at`, `is_deleted`) VALUES
+('Agence Principale', '123 Rue Principale, 75001 Paris, France', '12345678900012', '+33 1 23 45 67 89', 'contact@agenceprincipale.fr', CURRENT_TIMESTAMP, 0);
+
 -- --------------------------------------------------------
 
 --
--- Structure de la table `users`
+-- Table structure for `users`
 --
 CREATE TABLE `users` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -95,10 +102,29 @@ CREATE TABLE `users` (
   KEY `agency_id` (`agency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `users`
+--
+INSERT INTO `users` (
+  `username`, `email`, `password`, `role_id`, `agency_id`, 
+  `first_name`, `last_name`, `phone`, `created_at`, `is_deleted`
+) VALUES (
+  'superadmin',
+  'superadmin@immo.fr',
+  '$2y$10$8J6Y7uK5vL9mN3pQ2rT8O.7xZ8W4A9B6C5D4E3F2G1H0I9J8K7L6M', -- Password: Admin123!
+  1,
+  1,
+  'Admin',
+  'Principal',
+  '+33 6 12 34 56 78',
+  CURRENT_TIMESTAMP,
+  0
+);
+
 -- --------------------------------------------------------
 
 --
--- Structure de la table `owners`
+-- Table structure for `owners`
 --
 CREATE TABLE `owners` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -106,13 +132,13 @@ CREATE TABLE `owners` (
   `agent_id` INT(11) DEFAULT NULL,
   `agency_id` INT(11) DEFAULT NULL,
   `siret` VARCHAR(20),
-  `type` VARCHAR(20) NOT NULL,
+  `type` ENUM('particulier', 'professionnel') NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
   `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `siret` (`siret`)
+  UNIQUE KEY `siret` (`siret`),
   KEY `agent_id` (`agent_id`),
   KEY `agency_id` (`agency_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -120,7 +146,7 @@ CREATE TABLE `owners` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `building_types`
+-- Table structure for `building_types`
 --
 CREATE TABLE `building_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -131,7 +157,7 @@ CREATE TABLE `building_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `building_types`
+-- Dumping data for table `building_types`
 --
 INSERT INTO `building_types` (`id`, `name`, `description`) VALUES
 (1, 'Résidentiel', 'Bâtiment à usage d''habitation'),
@@ -140,7 +166,7 @@ INSERT INTO `building_types` (`id`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `buildings`
+-- Table structure for `buildings`
 --
 CREATE TABLE `buildings` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -154,10 +180,10 @@ CREATE TABLE `buildings` (
   `floors` INT(11) NOT NULL,
   `apartment_count` INT(11) NOT NULL,
   `land_area` DECIMAL(10,2) DEFAULT NULL,
-  `parking` VARCHAR(50) NOT NULL,
+  `parking` ENUM('aucun', 'souterrain', 'exterieur', 'couvert') NOT NULL,
   `type_id` INT(11) NOT NULL,
   `year_built` INT(11) DEFAULT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `status` ENUM('disponible', 'vendu', 'en_construction', 'en_renovation') NOT NULL,
   `price` DECIMAL(12,2) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -174,7 +200,7 @@ CREATE TABLE `buildings` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `apartment_types`
+-- Table structure for `apartment_types`
 --
 CREATE TABLE `apartment_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -185,7 +211,7 @@ CREATE TABLE `apartment_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `apartment_types`
+-- Dumping data for table `apartment_types`
 --
 INSERT INTO `apartment_types` (`id`, `name`, `description`) VALUES
 (1, 'Studio', 'Appartement d''une pièce principale'),
@@ -195,7 +221,7 @@ INSERT INTO `apartment_types` (`id`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `apartments`
+-- Table structure for `apartments`
 --
 CREATE TABLE `apartments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -217,7 +243,7 @@ CREATE TABLE `apartments` (
   `type_id` INT(11) NOT NULL,
   `rent_amount` DECIMAL(10,2) DEFAULT NULL,
   `charges_amount` DECIMAL(10,2) DEFAULT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `status` ENUM('disponible', 'louer', 'vendu', 'en_renovation') NOT NULL,
   `price` DECIMAL(12,2) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -235,11 +261,11 @@ CREATE TABLE `apartments` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `images`
+-- Table structure for `images`
 --
 CREATE TABLE `images` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `entity_type` VARCHAR(20) NOT NULL,
+  `entity_type` ENUM('building', 'apartment', 'profile') NOT NULL,
   `entity_id` INT(11) NOT NULL,
   `path` VARCHAR(255) NOT NULL,
   `alt_text` VARCHAR(100) DEFAULT NULL,
@@ -252,7 +278,7 @@ CREATE TABLE `images` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `profile_images`
+-- Table structure for `profile_images`
 --
 CREATE TABLE `profile_images` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -268,7 +294,7 @@ CREATE TABLE `profile_images` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `tenants`
+-- Table structure for `tenants`
 --
 CREATE TABLE `tenants` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -287,7 +313,7 @@ CREATE TABLE `tenants` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `buyers`
+-- Table structure for `buyers`
 --
 CREATE TABLE `buyers` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -306,7 +332,7 @@ CREATE TABLE `buyers` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `leases`
+-- Table structure for `leases`
 --
 CREATE TABLE `leases` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -333,7 +359,7 @@ CREATE TABLE `leases` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `payments`
+-- Table structure for `payments`
 --
 CREATE TABLE `payments` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -343,8 +369,8 @@ CREATE TABLE `payments` (
   `amount` DECIMAL(10,2) NOT NULL,
   `payment_date` DATE NOT NULL,
   `due_date` DATE NOT NULL,
-  `type` VARCHAR(50) NOT NULL,
-  `status` VARCHAR(20) NOT NULL,
+  `type` ENUM('loyer', 'charges', 'depot', 'autre') NOT NULL,
+  `status` ENUM('payer', 'en_attente', 'en_retard', 'annuler') NOT NULL,
   `quittance_path` VARCHAR(255) DEFAULT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT NULL,
@@ -358,13 +384,13 @@ CREATE TABLE `payments` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `notifications`
+-- Table structure for `notifications`
 --
 CREATE TABLE `notifications` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
   `agency_id` INT(11) DEFAULT NULL,
-  `type` VARCHAR(20) NOT NULL,
+  `type` ENUM('info', 'alerte', 'rappel', 'action') NOT NULL,
   `title` VARCHAR(100) NOT NULL,
   `message` TEXT NOT NULL,
   `link` VARCHAR(255) DEFAULT NULL,
@@ -378,13 +404,13 @@ CREATE TABLE `notifications` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `audit_log`
+-- Table structure for `audit_log`
 --
 CREATE TABLE `audit_log` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) DEFAULT NULL,
   `agency_id` INT(11) DEFAULT NULL,
-  `action` VARCHAR(50) NOT NULL,
+  `action` ENUM('create', 'update', 'delete', 'view') NOT NULL,
   `table_name` VARCHAR(50) NOT NULL,
   `record_id` INT(11) NOT NULL,
   `old_data` JSON DEFAULT NULL,
@@ -400,18 +426,18 @@ CREATE TABLE `audit_log` (
 -- --------------------------------------------------------
 
 --
--- Contraintes pour les tables
+-- Constraints for tables
 --
 
 --
--- Contraintes pour la table `users`
+-- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE RESTRICT,
   ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `owners`
+-- Constraints for table `owners`
 --
 ALTER TABLE `owners`
   ADD CONSTRAINT `owners_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
@@ -419,7 +445,7 @@ ALTER TABLE `owners`
   ADD CONSTRAINT `owners_ibfk_3` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `buildings`
+-- Constraints for table `buildings`
 --
 ALTER TABLE `buildings`
   ADD CONSTRAINT `buildings_ibfk_1` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE RESTRICT,
@@ -428,7 +454,7 @@ ALTER TABLE `buildings`
   ADD CONSTRAINT `buildings_ibfk_4` FOREIGN KEY (`type_id`) REFERENCES `building_types` (`id`) ON DELETE RESTRICT;
 
 --
--- Contraintes pour la table `apartments`
+-- Constraints for table `apartments`
 --
 ALTER TABLE `apartments`
   ADD CONSTRAINT `apartments_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`) ON DELETE RESTRICT,
@@ -438,13 +464,13 @@ ALTER TABLE `apartments`
   ADD CONSTRAINT `apartments_ibfk_5` FOREIGN KEY (`type_id`) REFERENCES `apartment_types` (`id`) ON DELETE RESTRICT;
 
 --
--- Contraintes pour la table `profile_images`
+-- Constraints for table `profile_images`
 --
 ALTER TABLE `profile_images`
   ADD CONSTRAINT `profile_images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT;
 
 --
--- Contraintes pour la table `tenants`
+-- Constraints for table `tenants`
 --
 ALTER TABLE `tenants`
   ADD CONSTRAINT `tenants_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
@@ -452,7 +478,7 @@ ALTER TABLE `tenants`
   ADD CONSTRAINT `tenants_ibfk_3` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `buyers`
+-- Constraints for table `buyers`
 --
 ALTER TABLE `buyers`
   ADD CONSTRAINT `buyers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT,
@@ -460,7 +486,7 @@ ALTER TABLE `buyers`
   ADD CONSTRAINT `buyers_ibfk_3` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `leases`
+-- Constraints for table `leases`
 --
 ALTER TABLE `leases`
   ADD CONSTRAINT `leases_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`) ON DELETE RESTRICT,
@@ -469,7 +495,7 @@ ALTER TABLE `leases`
   ADD CONSTRAINT `leases_ibfk_4` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `payments`
+-- Constraints for table `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`lease_id`) REFERENCES `leases` (`id`) ON DELETE RESTRICT,
@@ -477,14 +503,14 @@ ALTER TABLE `payments`
   ADD CONSTRAINT `payments_ibfk_3` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `notifications`
+-- Constraints for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`agency_id`) REFERENCES `agencies` (`id`) ON DELETE SET NULL;
 
 --
--- Contraintes pour la table `audit_log`
+-- Constraints for table `audit_log`
 --
 ALTER TABLE `audit_log`
   ADD CONSTRAINT `audit_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
@@ -493,7 +519,7 @@ ALTER TABLE `audit_log`
 COMMIT;
 
 --
--- Restauration des paramètres de codage
+-- Restore character set parameters
 --
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
