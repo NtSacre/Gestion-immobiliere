@@ -3,58 +3,42 @@ namespace App\Utils;
 
 class Helpers
 {
-    public function __construct()
+    private $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function generateCsrfToken(string $action): string
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-    }
-
-    public function sanitize(string $data): string
-    {
-        return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
-    }
-
-    public function csrf_token(string $form_id = 'default'): string
-    {
+        if (!isset($_SESSION['csrf_tokens'])) {
+            $_SESSION['csrf_tokens'] = [];
+        }
         $token = bin2hex(random_bytes(32));
-        $_SESSION['csrf_tokens'][$form_id] = $token;
-        $logger = new Logger();
-        $logger->error("CSRF Token généré pour $form_id: $token");
+        $_SESSION['csrf_tokens'][$action] = $token;
         return $token;
     }
 
-    public function csrf_verify(string $token, string $form_id = 'default'): bool
+    public function verifyCsrfToken(string $action, string $token): bool
     {
-        $session_token = $_SESSION['csrf_tokens'][$form_id] ?? null;
-        $logger = new Logger();
-        $logger->error("CSRF Verify - Form: '$form_id', Token envoyé: '$token', Token session: '$session_token'");
-        if (isset($session_token) && hash_equals($session_token, $token)) {
-            unset($_SESSION['csrf_tokens'][$form_id]); // Supprimer après vérification
-            return true;
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-        return false;
+        if (!isset($_SESSION['csrf_tokens'][$action]) || !hash_equals($_SESSION['csrf_tokens'][$action], $token)) {
+            return false;
+        }
+        // Optionnel : Supprimer le jeton après vérification pour éviter réutilisation
+        unset($_SESSION['csrf_tokens'][$action]);
+        return true;
     }
 
-    public function redirect(string $url): void
+    public function redirect($url)
     {
         header("Location: $url");
         exit;
     }
-
-    public function url(string $name, array $params = []): string
-    {
-        $routes = require dirname(__DIR__, 2) . '/routes.php';
-        foreach ($routes as $pattern => $route) {
-            if ($route['name'] === $name) {
-                $url = $pattern;
-                foreach ($params as $key => $value) {
-                    $url = str_replace(":$key", $value, $url);
-                }
-                return '/' . ltrim($url, '/');
-            }
-        }
-        return '/';
-    }
 }
-?>

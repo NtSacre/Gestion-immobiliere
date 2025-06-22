@@ -22,7 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Instanciation des utilitaires
 $auth = new Auth();
 $logger = new Logger();
-$helpers = new Helpers();
+$helpers = new Helpers($logger); // Injection de Logger
 $flash = new Flash();
 
 // Journalisation de la requête
@@ -32,20 +32,20 @@ $logger->info("Démarrage de la requête pour URI: {uri}", ['uri' => $_SERVER['R
 $request_uri = $_SERVER['REQUEST_URI'];
 $script_name = $_SERVER['SCRIPT_NAME'];
 
-// Nettoyer l'URI
+// Nettoyer l'URI de manière robuste
 $base_path = dirname($script_name);
 if ($base_path === '/') {
     $base_path = '';
 }
-
 $uri = parse_url($request_uri, PHP_URL_PATH);
 $uri = substr($uri, strlen($base_path));
 $uri = trim($uri, '/');
 
-// Route par défaut si aucune
-if ($uri === '') {
-    $uri = '';
+// Supprimer les paramètres GET et fragments
+if (strpos($uri, '?') !== false) {
+    $uri = strtok($uri, '?');
 }
+$logger->info("URI nettoyée: '$uri' à partir de REQUEST_URI: '$request_uri'");
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -69,27 +69,29 @@ try {
             $pattern = str_replace(['/', '-'], ['\/', '\-'], $route_pattern);
             
             // Remplacer les paramètres :param par des groupes de capture
-           $pattern = preg_replace('/:([a-zA-Z_][a-zA-Z0-9_]*)/', '([^\/]+)', $pattern);
+            $pattern = preg_replace('/:([a-zA-Z_][a-zA-Z0-9_]*)/', '([^\/]+)', $pattern);
 
-            
             // Ancrer le pattern
             $pattern = '/^' . $pattern . '$/';
             
             try {
-                if (preg_match($pattern, $uri, $matches) && $route['method'] === $method) {
-                    $matched_route = $route;
-                    array_shift($matches); // Supprimer la correspondance complète
-                    $params = $matches; // Capturer les paramètres
-                    $logger->info("Route avec paramètres trouvée: '$route_pattern' pour URI: '$uri'", [
-                        'pattern' => $pattern,
-                        'params' => $params
-                    ]);
-                    break;
+                if (preg_match($pattern, $uri, $matches)) {
+                    $logger->info("Tentative de match avec pattern: '$pattern', URI: '$uri', matches: " . json_encode($matches));
+                    if ($route['method'] === $method) {
+                        $matched_route = $route;
+                        array_shift($matches); // Supprimer la correspondance complète
+                        $params = $matches; // Capturer les paramètres
+                        $logger->info("Route avec paramètres trouvée: '$route_pattern' pour URI: '$uri'", [
+                            'params' => $params
+                        ]);
+                        break;
+                    }
                 }
             } catch (Exception $e) {
                 $logger->error("Erreur preg_match pour la route: '$route_pattern'", [
                     'pattern' => $pattern,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
+                    'uri' => $uri
                 ]);
                 continue;
             }
@@ -115,12 +117,14 @@ try {
     // Middleware : Vérifier CSRF pour les requêtes POST
     if ($method === 'POST') {
         $token = $_POST['csrf_token'] ?? '';
-        // Utiliser le nom de la route comme form_id
-        $form_id = $matched_route['name'];
-        if (!$helpers->csrf_verify($token, $form_id)) {
+        $form_id = ($uri === 'buildings/store') ? 'buildings.store' : (($uri === 'buildings/update') ? 'buildings.update' : 'default');
+        $expected_token = isset($_SESSION['csrf_tokens'][$form_id]) ? $_SESSION['csrf_tokens'][$form_id] : 'non défini';
+        $logger->info("Vérification CSRF pour URI: '$uri', form_id: '$form_id', token reçu: '$token', token attendu: '$expected_token', session CSRF: " . json_encode($_SESSION['csrf_tokens'] ?? 'non défini'));
+        if (!$helpers->verifyCsrfToken($form_id, $token)) {
             $flash->flash('error', 'Jeton CSRF invalide.');
-            $logger->error("Jeton CSRF invalide pour '$uri' (form_id: $form_id)", ['uri' => $uri, 'token' => $token]);
-            $helpers->redirect('/403');
+            $logger->error("Jeton CSRF invalide pour '$uri' (form_id: $form_id)", ['uri' => $uri, 'token' => $token, 'expected' => $expected_token, 'session' => $_SESSION['csrf_tokens'] ?? 'non défini']);
+            $redirect_uri = ($uri === 'buildings/store') ? '/buildings/create' : '/buildings/edit/' . ($params[0] ?? '');
+            $helpers->redirect($redirect_uri);
         }
     }
 
@@ -183,4 +187,3 @@ try {
         require_once dirname(__DIR__) . '/src/Views/layouts/public_layout.php';
     }
 }
-?>

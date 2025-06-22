@@ -5,6 +5,7 @@ use App\Utils\Flash;
 use App\Utils\Auth;
 use App\Models\Lease;
 use App\Utils\Helpers;
+use Exception;
 
 // Logique centralisée en haut
 error_log("Rendu du layout admin pour rôle: " . ($_SESSION['role'] ?? 'guest'));
@@ -64,26 +65,39 @@ if ($isAuthenticated) {
 }
 
 // CSRF pour le formulaire de suppression
+// Réutiliser l'instance de Helpers passée depuis le contrôleur
+if (!isset($helpers) && isset($this) && isset($this->helpers)) {
+    $helpers = $this->helpers; // Tenter de récupérer depuis le contrôleur si disponible
+}
 
-$csrf = new Helpers();
+if (!isset($helpers)) {
+    // Si $helpers est toujours absent, utiliser une instance avec Logger par défaut (déprécié mais temporaire)
+    require_once __DIR__ . '/../../../vendor/autoload.php';
+    $logger = new \App\Utils\Logger();
+    $helpers = new \App\Utils\Helpers($logger);
+    echo "<!-- Warning: Helpers instancié manuellement dans le layout -->";
+}
+
+$csrf = $helpers;
 // On prépare un tableau des routes utilisées
-$csrfRoutes = ['users.delete', 
-                'buildings.delete', 
-                'tenants.delete', 
-                'owners.delete', 
-                'apartements.delete',
-                'roles.delete',
-                'agencies.delete',
-                'apartment-types.delete',
-                'building-types.delete',
-                'payments.delete',
-                'leases.delete'
-            ];
+$csrfRoutes = [
+    'users.delete', 
+    'buildings.delete', 
+    'tenants.delete', 
+    'owners.delete', 
+    'apartements.delete',
+    'roles.delete',
+    'agencies.delete',
+    'apartment-types.delete',
+    'building-types.delete',
+    'payments.delete',
+    'leases.delete'
+];
 
 // Génère un tableau associatif route_name => token
 $csrfTokens = [];
 foreach ($csrfRoutes as $routeName) {
-    $csrfTokens[$routeName] = $csrf->csrf_token($routeName);
+    $csrfTokens[$routeName] = $csrf->generateCsrfToken($routeName); // Correction ici
 }
 
 ?>
@@ -98,7 +112,7 @@ foreach ($csrfRoutes as $routeName) {
 
     <link rel="icon" href="/assets/images/favicon.png" type="image/png">
     <!-- Ajout des icônes Font Awesome si pas déjà incluses -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -409,29 +423,29 @@ foreach ($csrfRoutes as $routeName) {
         }
 
         // Modal Functions
-            function openDeleteModal(entityRoute, id, routeName, entityName) {
-                const modal = document.getElementById('confirmDeleteModal');
-                const form = document.getElementById('deleteEntityForm');
-                const csrfInput = form.querySelector('input[name="csrf_token"]');
-                const entityNameSpan = document.getElementById('entityName');
-                // Définir l’action complète
-                form.action = entityRoute + id;
+        function openDeleteModal(entityRoute, id, routeName, entityName) {
+            const modal = document.getElementById('confirmDeleteModal');
+            const form = document.getElementById('deleteEntityForm');
+            const csrfInput = form.querySelector('input[name="csrf_token"]');
+            const entityNameSpan = document.getElementById('entityName');
+            // Définir l’action complète
+            form.action = entityRoute + id;
 
-                // Mettre à jour le token
-                if (csrfTokens[routeName]) {
-                    csrfInput.value = csrfTokens[routeName];
-                } else {
-                    console.error("CSRF token non trouvé pour la route :", routeName);
-                }
-
-                 // Affiche le nom de l'entité à supprimer
-                entityNameSpan.textContent = entityName;
-
-                // Affichage du modal
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.classList.add('overflow-hidden');
+            // Mettre à jour le token
+            if (csrfTokens[routeName]) {
+                csrfInput.value = csrfTokens[routeName];
+            } else {
+                console.error("CSRF token non trouvé pour la route :", routeName);
             }
+
+            // Affiche le nom de l'entité à supprimer
+            entityNameSpan.textContent = entityName;
+
+            // Affichage du modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
 
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);

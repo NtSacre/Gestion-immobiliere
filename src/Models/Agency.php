@@ -13,15 +13,15 @@ use PDOException;
 class Agency
 {
     private $pdo;
-    protected $id;
-    protected $name;
-    protected $siret;
-    protected $address;
-    protected $phone;
-    protected $email;
-    protected $created_at;
-    protected $updated_at;
-    protected $deleted_at;
+    protected $id = null;
+    protected $name = null;
+    protected $siret = null;
+    protected $address = null;
+    protected $phone = null;
+    protected $email = null;
+    protected $created_at = null;
+    protected $updated_at = null;
+    protected $deleted_at = null;
 
     public function __construct()
     {
@@ -53,20 +53,33 @@ class Agency
     /**
      * Crée un objet Agency à partir des données de la base
      * @param array $data
-     * @return Agency
+     * @return Agency|null
      */
-    protected static function fromData(array $data): Agency
+    protected static function fromData(array $data): ?Agency
     {
+        // Vérification initiale des champs essentiels
+        if (!isset($data['id']) || $data['id'] === null || !isset($data['name']) || $data['name'] === null) {
+            error_log("Ligne rejetée dans Agency::fromData() car invalide (pré-initialisation) : " . json_encode($data));
+            return null;
+        }
+
         $agency = new self();
         $agency->setId($data['id']);
         $agency->setName($data['name']);
-        $agency->setSiret($data['siret']);
-        $agency->setAddress($data['address']);
+        $agency->setSiret($data['siret'] ?? null);
+        $agency->setAddress($data['address'] ?? null);
         $agency->setPhone($data['phone'] ?? null);
-        $agency->setEmail($data['email']);
-        $agency->setCreatedAt($data['created_at']);
+        $agency->setEmail($data['email'] ?? null);
+        $agency->setCreatedAt($data['created_at'] ?? null);
         $agency->setUpdatedAt($data['updated_at'] ?? null);
         $agency->setDeletedAt($data['deleted_at'] ?? null);
+
+        // Vérification finale après initialisation
+        if ($agency->getId() === null || $agency->getName() === null) {
+            error_log("Objet Agency mal initialisé dans Agency::fromData() : " . json_encode($data));
+            return null;
+        }
+
         return $agency;
     }
 
@@ -84,7 +97,8 @@ class Agency
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la recherche de l’agence : " . $e->getMessage());
+            error_log("Erreur dans Agency::find() : " . $e->getMessage());
+            return null;
         }
     }
 
@@ -106,15 +120,30 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE ORDER BY name ASC');
+            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE AND id IS NOT NULL AND name IS NOT NULL ORDER BY name ASC');
             $agencies = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $agencies[] = self::fromData($data);
+                $agency = self::fromData($data);
+                if ($agency !== null) {
+                    $agencies[] = $agency;
+                } else {
+                    error_log("Ligne ignorée dans Agency::get() après fromData : " . json_encode($data));
+                }
             }
             return $agencies;
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la récupération des agences : " . $e->getMessage());
+            error_log("Erreur dans Agency::get() : " . $e->getMessage());
+            return [];
         }
+    }
+
+    /**
+     * Récupère toutes les agences (alias de get)
+     * @return array
+     */
+    public static function all()
+    {
+        return self::get();
     }
 
     /**
@@ -125,11 +154,12 @@ class Agency
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM agencies WHERE is_deleted IS FALSE AND id IS NOT NULL AND name IS NOT NULL ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la récupération de la première agence : " . $e->getMessage());
+            error_log("Erreur dans Agency::first() : " . $e->getMessage());
+            return null;
         }
     }
 
@@ -156,7 +186,8 @@ class Agency
             $id = $pdo->lastInsertId();
             return self::find($id);
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la création de l’agence : " . $e->getMessage());
+            error_log("Erreur dans Agency::create() : " . $e->getMessage());
+            return null;
         }
     }
 
@@ -189,7 +220,8 @@ class Agency
             ]);
             return self::find($id);
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la mise à jour de l’agence : " . $e->getMessage());
+            error_log("Erreur dans Agency::update() : " . $e->getMessage());
+            return null;
         }
     }
 
@@ -205,7 +237,8 @@ class Agency
             $stmt = $pdo->prepare('UPDATE agencies SET deleted_at = NOW() WHERE id = ?');
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la suppression de l’agence : " . $e->getMessage());
+            error_log("Erreur dans Agency::delete() : " . $e->getMessage());
+            return false;
         }
     }
 
@@ -223,7 +256,8 @@ class Agency
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la recherche de l’agence par email : " . $e->getMessage());
+            error_log("Erreur dans Agency::findByEmail() : " . $e->getMessage());
+            return null;
         }
     }
 

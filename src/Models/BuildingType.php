@@ -106,6 +106,15 @@ class BuildingType
     }
 
     /**
+     * Récupère tous les types de bâtiments (alias de get)
+     * @return array
+     */
+    public static function all()
+    {
+        return self::get();
+    }
+
+    /**
      * Récupère le premier type de bâtiment (par nom)
      * @return BuildingType|null
      */
