@@ -16,7 +16,7 @@ class Owner
     protected $id;
     protected $user_id;
     protected $type;
-    protected $name;
+   
     protected $siret;
     protected $created_at;
     protected $updated_at;
@@ -100,7 +100,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY name');
+            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY id');
             $owners = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $owners[] = self::fromData($data);
@@ -119,7 +119,7 @@ class Owner
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM owners WHERE is_deleted IS FALSE ORDER BY id ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {

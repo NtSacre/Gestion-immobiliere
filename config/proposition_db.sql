@@ -189,7 +189,7 @@ CREATE TABLE `buildings` (
   `floors` INT(11) NOT NULL,
   `apartment_count` INT(11) NOT NULL,
   `land_area` DECIMAL(10,2) DEFAULT NULL,
-  `parking` ENUM('aucun', 'souterrain', 'extérieur', 'couvert') NOT NULL,
+  `parking` ENUM('aucun', 'souterrain', 'exterieur', 'couvert') NOT NULL,
   `type_id` INT(11) NOT NULL,
   `year_built` INT(11) DEFAULT NULL,
   `status` ENUM('disponible', 'vendu', 'en_construction', 'en_rénovation') NOT NULL,

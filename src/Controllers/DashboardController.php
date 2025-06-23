@@ -240,22 +240,22 @@ class DashboardController
         return [
             'primary' => [
                 'revenus' => [
-                    'value' => Lease::calculateRevenueByOwner($owner['id']) . ' FCFA', // Méthode manquante
+                    'value' => Lease::calculateRevenueByOwner($owner->getId()) . ' FCFA', // Méthode manquante
                     'label' => 'Revenus locatifs',
                     'emoji' => '💸'
                 ],
                 'appartements_loues' => [
-                    'value' => Apartment::countRentedByOwner($owner['id']), // Méthode manquante
+                    'value' => Apartment::countRentedByOwner($owner->getId()), // Méthode manquante
                     'label' => 'Appartements loués',
                     'emoji' => '🏡'
                 ],
                 'appartements_disponibles' => [
-                    'value' => Apartment::countAvailableByOwner($owner['id']), // Méthode manquante
+                    'value' => Apartment::countAvailableByOwner($owner->getId()), // Méthode manquante
                     'label' => 'Appartements disponibles',
                     'emoji' => '🏡'
                 ],
                 'nouveaux_locataires' => [
-                    'value' => Tenant::countNewByOwnerThisMonth($owner['id']), // Méthode manquante
+                    'value' => Tenant::countNewByOwnerThisMonth($owner->getId()), // Méthode manquante
                     'label' => 'Nouveaux locataires ce mois',
                     'emoji' => '👥'
                 ]
