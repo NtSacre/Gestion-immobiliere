@@ -63,7 +63,7 @@ class User
     }
     public function getPhone()
     {
-        return (int)$this->phone;
+        return $this->phone;
     }
     public function getCreatedAt()
     {
@@ -147,7 +147,7 @@ class User
         $user->setPhone($data['phone'] ?? null);
         $user->setCreatedAt($data['created_at']);
         $user->setUpdatedAt($data['updated_at'] ?? null);
-        $user->setIsDeleted($data['is_deleted'] ?? null);
+        $user->setIsDeleted($data['is_deleted'] ?? 0);
         return $user;
     }
 
@@ -178,16 +178,17 @@ class User
     {
         return self::find($id);
     }
+    
 
     /**
      * Récupère tous les utilisateurs
-     * @return array Array
+     * @return array
      */
     public static function get()
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY created_at DESC');
+            $stmt = $pdo->query('SELECT * FROM users WHERE is_deleted = 0 ORDER BY created_at DESC');
             $users = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $users[] = self::fromData($data);
@@ -358,14 +359,16 @@ class User
         return null;
     }
 
+
     /**
      * Récupère le rôle de l’utilisateur
      * @return Role|null
      */
-    public  function role()
+    public function role()
     {
         return Role::find($this->role_id);
     }
+
 
     /**
      * Trouve les utilisateurs par agency_id
@@ -435,7 +438,6 @@ class User
 
     /**
      * Compte le nombre d'agents pour une agence spécifique.
-     *
      * @param int $agency_id ID de l'agence
      * @return int Nombre d'agents
      */
@@ -447,11 +449,11 @@ class User
                 SELECT COUNT(*)
                 FROM users
                 WHERE role_id = (SELECT id FROM roles WHERE name = 'agent') AND agency_id = ?
+                AND is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agency_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des agents pour une agence spécifique : " . $e->getMessage());
         }
@@ -679,7 +681,6 @@ class User
                 $query .= " AND r.name IN ($placeholders)";
                 $params = array_merge($params, $roles);
             }
-
             $stmt = $pdo->prepare($query);
             $stmt->execute($params);
             return (int) $stmt->fetchColumn();
@@ -701,12 +702,10 @@ class User
             $pdo = Database::getInstance();
             $query = "SELECT COUNT(*) FROM users WHERE email = ? AND is_deleted = 0";
             $params = [$email];
-
             if ($excludeId !== null) {
                 $query .= " AND id != ?";
                 $params[] = $excludeId;
             }
-
             $stmt = $pdo->prepare($query);
             $stmt->execute($params);
             return (int) $stmt->fetchColumn() > 0;
