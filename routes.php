@@ -284,6 +284,13 @@ $routes = [
         'name' => 'payments.quittance',
         'allowed_roles' => ['superadmin', 'admin', 'agent']
     ],
+    'leases/downloadPDF/:id' => [
+        'controller' => 'App\Controllers\LeaseController',
+        'action' => 'downloadPDF',
+        'method' => 'GET',
+        'name' => 'leases.downloadPDF',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
     'clients' => [
         'controller' => 'App\Controllers\ClientController',
         'action' => 'index',

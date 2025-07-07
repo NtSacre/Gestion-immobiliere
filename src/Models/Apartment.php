@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Config\Database;
+use App\Utils\Logger;
 use PDO;
 use PDOException;
 
@@ -16,6 +17,8 @@ class Apartment
     protected $id;
     protected $building_id;
     protected $owner_id;
+    protected $agency_id;
+    protected $agent_id;
     protected $number;
     protected $floor;
     protected $area;
@@ -34,17 +37,23 @@ class Apartment
     protected $price;
     protected $created_at;
     protected $updated_at;
-    protected $deleted_at;
+    protected $is_deleted;
+    protected $canManage;
+     protected $logger;
+
 
     public function __construct()
     {
         $this->pdo = Database::getInstance();
+        $this->logger = new Logger();
     }
 
     // Getters
     public function getId() { return $this->id; }
     public function getBuildingId() { return $this->building_id; }
     public function getOwnerId() { return $this->owner_id; }
+    public function getAgencyId() { return $this->agency_id; }
+    public function getAgentId() { return $this->agent_id; }
     public function getNumber() { return $this->number; }
     public function getFloor() { return $this->floor; }
     public function getArea() { return $this->area; }
@@ -63,12 +72,15 @@ class Apartment
     public function getPrice() { return $this->price; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
-    public function getDeletedAt() { return $this->deleted_at; }
+    public function getIsDeletedAt() { return $this->is_deleted; }
+    public function getCanManage() { return $this->canManage; }
 
-    // Protected setters
+    // Setters
     protected function setId($id) { $this->id = $id; }
     protected function setBuildingId($building_id) { $this->building_id = $building_id; }
     protected function setOwnerId($owner_id) { $this->owner_id = $owner_id; }
+    protected function setAgencyId($agency_id) { $this->agency_id = $agency_id; }
+    protected function setAgentId($agent_id) { $this->agent_id = $agent_id; }
     protected function setNumber($number) { $this->number = $number; }
     protected function setFloor($floor) { $this->floor = $floor; }
     protected function setArea($area) { $this->area = $area; }
@@ -87,7 +99,8 @@ class Apartment
     protected function setPrice($price) { $this->price = $price; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
     protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
-    protected function setDeletedAt($deleted_at) { $this->deleted_at = $deleted_at; }
+    protected function setIsDeletedAt($is_deleted) { $this->is_deleted = $is_deleted; }
+    public function setCanManage($canManage) { $this->canManage = $canManage; }
 
     /**
      * Crée un objet Apartment à partir des données de la base
@@ -100,6 +113,8 @@ class Apartment
         $apartment->setId($data['id']);
         $apartment->setBuildingId($data['building_id']);
         $apartment->setOwnerId($data['owner_id']);
+        $apartment->setAgencyId($data['agency_id'] ?? null);
+        $apartment->setAgentId($data['agent_id'] ?? null);
         $apartment->setNumber($data['number']);
         $apartment->setFloor($data['floor']);
         $apartment->setArea($data['area']);
@@ -118,7 +133,8 @@ class Apartment
         $apartment->setPrice($data['price'] ?? null);
         $apartment->setCreatedAt($data['created_at']);
         $apartment->setUpdatedAt($data['updated_at'] ?? null);
-        $apartment->setDeletedAt($data['deleted_at'] ?? null);
+        $apartment->setIsDeletedAt($data['is_deleted'] ?? null);
+        $apartment->setCanManage($data['canManage'] ?? false);
         return $apartment;
     }
 
@@ -131,7 +147,7 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE id = ? AND is_deleted = 0');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -151,14 +167,40 @@ class Apartment
     }
 
     /**
-     * Récupère tous les appartements
+     * Récupère tous les appartements avec recherche, pagination et filtres
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
      * @return array
      */
-    public static function get()
+    public static function getAll($search = '', $limit = 10, $offset = 0, $statuses = [])
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM apartments WHERE is_deleted IS FALSE ORDER BY number');
+            $query = 'SELECT a.* FROM apartments a JOIN buildings b ON a.building_id = b.id WHERE a.is_deleted = 0';
+            $params = [];
+
+            if ($search) {
+                $query .= ' AND (a.number LIKE ? OR b.name LIKE ? OR b.city LIKE ?)';
+                $searchParam = "%$search%";
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND a.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= ' ORDER BY a.number ASC LIMIT ? OFFSET ?';
+            $params[] = $limit;
+            $params[] = $offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
             $apartments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $apartments[] = self::fromData($data);
@@ -170,6 +212,143 @@ class Apartment
     }
 
     /**
+     * Compte tous les appartements avec recherche et filtres
+     * @param string $search
+     * @param array $statuses
+     * @return int
+     */
+    public static function countAll($search = '', $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = 'SELECT COUNT(*) FROM apartments a JOIN buildings b ON a.building_id = b.id WHERE a.is_deleted = 0';
+            $params = [];
+
+            if ($search) {
+                $query .= ' AND (a.number LIKE ? OR b.name LIKE ? OR b.city LIKE ?)';
+                $searchParam = "%$search%";
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND a.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            return (int) $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des appartements : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les appartements par ID d’agence
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
+     * @return array
+     */
+    public static function findByAgencyId($agencyId, $search = '', $limit = 10, $offset = 0, $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = 'SELECT a.* FROM apartments a JOIN buildings b ON a.building_id = b.id WHERE a.is_deleted = 0 AND b.agency_id = ?';
+            $params = [$agencyId];
+
+            if ($search) {
+                $query .= ' AND (a.number LIKE ? OR b.name LIKE ? OR b.city LIKE ?)';
+                $searchParam = "%$search%";
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND a.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= ' ORDER BY a.number ASC LIMIT ? OFFSET ?';
+            $params[] = $limit;
+            $params[] = $offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $apartments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $apartments[] = self::fromData($data);
+            }
+            return $apartments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des appartements par agence : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les appartements par ID d’agent et d’agence
+     * @param int $agentId
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
+     * @return array
+     */
+    public static function findByAgentId($agentId, $agencyId, $search = '', $limit = 10, $offset = 0, $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = 'SELECT a.* FROM apartments a JOIN buildings b ON a.building_id = b.id WHERE a.is_deleted = 0 AND a.agent_id = ? AND b.agency_id = ?';
+            $params = [$agentId, $agencyId];
+
+            if ($search) {
+                $query .= ' AND (a.number LIKE ? OR b.name LIKE ? OR b.city LIKE ?)';
+                $searchParam = "%$search%";
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+                $params[] = $searchParam;
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND a.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= ' ORDER BY a.number ASC LIMIT ? OFFSET ?';
+            $params[] = $limit;
+            $params[] = $offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $apartments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $apartments[] = self::fromData($data);
+            }
+            return $apartments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des appartements par agent : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère tous les appartements
+     * @return array
+     */
+    public static function get()
+    {
+        return self::getAll();
+    }
+
+    /**
      * Récupère le premier appartement (par numéro)
      * @return Apartment|null
      */
@@ -177,7 +356,7 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM apartments WHERE is_deleted IS FALSE ORDER BY number ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM apartments WHERE is_deleted = 0 ORDER BY number ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -190,51 +369,88 @@ class Apartment
      * @param array $data
      * @return Apartment
      */
-    public static function create(array $data)
-    {
-        try {
-            $pdo = Database::getInstance();
-            // Vérifier les dépendances
-            if (!Building::find($data['building_id'])) {
-                throw new PDOException("Building ID invalide");
-            }
-            if (!Owner::find($data['owner_id'])) {
-                throw new PDOException("Owner ID invalide");
-            }
-            // Note : apartment_types non implémenté, à vérifier
-            $stmt = $pdo->prepare('
-                INSERT INTO apartments (
-                    building_id, owner_id, number, floor, area, rooms, bedrooms, bathrooms, toilets,
-                    living_rooms, kitchens, has_balcony, amenities, type_id, rent_amount, charges_amount,
-                    status, price, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-            ');
-            $stmt->execute([
-                $data['building_id'],
-                $data['owner_id'],
-                $data['number'],
-                $data['floor'],
-                $data['area'],
-                $data['rooms'],
-                $data['bedrooms'],
-                $data['bathrooms'],
-                $data['toilets'],
-                $data['living_rooms'],
-                $data['kitchens'],
-                $data['has_balcony'],
-                $data['amenities'] ? json_encode($data['amenities']) : null,
-                $data['type_id'],
-                $data['rent_amount'] ?? null,
-                $data['charges_amount'] ?? null,
-                $data['status'],
-                $data['price'] ?? null
-            ]);
-            $id = $pdo->lastInsertId();
-            return self::find($id);
-        } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la création de l’appartement : " . $e->getMessage());
+public static function create(array $data)
+{
+    try {
+        $pdo = Database::getInstance();
+        // Vérifications des dépendances
+        if (!Building::find($data['building_id'])) {
+            throw new PDOException("Building ID invalide : {$data['building_id']}");
         }
+        if (!Owner::find($data['owner_id'])) {
+            throw new PDOException("Owner ID invalide : {$data['owner_id']}");
+        }
+        if (!empty($data['agency_id']) && !Agency::find($data['agency_id'])) {
+            throw new PDOException("Agency ID invalide : {$data['agency_id']}");
+        }
+        if (!empty($data['agent_id']) && !User::find($data['agent_id'])) {
+            throw new PDOException("Agent ID invalide : {$data['agent_id']}");
+        }
+        if (!ApartmentType::find($data['type_id'])) {
+            throw new PDOException("ApartmentType ID invalide : {$data['type_id']}");
+        }
+
+        // Journaliser les données pour débogage
+        $logger = new Logger();
+        $logger->info("Tentative d’insertion d’un appartement avec les données : ", $data);
+
+        $stmt = $pdo->prepare('
+            INSERT INTO apartments (
+                building_id, owner_id, agency_id, agent_id, number, floor, area, rooms, bedrooms, bathrooms, toilets,
+                living_rooms, kitchens, has_balcony, amenities, type_id, rent_amount, charges_amount, status, price, is_deleted, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())
+        ');
+        $stmt->execute([
+            $data['building_id'],
+            $data['owner_id'],
+            $data['agency_id'] ?? null,
+            $data['agent_id'] ?? null,
+            $data['number'],
+            $data['floor'],
+            $data['area'],
+            $data['rooms'],
+            $data['bedrooms'],
+            $data['bathrooms'],
+            $data['toilets'],
+            $data['living_rooms'],
+            $data['kitchens'],
+            $data['has_balcony'],
+            $data['amenities'] ? json_encode($data['amenities']) : null,
+            $data['type_id'],
+            $data['rent_amount'] ?? null,
+            $data['charges_amount'] ?? null,
+            $data['status'],
+            $data['price'] ?? null
+        ]);
+        $id = $pdo->lastInsertId();
+        
+        if (!$id) {
+            throw new PDOException("Aucun ID généré après l’insertion de l’appartement.");
+        }
+
+        // Vérifier si l’enregistrement existe
+        $checkStmt = $pdo->prepare('SELECT id, is_deleted FROM apartments WHERE id = ?');
+        $checkStmt->execute([$id]);
+        $result = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        if (!$result) {
+            throw new PDOException("L’enregistrement avec l’ID $id n’existe pas dans la base après insertion.");
+        }
+        if ($result['is_deleted'] != 0) {
+            throw new PDOException("L’enregistrement avec l’ID $id a is_deleted = {$result['is_deleted']} après insertion.");
+        }
+
+        $apartment = self::find($id);
+        if (!$apartment) {
+            throw new PDOException("L’appartement avec l’ID $id n’a pas été trouvé après insertion.");
+        }
+
+        return $apartment;
+    } catch (PDOException $e) {
+        $logger = new Logger();
+        $logger->error("Erreur lors de la création de l’appartement : " . $e->getMessage(), $data);
+        throw new PDOException("Erreur lors de la création de l’appartement : " . $e->getMessage());
     }
+}
 
     /**
      * Met à jour un appartement
@@ -246,6 +462,11 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
+            $existing = self::find($id);
+            if (!$existing) {
+                throw new PDOException("Appartement introuvable");
+            }
+
             // Vérifier les dépendances si modifiées
             if (!empty($data['building_id']) && !Building::find($data['building_id'])) {
                 throw new PDOException("Building ID invalide");
@@ -253,13 +474,19 @@ class Apartment
             if (!empty($data['owner_id']) && !Owner::find($data['owner_id'])) {
                 throw new PDOException("Owner ID invalide");
             }
-            $existing = self::find($id);
-            if (!$existing) {
-                throw new PDOException("Appartement introuvable");
+            if (!empty($data['agency_id']) && !Agency::find($data['agency_id'])) {
+                throw new PDOException("Agency ID invalide");
             }
+            if (!empty($data['agent_id']) && !User::find($data['agent_id'])) {
+                throw new PDOException("Agent ID invalide");
+            }
+            if (!empty($data['type_id']) && !ApartmentType::find($data['type_id'])) {
+                throw new PDOException("ApartmentType ID invalide");
+            }
+
             $stmt = $pdo->prepare('
                 UPDATE apartments
-                SET building_id = ?, owner_id = ?, number = ?, floor = ?, area = ?, rooms = ?, bedrooms = ?,
+                SET building_id = ?, owner_id = ?, agency_id = ?, agent_id = ?, number = ?, floor = ?, area = ?, rooms = ?, bedrooms = ?,
                     bathrooms = ?, toilets = ?, living_rooms = ?, kitchens = ?, has_balcony = ?, amenities = ?,
                     type_id = ?, rent_amount = ?, charges_amount = ?, status = ?, price = ?, updated_at = NOW()
                 WHERE id = ?
@@ -267,6 +494,8 @@ class Apartment
             $stmt->execute([
                 $data['building_id'] ?? $existing->getBuildingId(),
                 $data['owner_id'] ?? $existing->getOwnerId(),
+                $data['agency_id'] ?? $existing->getAgencyId(),
+                $data['agent_id'] ?? $existing->getAgentId(),
                 $data['number'] ?? $existing->getNumber(),
                 $data['floor'] ?? $existing->getFloor(),
                 $data['area'] ?? $existing->getArea(),
@@ -300,7 +529,7 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('UPDATE apartments SET deleted_at = NOW() WHERE id = ?');
+            $stmt = $pdo->prepare('UPDATE apartments SET is_deleted = NOW() WHERE id = ?');
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la suppression de l’appartement : " . $e->getMessage());
@@ -316,7 +545,7 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE building_id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE building_id = ? AND is_deleted = 0');
             $stmt->execute([$buildingId]);
             $apartments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -337,7 +566,7 @@ class Apartment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE owner_id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM apartments WHERE owner_id = ? AND is_deleted = 0');
             $stmt->execute([$ownerId]);
             $apartments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -367,54 +596,53 @@ class Apartment
         return Owner::find($this->owner_id);
     }
 
-/**
- * Compte les appartements disponibles (non loués, non supprimés)
- * @return int
- */
-public static function countAvailable()
-{
-    try {
-        $pdo = Database::getInstance();
-        $stmt = $pdo->prepare('
-            SELECT COUNT(*) 
-            FROM apartments 
-            WHERE is_deleted = 0 
-            AND id NOT IN (SELECT apartment_id FROM leases WHERE is_active = 1 AND is_deleted = 0)
-        ');
-        $stmt->execute();
-        return (int) $stmt->fetchColumn();
-    } catch (PDOException $e) {
-        throw new PDOException("Erreur lors du comptage des appartements disponibles : " . $e->getMessage());
+    /**
+     * Compte les appartements disponibles (non loués, non supprimés)
+     * @return int
+     */
+    public static function countAvailable()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT COUNT(*) 
+                FROM apartments 
+                WHERE is_deleted = 0 
+                AND id NOT IN (SELECT apartment_id FROM leases WHERE is_active = 1 AND is_deleted = 0)
+            ');
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des appartements disponibles : " . $e->getMessage());
+        }
     }
-}
 
-/**
- * Compte les nouveaux appartements disponibles ajoutés ce mois
- * @return int
- */
-public static function countNewAvailableThisMonth()
-{
-    try {
-        $pdo = Database::getInstance();
-        $stmt = $pdo->prepare('
-            SELECT COUNT(*) 
-            FROM apartments 
-            WHERE is_deleted = 0 
-            AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-            AND id NOT IN (SELECT apartment_id FROM leases WHERE is_active = 1 AND is_deleted = 0)
-        ');
-        $stmt->execute();
-        return (int) $stmt->fetchColumn();
-    } catch (PDOException $e) {
-        throw new PDOException("Erreur lors du comptage des nouveaux appartements disponibles : " . $e->getMessage());
+    /**
+     * Compte les nouveaux appartements disponibles ajoutés ce mois
+     * @return int
+     */
+    public static function countNewAvailableThisMonth()
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT COUNT(*) 
+                FROM apartments 
+                WHERE is_deleted = 0 
+                AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+                AND id NOT IN (SELECT apartment_id FROM leases WHERE is_active = 1 AND is_deleted = 0)
+            ');
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des nouveaux appartements disponibles : " . $e->getMessage());
+        }
     }
-}
 
- /**
-     * Compte le nombre d'appartements disponibles pour une agence spécifique.
-     *
-     * @param int $agency_id ID de l'agence
-     * @return int Nombre d'appartements disponibles
+    /**
+     * Compte le nombre d'appartements disponibles pour une agence spécifique
+     * @param int $agency_id
+     * @return int
      */
     public static function countAvailableByAgency($agency_id)
     {
@@ -424,25 +652,22 @@ public static function countNewAvailableThisMonth()
                 SELECT COUNT(*)
                 FROM apartments a
                 JOIN buildings b ON a.building_id = b.id
-                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1
-                WHERE l.id IS NULL AND b.agency_id = ?
+                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1 AND l.is_deleted = 0
+                WHERE a.is_deleted = 0 AND b.agency_id = ?
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agency_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des appartements disponibles pour une agence spécifique : " . $e->getMessage());
         }
     }
 
-
     /**
-     * Compte le nombre d'appartements disponibles pour un agent spécifique dans une agence.
-     *
-     * @param int $agent_id ID de l'agent
-     * @param int $agency_id ID de l'agence
-     * @return int Nombre d'appartements disponibles
+     * Compte le nombre d'appartements disponibles pour un agent spécifique dans une agence
+     * @param int $agent_id
+     * @param int $agency_id
+     * @return int
      */
     public static function countAvailableByAgent($agent_id, $agency_id)
     {
@@ -452,23 +677,21 @@ public static function countNewAvailableThisMonth()
                 SELECT COUNT(*)
                 FROM apartments a
                 JOIN buildings b ON a.building_id = b.id
-                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1
-                WHERE l.id IS NULL AND a.agent_id = ? AND b.agency_id = ?
+                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1 AND l.is_deleted = 0
+                WHERE a.is_deleted = 0 AND a.agent_id = ? AND b.agency_id = ?
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agent_id, $agency_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des appartements disponibles pour un agent spécifique : " . $e->getMessage());
         }
     }
 
     /**
-     * Compte le nombre d'appartements loués pour un propriétaire spécifique.
-     *
-     * @param int $owner_id ID du propriétaire
-     * @return int Nombre d'appartements loués
+     * Compte le nombre d'appartements loués pour un propriétaire spécifique
+     * @param int $owner_id
+     * @return int
      */
     public static function countRentedByOwner($owner_id)
     {
@@ -478,22 +701,20 @@ public static function countNewAvailableThisMonth()
                 SELECT COUNT(*)
                 FROM apartments a
                 JOIN leases l ON a.id = l.apartment_id
-                WHERE l.is_active = 1 AND a.owner_id = ?
+                WHERE l.is_active = 1 AND a.owner_id = ? AND a.is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$owner_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des appartements loués pour un propriétaire spécifique : " . $e->getMessage());
         }
     }
 
     /**
-     * Compte le nombre d'appartements disponibles pour un propriétaire spécifique.
-     *
-     * @param int $owner_id ID du propriétaire
-     * @return int Nombre d'appartements disponibles
+     * Compte le nombre d'appartements disponibles pour un propriétaire spécifique
+     * @param int $owner_id
+     * @return int
      */
     public static function countAvailableByOwner($owner_id)
     {
@@ -502,23 +723,21 @@ public static function countNewAvailableThisMonth()
             $query = "
                 SELECT COUNT(*)
                 FROM apartments a
-                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1
-                WHERE l.id IS NULL AND a.owner_id = ?
+                LEFT JOIN leases l ON a.id = l.apartment_id AND l.is_active = 1 AND l.is_deleted = 0
+                WHERE a.is_deleted = 0 AND a.owner_id = ?
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$owner_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des appartements disponibles pour un propriétaire spécifique : " . $e->getMessage());
         }
     }
 
     /**
-     * Compte le nombre d'appartements occupés par un locataire spécifique.
-     *
-     * @param int $tenant_id ID du locataire
-     * @return int Nombre d'appartements occupés
+     * Compte le nombre d'appartements occupés par un locataire spécifique
+     * @param int $tenant_id
+     * @return int
      */
     public static function countOccupiedByTenant($tenant_id)
     {
@@ -528,12 +747,11 @@ public static function countNewAvailableThisMonth()
                 SELECT COUNT(*)
                 FROM apartments a
                 JOIN leases l ON a.id = l.apartment_id
-                WHERE l.tenant_id = ? AND l.is_active = 1
+                WHERE l.tenant_id = ? AND l.is_active = 1 AND a.is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$tenant_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des appartements occupés par un locataire spécifique : " . $e->getMessage());
         }

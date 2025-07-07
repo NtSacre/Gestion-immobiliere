@@ -71,6 +71,11 @@ class DashboardController
                     $metrics = $this->getProprietaireMetrics($user['id']);
                     break;
                 case 'locataire':
+                    if (!isset($user['id'])) {
+                        $this->flash->flash('error', 'Identifiant utilisateur non défini.');
+                        $this->helpers->redirect('/auth/login');
+                        return;
+                    }
                     $metrics = $this->getLocataireMetrics($user['id']);
                     break;
                 case 'acheteur':
@@ -267,32 +272,59 @@ class DashboardController
     {
         $tenant = Tenant::findByUserId($user_id);
 
+        // Gérer le cas où aucun locataire n’est trouvé
+        if (!$tenant) {
+            return [
+                'primary' => [
+                    'loyer' => [
+                        'value' => '0 FCFA',
+                        'label' => 'Loyer mensuel',
+                        'emoji' => '💸'
+                    ],
+                    'baux_actifs' => [
+                        'value' => 0,
+                        'label' => 'Baux actifs',
+                        'emoji' => '📜'
+                    ],
+                    'appartements_occupes' => [
+                        'value' => 0,
+                        'label' => 'Appartements occupés',
+                        'emoji' => '🏡'
+                    ],
+                    'paiements_effectues' => [
+                        'value' => 0,
+                        'label' => 'Paiements effectués',
+                        'emoji' => '✅'
+                    ]
+                ]
+            ];
+        }
+
         return [
             'primary' => [
                 'loyer' => [
-                    'value' => Lease::getRentAmountByTenant($tenant['id']) . ' FCFA', // Méthode manquante
+                    'value' => Lease::getRentAmountByTenant($tenant->getId()) . ' FCFA',
                     'label' => 'Loyer mensuel',
                     'emoji' => '💸'
                 ],
                 'baux_actifs' => [
-                    'value' => Lease::countActiveByTenant($tenant['id']), // Méthode manquante
+                    'value' => Lease::countActiveByTenant($tenant->getId()),
                     'label' => 'Baux actifs',
                     'emoji' => '📜'
                 ],
                 'appartements_occupes' => [
-                    'value' => Apartment::countOccupiedByTenant($tenant['id']), // Méthode manquante
+                    'value' => Apartment::countOccupiedByTenant($tenant->getId()),
                     'label' => 'Appartements occupés',
                     'emoji' => '🏡'
                 ],
                 'paiements_effectues' => [
-                    'value' => Payment::countPaidByTenant($tenant['id']), // Méthode manquante
+                    'value' => Payment::countPaidByTenant($tenant->getId()),
                     'label' => 'Paiements effectués',
                     'emoji' => '✅'
                 ]
             ]
         ];
     }
-
     private function getAcheteurMetrics($user_id)
     {
         $buyer = Buyer::findByUserId($user_id);
@@ -392,4 +424,3 @@ class DashboardController
         ];
     }
 }
-?>

@@ -29,141 +29,140 @@ class UserController
         $this->flash = $flash;
     }
 
-/**
- * Affiche la liste paginée des utilisateurs filtrée selon le rôle de l'utilisateur connecté.
- */
-public function index()
-{
-    if (!$this->auth->check()) {
-        $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
-        $this->helpers->redirect('/auth/login');
-        return;
-    }
-
-    $user = $this->auth->user();
-    $role = $user['role'] ?? 'guest';
-    $agencyId = $user['agency_id'] ?? null;
-    $agentId = $user['id'] ?? null;
-
-    // Paramètres de pagination et filtres
-    $page = max(1, (int) ($_GET['page'] ?? 1));
-    $perPage = 10;
-    $offset = ($page - 1) * $perPage;
-    $search = trim($_GET['search'] ?? '');
-    
-    // Correction pour les rôles sélectionnés
-    $selectedRoles = [];
-    if (isset($_GET['roles']) && is_array($_GET['roles'])) {
-        $selectedRoles = array_filter($_GET['roles'], function($role) {
-            return !empty(trim($role));
-        });
-    }
-
-    // Définir les rôles autorisés pour le filtre
-    $allowedRoles = match ($role) {
-        'superadmin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
-        'admin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
-        'agent' => ['proprietaire', 'locataire', 'acheteur'],
-        default => []
-    };
-
-    $users = [];
-    $totalUsers = 0;
-    $roles = [];
-
-    try {
-        // Charger les rôles pour le filtre seulement si l'utilisateur a des rôles autorisés
-        if (!empty($allowedRoles)) {
-            $roles = Role::getByNames($allowedRoles);
+    /**
+     * Affiche la liste paginée des utilisateurs filtrée selon le rôle de l'utilisateur connecté.
+     */
+    public function index()
+    {
+        if (!$this->auth->check()) {
+            $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->helpers->redirect('/auth/login');
+            return;
         }
 
-        // Valider les rôles sélectionnés
-        $validSelectedRoles = array_intersect($selectedRoles, $allowedRoles);
+        $user = $this->auth->user();
+        $role = $user['role'] ?? 'guest';
+        $agencyId = $user['agency_id'] ?? null;
+        $agentId = $user['id'] ?? null;
 
-        // Récupérer les utilisateurs selon le rôle
-        if (!empty($allowedRoles)) {
-            switch ($role) {
-                case 'superadmin':
-                    $users = User::getAll($search, $perPage, $offset, $validSelectedRoles);
-                    $totalUsers = User::countAll($search, $validSelectedRoles);
-                    break;
-                    
-                case 'admin':
-                    if ($agencyId) {
-                        $users = User::getByAgency($agencyId, $search, $perPage, $offset, $validSelectedRoles);
-                        $totalUsers = User::countByAgency($agencyId, $search, $validSelectedRoles);
-                    } else {
-                        $this->flash->flash('error', 'Aucune agence associée à votre compte.');
-                        $this->helpers->redirect('/dashboard');
-                        return;
-                    }
-                    break;
-                    
-                case 'agent':
-                    if ($agencyId && $agentId) {
-                        $users = User::getByAgent($agentId, $agencyId, $search, $perPage, $offset, $validSelectedRoles);
-                        $totalUsers = User::countByAgent($agentId, $agencyId, $search, $validSelectedRoles);
-                    } else {
-                        $this->flash->flash('error', 'Informations d\'agent ou d\'agence manquantes.');
-                        $this->helpers->redirect('/dashboard');
-                        return;
-                    }
-                    break;
-                    
-                default:
-                    $this->flash->flash('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
-                    $this->helpers->redirect('/dashboard');
-                    return;
+        // Paramètres de pagination et filtres
+        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+        $search = trim($_GET['search'] ?? '');
+
+        // Correction pour les rôles sélectionnés
+        $selectedRoles = [];
+        if (isset($_GET['roles']) && is_array($_GET['roles'])) {
+            $selectedRoles = array_filter($_GET['roles'], function ($role) {
+                return !empty(trim($role));
+            });
+        }
+
+        // Définir les rôles autorisés pour le filtre
+        $allowedRoles = match ($role) {
+            'superadmin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
+            'admin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
+            'agent' => ['proprietaire', 'locataire', 'acheteur'],
+            default => []
+        };
+
+        $users = [];
+        $totalUsers = 0;
+        $roles = [];
+
+        try {
+            // Charger les rôles pour le filtre seulement si l'utilisateur a des rôles autorisés
+            if (!empty($allowedRoles)) {
+                $roles = Role::getByNames($allowedRoles);
             }
-        } else {
-            $this->flash->flash('error', 'Vous n\'avez pas les permissions nécessaires pour gérer les utilisateurs.');
-            $this->helpers->redirect('/dashboard');
-            return;
+
+            // Valider les rôles sélectionnés
+            $validSelectedRoles = array_intersect($selectedRoles, $allowedRoles);
+
+            // Récupérer les utilisateurs selon le rôle
+            if (!empty($allowedRoles)) {
+                switch ($role) {
+                    case 'superadmin':
+                        $users = User::getAll($search, $perPage, $offset, $validSelectedRoles);
+                        $totalUsers = User::countAll($search, $validSelectedRoles);
+                        break;
+
+                    case 'admin':
+                        if ($agencyId) {
+                            $users = User::getByAgency($agencyId, $search, $perPage, $offset, $validSelectedRoles);
+                            $totalUsers = User::countByAgency($agencyId, $search, $validSelectedRoles);
+                        } else {
+                            $this->flash->flash('error', 'Aucune agence associée à votre compte.');
+                            $this->helpers->redirect('/dashboard');
+                            return;
+                        }
+                        break;
+
+                    case 'agent':
+                        if ($agencyId && $agentId) {
+                            $users = User::getByAgent($agentId, $agencyId, $search, $perPage, $offset, $validSelectedRoles);
+                            $totalUsers = User::countByAgent($agentId, $agencyId, $search, $validSelectedRoles);
+                        } else {
+                            $this->flash->flash('error', 'Informations d\'agent ou d\'agence manquantes.');
+                            $this->helpers->redirect('/dashboard');
+                            return;
+                        }
+                        break;
+
+                    default:
+                        $this->flash->flash('error', 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page.');
+                        $this->helpers->redirect('/dashboard');
+                        return;
+                }
+            } else {
+                $this->flash->flash('error', 'Vous n\'avez pas les permissions nécessaires pour gérer les utilisateurs.');
+                $this->helpers->redirect('/dashboard');
+                return;
+            }
+
+            $totalPages = $totalUsers > 0 ? ceil($totalUsers / $perPage) : 1;
+
+            // Vérifier que la page demandée existe
+            if ($page > $totalPages && $totalPages > 0) {
+                $this->helpers->redirect("/users?page={$totalPages}&search=" . urlencode($search) .
+                    (!empty($validSelectedRoles) ? '&' . http_build_query(['roles' => $validSelectedRoles]) : ''));
+                return;
+            }
+        } catch (PDOException $e) {
+            $this->logger->error("Erreur lors du chargement des utilisateurs : " . $e->getMessage());
+            $this->flash->flash('error', 'Une erreur est survenue lors du chargement des utilisateurs.');
+            $users = [];
+            $totalUsers = 0;
+            $totalPages = 1;
+        } catch (PDOException $e) {
+            $this->logger->error("Erreur générale lors du chargement des utilisateurs : " . $e->getMessage());
+            $this->flash->flash('error', 'Une erreur inattendue est survenue.');
+            $users = [];
+            $totalUsers = 0;
+            $totalPages = 1;
         }
 
-        $totalPages = $totalUsers > 0 ? ceil($totalUsers / $perPage) : 1;
-        
-        // Vérifier que la page demandée existe
-        if ($page > $totalPages && $totalPages > 0) {
-            $this->helpers->redirect("/users?page={$totalPages}&search=" . urlencode($search) . 
-                (!empty($validSelectedRoles) ? '&' . http_build_query(['roles' => $validSelectedRoles]) : ''));
-            return;
-        }
+        // Préparer les variables pour la vue
+        $viewData = [
+            'users' => $users,
+            'totalUsers' => $totalUsers,
+            'totalPages' => $totalPages,
+            'page' => $page,
+            'search' => $search,
+            'selectedRoles' => $validSelectedRoles,
+            'roles' => $roles,
+            'role' => $role, // Importante : passer le rôle à la vue
+            'allowedRoles' => $allowedRoles
+        ];
 
-    } catch (PDOException $e) {
-        $this->logger->error("Erreur lors du chargement des utilisateurs : " . $e->getMessage());
-        $this->flash->flash('error', 'Une erreur est survenue lors du chargement des utilisateurs.');
-        $users = [];
-        $totalUsers = 0;
-        $totalPages = 1;
-    } catch (PDOException $e) {
-        $this->logger->error("Erreur générale lors du chargement des utilisateurs : " . $e->getMessage());
-        $this->flash->flash('error', 'Une erreur inattendue est survenue.');
-        $users = [];
-        $totalUsers = 0;
-        $totalPages = 1;
+        // Extracter les variables pour la vue
+        extract($viewData);
+
+        $title = 'Gestion des utilisateurs';
+        $content_view = 'admin/users/index.php';
+        require_once dirname(__DIR__, 1) . '/Views/layouts/admin_layout.php';
     }
-
-    // Préparer les variables pour la vue
-    $viewData = [
-        'users' => $users,
-        'totalUsers' => $totalUsers,
-        'totalPages' => $totalPages,
-        'page' => $page,
-        'search' => $search,
-        'selectedRoles' => $validSelectedRoles,
-        'roles' => $roles,
-        'role' => $role, // Importante : passer le rôle à la vue
-        'allowedRoles' => $allowedRoles
-    ];
-
-    // Extracter les variables pour la vue
-    extract($viewData);
-
-    $title = 'Gestion des utilisateurs';
-    $content_view = 'admin/users/index.php';
-    require_once dirname(__DIR__, 1) . '/Views/layouts/admin_layout.php';
-}
     /**
      * Affiche le formulaire de création d'utilisateur avec les rôles autorisés.
      */
@@ -222,7 +221,7 @@ public function index()
         $role = $user['role'] ?? 'guest';
         $errors = [];
 
-        // Validation des entrées
+        // Récupération des données du formulaire
         $data = [
             'username' => trim($_POST['username'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
@@ -232,10 +231,12 @@ public function index()
             'first_name' => trim($_POST['first_name'] ?? ''),
             'last_name' => trim($_POST['last_name'] ?? ''),
             'phone' => trim($_POST['phone'] ?? ''),
-            'owner_type' => trim($_POST['owner_type'] ?? ''), // Pour owners uniquement
-            'siret' => trim($_POST['siret'] ?? '') // Pour owners de type entreprise
+            'owner_type' => trim($_POST['owner_type'] ?? ''),
+            'siret' => trim($_POST['siret'] ?? ''),
+            'agency_id' => $role === 'superadmin' ? ($_POST['agency_id'] ?? null) : ($user['agency_id'] ?? null)
         ];
 
+        // Validation
         if (empty($data['username']) || strlen($data['username']) < 3) {
             $errors[] = 'Le nom d’utilisateur doit contenir au moins 3 caractères.';
         }
@@ -258,18 +259,22 @@ public function index()
             $errors[] = 'Le rôle sélectionné est invalide.';
         }
 
-        // Vérification des permissions pour le rôle
+        // Déterminer le nom du rôle à partir de l'ID
         $roleName = Role::getNameById($data['role_id']);
+
+        // Contrôle des rôles autorisés
         $allowedRoles = match ($role) {
             'superadmin' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur'],
             'admin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
             'agent' => ['proprietaire', 'locataire', 'acheteur'],
             default => []
         };
+
         if (!in_array($roleName, $allowedRoles)) {
             $errors[] = 'Vous n’êtes pas autorisé à créer un utilisateur avec ce rôle.';
         }
 
+        // Validation spécifique pour propriétaire
         if ($roleName === 'proprietaire') {
             if (!in_array($data['owner_type'], ['particulier', 'entreprise'])) {
                 $errors[] = 'Le type de propriétaire est invalide.';
@@ -282,35 +287,42 @@ public function index()
             }
         }
 
+        // Vérification de l'agence obligatoire pour certains rôles
+        if (in_array($roleName, ['admin', 'agent', 'proprietaire', 'locataire', 'acheteur']) && empty($data['agency_id'])) {
+            $errors[] = "L'agence est requise pour ce type d'utilisateur.";
+        }
+
+        // En cas d’erreurs
         if (!empty($errors)) {
             $this->flash->flash('error', implode('<br>', $errors));
             $this->helpers->redirect('/users/create');
             return;
         }
 
-        // Création de l'utilisateur dans une transaction
+        // Création de l'utilisateur
         $pdo = Database::getInstance();
         try {
             $pdo->beginTransaction();
 
-            // Créer l'utilisateur
+            // Données pour la table `users`
             $userData = [
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'role_id' => $data['role_id'],
-                'agency_id' => in_array($roleName, ['agent', 'proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null,
+                'agency_id' => $data['agency_id'],
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
                 'phone' => $data['phone'] ?: null
             ];
+
             $userId = User::create($userData);
 
-            // Créer l'entrée dans la table correspondante
+            // Données liées aux tables spécifiques (owner, tenant, buyer)
             $relatedData = [
                 'user_id' => $userId->getId(),
-                'agent_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) && $role === 'agent' ? $user['id'] : null,
-                'agency_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null
+                'agent_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) && in_array($role, ['agent', 'admin']) ? $user['id'] : null,
+                'agency_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) ? $data['agency_id'] : null
             ];
 
             switch ($roleName) {
@@ -338,244 +350,245 @@ public function index()
         }
     }
 
+
     /**
      * Met à jour un utilisateur avec validation.
      */
-public function update($id)
-{
-    if (!$this->auth->check()) {
-        $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
-        $this->helpers->redirect('/auth/login');
-        return;
-    }
-
-    $user = $this->auth->user();
-    $role = $user['role'] ?? 'guest';
-    $errors = [];
-
-    $data = [
-        'username' => trim($_POST['username'] ?? ''),
-        'email' => trim($_POST['email'] ?? ''),
-        'role_id' => (int) ($_POST['role_id'] ?? 0),
-        'first_name' => trim($_POST['first_name'] ?? ''),
-        'last_name' => trim($_POST['last_name'] ?? ''),
-        'phone' => trim($_POST['phone'] ?? ''),
-        'owner_type' => trim($_POST['owner_type'] ?? ''),
-        'siret' => trim($_POST['siret'] ?? '')
-    ];
-
-    // --- Validations
-    if (empty($data['username']) || strlen($data['username']) < 3) {
-        $errors[] = 'Le nom d’utilisateur doit contenir au moins 3 caractères.';
-    }
-    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'L’email est invalide.';
-    }
-    if (User::emailExists($data['email'], $id)) {
-        $errors[] = 'Cet email est déjà utilisé par un autre utilisateur.';
-    }
-    if (!Role::exists($data['role_id'])) {
-        $errors[] = 'Le rôle sélectionné est invalide.';
-    }
-
-    $roleName = Role::getNameById($data['role_id']);
-    $allowedRoles = match ($role) {
-        'superadmin' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur'],
-        'admin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
-        'agent' => ['proprietaire', 'locataire', 'acheteur'],
-        default => []
-    };
-
-    if (!in_array($roleName, $allowedRoles)) {
-        $errors[] = 'Vous n’êtes pas autorisé à assigner ce rôle.';
-    }
-
-    if ($roleName === 'proprietaire') {
-        if (!in_array($data['owner_type'], ['particulier', 'entreprise'])) {
-            $errors[] = 'Le type de propriétaire est invalide.';
+    public function update($id)
+    {
+        if (!$this->auth->check()) {
+            $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->helpers->redirect('/auth/login');
+            return;
         }
-        if ($data['owner_type'] === 'entreprise' && empty($data['siret'])) {
-            $errors[] = 'Le SIRET est requis pour un propriétaire de type entreprise.';
+
+        $user = $this->auth->user();
+        $role = $user['role'] ?? 'guest';
+        $errors = [];
+
+        $data = [
+            'username' => trim($_POST['username'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'role_id' => (int) ($_POST['role_id'] ?? 0),
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name' => trim($_POST['last_name'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'owner_type' => trim($_POST['owner_type'] ?? ''),
+            'siret' => trim($_POST['siret'] ?? '')
+        ];
+
+        // --- Validations
+        if (empty($data['username']) || strlen($data['username']) < 3) {
+            $errors[] = 'Le nom d’utilisateur doit contenir au moins 3 caractères.';
         }
-        if ($data['owner_type'] === 'particulier' && !empty($data['siret'])) {
-            $errors[] = 'Le SIRET ne doit pas être fourni pour un propriétaire de type particulier.';
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'L’email est invalide.';
         }
-    }
+        if (User::emailExists($data['email'], $id)) {
+            $errors[] = 'Cet email est déjà utilisé par un autre utilisateur.';
+        }
+        if (!Role::exists($data['role_id'])) {
+            $errors[] = 'Le rôle sélectionné est invalide.';
+        }
 
-    if (!empty($errors)) {
-        $this->flash->flash('error', implode('<br>', $errors));
-        $this->helpers->redirect("/users/edit/{$id}");
-        return;
-    }
+        $roleName = Role::getNameById($data['role_id']);
+        $allowedRoles = match ($role) {
+            'superadmin' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur'],
+            'admin' => ['agent', 'proprietaire', 'locataire', 'acheteur'],
+            'agent' => ['proprietaire', 'locataire', 'acheteur'],
+            default => []
+        };
 
-    $pdo = Database::getInstance();
-    try {
-        $pdo->beginTransaction();
+        if (!in_array($roleName, $allowedRoles)) {
+            $errors[] = 'Vous n’êtes pas autorisé à assigner ce rôle.';
+        }
 
-        $targetUser = User::findById($id);
-        if (!$targetUser || $targetUser->getIsDeleted()) {
+        if ($roleName === 'proprietaire') {
+            if (!in_array($data['owner_type'], ['particulier', 'entreprise'])) {
+                $errors[] = 'Le type de propriétaire est invalide.';
+            }
+            if ($data['owner_type'] === 'entreprise' && empty($data['siret'])) {
+                $errors[] = 'Le SIRET est requis pour un propriétaire de type entreprise.';
+            }
+            if ($data['owner_type'] === 'particulier' && !empty($data['siret'])) {
+                $errors[] = 'Le SIRET ne doit pas être fourni pour un propriétaire de type particulier.';
+            }
+        }
+
+        if (!empty($errors)) {
+            $this->flash->flash('error', implode('<br>', $errors));
+            $this->helpers->redirect("/users/edit/{$id}");
+            return;
+        }
+
+        $pdo = Database::getInstance();
+        try {
+            $pdo->beginTransaction();
+
+            $targetUser = User::findById($id);
+            if (!$targetUser || $targetUser->getIsDeleted()) {
+                $pdo->rollBack();
+                $this->flash->flash('error', 'Utilisateur introuvable.');
+                $this->helpers->redirect('/users');
+                return;
+            }
+
+            if (!$this->canManageUser($user, $targetUser)) {
+                $pdo->rollBack();
+                $this->flash->flash('error', 'Vous n’êtes pas autorisé à modifier cet utilisateur.');
+                $this->helpers->redirect('/users');
+                return;
+            }
+
+            $userData = [
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'role_id' => $data['role_id'],
+                'agency_id' => in_array($roleName, ['agent', 'proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null,
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'phone' => $data['phone'] ?: null,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            User::update($id, $userData);
+
+            $relatedData = [
+                'user_id' => $id,
+                'agent_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) && $role === 'agent' ? $user['id'] : null,
+                'agency_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null
+            ];
+
+            switch ($roleName) {
+                case 'proprietaire':
+                    $relatedData['type'] = $data['owner_type'];
+                    $relatedData['siret'] = $data['owner_type'] === 'entreprise' ? $data['siret'] : null;
+                    $existingOwner = Owner::findByUserId($id);
+                    if ($existingOwner) {
+                        Owner::update($existingOwner->getId(), $relatedData);
+                    } else {
+                        Owner::create($relatedData);
+                    }
+                    break;
+
+                case 'locataire':
+                    $existingTenant = Tenant::findByUserId($id);
+                    if ($existingTenant) {
+                        Tenant::update($existingTenant->getId(), $relatedData);
+                    } else {
+                        Tenant::create($relatedData);
+                    }
+                    break;
+
+                case 'acheteur':
+                    $existingBuyer = Buyer::findByUserId($id);
+                    if ($existingBuyer) {
+                        Buyer::update($existingBuyer->getId(), $relatedData);
+                    } else {
+                        Buyer::create($relatedData);
+                    }
+                    break;
+            }
+
+            $pdo->commit();
+            $this->flash->flash('success', 'Utilisateur mis à jour avec succès.');
+            $this->helpers->redirect('/users');
+        } catch (PDOException $e) {
             $pdo->rollBack();
-            $this->flash->flash('error', 'Utilisateur introuvable.');
-            $this->helpers->redirect('/users');
-            return;
+            $this->logger->error("Erreur lors de la mise à jour de l’utilisateur : " . $e->getMessage());
+            $this->flash->flash('error', 'Une erreur est survenue lors de la mise à jour de l’utilisateur.');
+            $this->helpers->redirect("/users/edit/{$id}");
         }
-
-        if (!$this->canManageUser($user, $targetUser)) {
-            $pdo->rollBack();
-            $this->flash->flash('error', 'Vous n’êtes pas autorisé à modifier cet utilisateur.');
-            $this->helpers->redirect('/users');
-            return;
-        }
-
-        $userData = [
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'role_id' => $data['role_id'],
-            'agency_id' => in_array($roleName, ['agent', 'proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null,
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'] ?: null,
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
-        User::update($id, $userData);
-
-        $relatedData = [
-            'user_id' => $id,
-            'agent_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) && $role === 'agent' ? $user['id'] : null,
-            'agency_id' => in_array($roleName, ['proprietaire', 'locataire', 'acheteur']) ? $user['agency_id'] : null
-        ];
-
-        switch ($roleName) {
-            case 'proprietaire':
-                $relatedData['type'] = $data['owner_type'];
-                $relatedData['siret'] = $data['owner_type'] === 'entreprise' ? $data['siret'] : null;
-                $existingOwner = Owner::findByUserId($id);
-                if ($existingOwner) {
-                    Owner::update($existingOwner->getId(), $relatedData);
-                } else {
-                    Owner::create($relatedData);
-                }
-                break;
-
-            case 'locataire':
-                $existingTenant = Tenant::findByUserId($id);
-                if ($existingTenant) {
-                    Tenant::update($existingTenant->getId(), $relatedData);
-                } else {
-                    Tenant::create($relatedData);
-                }
-                break;
-
-            case 'acheteur':
-                $existingBuyer = Buyer::findByUserId($id);
-                if ($existingBuyer) {
-                    Buyer::update($existingBuyer->getId(), $relatedData);
-                } else {
-                    Buyer::create($relatedData);
-                }
-                break;
-        }
-
-        $pdo->commit();
-        $this->flash->flash('success', 'Utilisateur mis à jour avec succès.');
-        $this->helpers->redirect('/users');
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $this->logger->error("Erreur lors de la mise à jour de l’utilisateur : " . $e->getMessage());
-        $this->flash->flash('error', 'Une erreur est survenue lors de la mise à jour de l’utilisateur.');
-        $this->helpers->redirect("/users/edit/{$id}");
-    }
-}
-
-
-/**
- * Affiche les détails d’un utilisateur spécifique.
- * @param int $id L’identifiant de l’utilisateur à afficher.
- */
-public function show($id)
-{
-    if (!$this->auth->check()) {
-        $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
-        $this->helpers->redirect('/auth/login');
-        return;
     }
 
-    $user = $this->auth->user();
-    $role = $user['role'] ?? 'guest';
 
-    try {
-        // Récupérer l’utilisateur cible
-        $targetUser = User::findById($id);
-        if (!$targetUser || ($targetUser->is_deleted ?? false)) { // Vérification de is_deleted
-            $this->flash->flash('error', 'Utilisateur introuvable.');
-            $this->helpers->redirect('/users');
+    /**
+     * Affiche les détails d’un utilisateur spécifique.
+     * @param int $id L’identifiant de l’utilisateur à afficher.
+     */
+    public function show($id)
+    {
+        if (!$this->auth->check()) {
+            $this->flash->flash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->helpers->redirect('/auth/login');
             return;
         }
 
-        // Vérification des permissions
-        if (!$this->canManageUser($user, $targetUser)) {
-            $this->flash->flash('error', 'Vous n’êtes pas autorisé à voir cet utilisateur.');
+        $user = $this->auth->user();
+        $role = $user['role'] ?? 'guest';
+
+        try {
+            // Récupérer l’utilisateur cible
+            $targetUser = User::findById($id);
+            if (!$targetUser || ($targetUser->is_deleted ?? false)) { // Vérification de is_deleted
+                $this->flash->flash('error', 'Utilisateur introuvable.');
+                $this->helpers->redirect('/users');
+                return;
+            }
+
+            // Vérification des permissions
+            if (!$this->canManageUser($user, $targetUser)) {
+                $this->flash->flash('error', 'Vous n’êtes pas autorisé à voir cet utilisateur.');
+                $this->helpers->redirect('/users');
+                return;
+            }
+
+            // Préparer les données pour la vue
+            $userData = [
+                'id' => $targetUser->getId(),
+                'first_name' => $targetUser->getFirstName(),
+                'last_name' => $targetUser->getLastName(),
+                'email' => $targetUser->getEmail(),
+                'phone' => $targetUser->getPhone() ?? 'Non spécifié',
+                'role' => $this->formatRole(Role::getNameById($targetUser->getRoleId())),
+                'agency_id' => $targetUser->getAgencyId() ?? 'Non spécifié',
+                'created_at' => $this->formatDate($targetUser->getCreatedAt()),
+            ];
+
+            // Définir les variables pour la vue
+            $title = 'Détails de l’utilisateur';
+            $content_view = 'admin/users/show.php';
+            $user_data = $userData; // Passer les données à la vue
+
+            // Charger le layout
+            require_once dirname(__DIR__, 1) . '/Views/layouts/admin_layout.php';
+        } catch (PDOException $e) {
+            $this->logger->error("Erreur lors du chargement de l’utilisateur : " . $e->getMessage(), [
+                'user_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            $this->flash->flash('error', 'Une erreur est survenue lors du chargement de l’utilisateur.');
             $this->helpers->redirect('/users');
-            return;
         }
-
-        // Préparer les données pour la vue
-        $userData = [
-            'id' => $targetUser->getId(),
-            'first_name' => $targetUser->getFirstName(),
-            'last_name' => $targetUser->getLastName(),
-            'email' => $targetUser->getEmail(),
-            'phone' => $targetUser->getPhone() ?? 'Non spécifié',
-            'role' => $this->formatRole(Role::getNameById($targetUser->getRoleId())),
-            'agency_id' => $targetUser->getAgencyId() ?? 'Non spécifié',
-            'created_at' => $this->formatDate($targetUser->getCreatedAt()),
-        ];
-
-        // Définir les variables pour la vue
-        $title = 'Détails de l’utilisateur';
-        $content_view = 'admin/users/show.php';
-        $user_data = $userData; // Passer les données à la vue
-
-        // Charger le layout
-        require_once dirname(__DIR__, 1) . '/Views/layouts/admin_layout.php';
-    } catch (PDOException $e) {
-        $this->logger->error("Erreur lors du chargement de l’utilisateur : " . $e->getMessage(), [
-            'user_id' => $id,
-            'error' => $e->getMessage()
-        ]);
-        $this->flash->flash('error', 'Une erreur est survenue lors du chargement de l’utilisateur.');
-        $this->helpers->redirect('/users');
     }
-}
 
-/**
- * Formate le rôle pour l’affichage.
- * @param string $role Le rôle brut.
- * @return string Le rôle formaté.
- */
-private function formatRole($role)
-{
-    $roles = [
-        'superadmin' => 'Super Administrateur',
-        'admin' => 'Administrateur',
-        'agent' => 'Agent',
-        'proprietaire' => 'Propriétaire',
-        'locataire' => 'Locataire',
-        'acheteur' => 'Acheteur',
-        'guest' => 'Invité'
-    ];
-    return $roles[$role] ?? ucfirst($role);
-}
+    /**
+     * Formate le rôle pour l’affichage.
+     * @param string $role Le rôle brut.
+     * @return string Le rôle formaté.
+     */
+    private function formatRole($role)
+    {
+        $roles = [
+            'superadmin' => 'Super Administrateur',
+            'admin' => 'Administrateur',
+            'agent' => 'Agent',
+            'proprietaire' => 'Propriétaire',
+            'locataire' => 'Locataire',
+            'acheteur' => 'Acheteur',
+            'guest' => 'Invité'
+        ];
+        return $roles[$role] ?? ucfirst($role);
+    }
 
-/**
- * Formate la date pour l’affichage.
- * @param string $date La date brute (format SQL).
- * @return string La date formatée (ex. 01/01/2023).
- */
-private function formatDate($date)
-{
-    return $date ? date('d/m/Y', strtotime($date)) : 'Non spécifié';
-}
+    /**
+     * Formate la date pour l’affichage.
+     * @param string $date La date brute (format SQL).
+     * @return string La date formatée (ex. 01/01/2023).
+     */
+    private function formatDate($date)
+    {
+        return $date ? date('d/m/Y', strtotime($date)) : 'Non spécifié';
+    }
 
     /**
      * Affiche le formulaire de modification d’un utilisateur.
@@ -620,8 +633,8 @@ private function formatDate($date)
                     break;
             }
 
-          // Génère un jeton CSRF pour la vue
-        $csrf_token = $this->helpers->csrf_token('users.update');
+            // Génère un jeton CSRF pour la vue
+            $csrf_token = $this->helpers->csrf_token('users.update');
             $title = 'Modifier l’utilisateur';
             $content_view = 'admin/users/edit.php';
             require_once dirname(__DIR__, 1) . '/Views/layouts/admin_layout.php';
@@ -706,8 +719,7 @@ private function formatDate($date)
     private function isCreatedByAgent($agentId, $userId)
     {
         return Owner::isCreatedByAgent($agentId, $userId) ||
-               Tenant::isCreatedByAgent($agentId, $userId) ||
-               Buyer::isCreatedByAgent($agentId, $userId);
+            Tenant::isCreatedByAgent($agentId, $userId) ||
+            Buyer::isCreatedByAgent($agentId, $userId);
     }
 }
-?>

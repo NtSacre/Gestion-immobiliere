@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use App\Config\Database;
@@ -160,7 +159,7 @@ class User
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? AND is_deleted = 0');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -179,7 +178,6 @@ class User
         return self::find($id);
     }
     
-
     /**
      * Récupère tous les utilisateurs
      * @return array
@@ -207,7 +205,7 @@ class User
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM users WHERE is_deleted IS FALSE ORDER BY created_at ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM users WHERE is_deleted = 0 ORDER BY created_at ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -309,7 +307,6 @@ class User
         }
     }
 
-
     /**
      * Supprime un utilisateur (soft delete)
      * @param int $id
@@ -319,7 +316,7 @@ class User
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('UPDATE users SET updated_at = NOW() WHERE id = ?');
+            $stmt = $pdo->prepare('UPDATE users SET is_deleted = 1, updated_at = NOW() WHERE id = ?');
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la suppression de l’utilisateur : " . $e->getMessage());
@@ -335,7 +332,7 @@ class User
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? AND is_deleted = 0');
             $stmt->execute([$email]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -359,7 +356,6 @@ class User
         return null;
     }
 
-
     /**
      * Récupère le rôle de l’utilisateur
      * @return Role|null
@@ -368,7 +364,6 @@ class User
     {
         return Role::find($this->role_id);
     }
-
 
     /**
      * Trouve les utilisateurs par agency_id
@@ -379,7 +374,7 @@ class User
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM users WHERE agency_id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE agency_id = ? AND is_deleted = 0');
             $stmt->execute([$agencyId]);
             $users = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -392,6 +387,33 @@ class User
     }
 
     /**
+     * Trouve les utilisateurs par nom de rôle
+     * @param string $roleName
+     * @return array
+     */
+    public static function findByRole($roleName)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT u.* 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE r.name = ? AND u.is_deleted = 0
+                ORDER BY u.last_name, u.first_name
+            ');
+            $stmt->execute([$roleName]);
+            $users = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = self::fromData($data);
+            }
+            return $users;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des utilisateurs par rôle : " . $e->getMessage());
+        }
+    }
+
+    /**
      * Compte le nombre total de propriétaires (rôle "proprietaire", non supprimés)
      * @return int
      */
@@ -400,12 +422,12 @@ class User
         try {
             $pdo = Database::getInstance();
             $stmt = $pdo->prepare('
-            SELECT COUNT(*) 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            WHERE r.name = "proprietaire" 
-            AND u.is_deleted = 0
-        ');
+                SELECT COUNT(*) 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE r.name = "proprietaire" 
+                AND u.is_deleted = 0
+            ');
             $stmt->execute();
             return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
@@ -422,13 +444,13 @@ class User
         try {
             $pdo = Database::getInstance();
             $stmt = $pdo->prepare('
-            SELECT COUNT(*) 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            WHERE r.name = "proprietaire" 
-            AND u.is_deleted = 0 
-            AND u.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-        ');
+                SELECT COUNT(*) 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE r.name = "proprietaire" 
+                AND u.is_deleted = 0 
+                AND u.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+            ');
             $stmt->execute();
             return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
@@ -437,9 +459,9 @@ class User
     }
 
     /**
-     * Compte le nombre d'agents pour une agence spécifique.
-     * @param int $agency_id ID de l'agence
-     * @return int Nombre d'agents
+     * Compte le nombre d'agents pour une agence spécifique
+     * @param int $agency_id
+     * @return int
      */
     public static function countAgentsByAgency($agency_id)
     {
@@ -460,24 +482,23 @@ class User
     }
 
     /**
-     * Récupère tous les utilisateurs avec recherche et pagination.
-     *
-     * @param string $search Terme de recherche (username, email, first_name, last_name)
-     * @param int $limit Nombre d'utilisateurs par page
-     * @param int $offset Décalage pour la pagination
-     * @return array Liste des utilisateurs
+     * Récupère tous les utilisateurs avec recherche et pagination
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @return array
      */
     public static function getAll($search = '', $limit = 10, $offset = 0)
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT * FROM users 
-            WHERE is_deleted = 0 
-            AND (username LIKE ? OR email LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
-            ORDER BY created_at DESC
-            LIMIT ? OFFSET ?
-        ";
+                SELECT * FROM users 
+                WHERE is_deleted = 0 
+                AND (username LIKE ? OR email LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?
+            ";
             $stmt = $pdo->prepare($query);
             $searchTerm = "%{$search}%";
             $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm, $limit, $offset]);
@@ -492,21 +513,20 @@ class User
     }
 
     /**
-     * Compte tous les utilisateurs avec recherche.
-     *
-     * @param string $search Terme de recherche
-     * @return int Nombre total d'utilisateurs
+     * Compte tous les utilisateurs avec recherche
+     * @param string $search
+     * @return int
      */
     public static function countAll($search = '')
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT COUNT(*) 
-            FROM users 
-            WHERE is_deleted = 0 
-            AND (username LIKE ? OR email LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
-        ";
+                SELECT COUNT(*) 
+                FROM users 
+                WHERE is_deleted = 0 
+                AND (username LIKE ? OR email LIKE ? OR first_name LIKE ? OR last_name LIKE ?)
+            ";
             $stmt = $pdo->prepare($query);
             $searchTerm = "%{$search}%";
             $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $searchTerm]);
@@ -517,27 +537,26 @@ class User
     }
 
     /**
-     * Récupère les utilisateurs d'une agence avec rôles spécifiques, recherche et pagination.
-     *
-     * @param int $agencyId ID de l'agence
-     * @param string $search Terme de recherche
-     * @param int $limit Nombre d'utilisateurs par page
-     * @param int $offset Décalage pour la pagination
-     * @param array $roles Liste des noms de rôles autorisés
-     * @return array Liste des utilisateurs
+     * Récupère les utilisateurs d'une agence avec rôles spécifiques, recherche et pagination
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $roles
+     * @return array
      */
     public static function getByAgency($agencyId, $search = '', $limit = 10, $offset = 0, $roles = [])
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT u.* 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            WHERE u.is_deleted = 0 
-            AND u.agency_id = ?
-            AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
-        ";
+                SELECT u.* 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE u.is_deleted = 0 
+                AND u.agency_id = ?
+                AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
+            ";
             $params = [$agencyId, "%{$search}%", "%{$search}%", "%{$search}%", "%{$search}%"];
 
             if (!empty($roles)) {
@@ -563,25 +582,24 @@ class User
     }
 
     /**
-     * Compte les utilisateurs d'une agence avec rôles spécifiques et recherche.
-     *
-     * @param int $agencyId ID de l'agence
-     * @param string $search Terme de recherche
-     * @param array $roles Liste des noms de rôles autorisés
-     * @return int Nombre total d'utilisateurs
+     * Compte les utilisateurs d'une agence avec rôles spécifiques et recherche
+     * @param int $agencyId
+     * @param string $search
+     * @param array $roles
+     * @return int
      */
     public static function countByAgency($agencyId, $search = '', $roles = [])
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT COUNT(*) 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            WHERE u.is_deleted = 0 
-            AND u.agency_id = ?
-            AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
-        ";
+                SELECT COUNT(*) 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE u.is_deleted = 0 
+                AND u.agency_id = ?
+                AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
+            ";
             $params = [$agencyId, "%{$search}%", "%{$search}%", "%{$search}%", "%{$search}%"];
 
             if (!empty($roles)) {
@@ -599,32 +617,31 @@ class User
     }
 
     /**
-     * Récupère les utilisateurs créés par un agent dans une agence avec rôles spécifiques.
-     *
-     * @param int $agentId ID de l'agent
-     * @param int $agencyId ID de l'agence
-     * @param string $search Terme de recherche
-     * @param int $limit Nombre d'utilisateurs par page
-     * @param int $offset Décalage pour la pagination
-     * @param array $roles Liste des noms de rôles autorisés
-     * @return array Liste des utilisateurs
+     * Récupère les utilisateurs créés par un agent dans une agence avec rôles spécifiques
+     * @param int $agentId
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $roles
+     * @return array
      */
     public static function getByAgent($agentId, $agencyId, $search = '', $limit = 10, $offset = 0, $roles = [])
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT u.* 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            LEFT JOIN owners o ON u.id = o.user_id AND o.agent_id = ?
-            LEFT JOIN tenants t ON u.id = t.user_id AND t.agent_id = ?
-            LEFT JOIN buyers b ON u.id = b.user_id AND b.agent_id = ?
-            WHERE u.is_deleted = 0 
-            AND u.agency_id = ?
-            AND (o.id IS NOT NULL OR t.id IS NOT NULL OR b.id IS NOT NULL)
-            AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
-        ";
+                SELECT u.* 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                LEFT JOIN owners o ON u.id = o.user_id AND o.agent_id = ?
+                LEFT JOIN tenants t ON u.id = t.user_id AND t.agent_id = ?
+                LEFT JOIN buyers b ON u.id = b.user_id AND b.agent_id = ?
+                WHERE u.is_deleted = 0 
+                AND u.agency_id = ?
+                AND (o.id IS NOT NULL OR t.id IS NOT NULL OR b.id IS NOT NULL)
+                AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
+            ";
             $params = [$agentId, $agentId, $agentId, $agencyId, "%{$search}%", "%{$search}%", "%{$search}%", "%{$search}%"];
 
             if (!empty($roles)) {
@@ -650,30 +667,29 @@ class User
     }
 
     /**
-     * Compte les utilisateurs créés par un agent dans une agence avec rôles spécifiques.
-     *
-     * @param int $agentId ID de l'agent
-     * @param int $agencyId ID de l'agence
-     * @param string $search Terme de recherche
-     * @param array $roles Liste des noms de rôles autorisés
-     * @return int Nombre total d'utilisateurs
+     * Compte les utilisateurs créés par un agent dans une agence avec rôles spécifiques
+     * @param int $agentId
+     * @param int $agencyId
+     * @param string $search
+     * @param array $roles
+     * @return int
      */
     public static function countByAgent($agentId, $agencyId, $search = '', $roles = [])
     {
         try {
             $pdo = Database::getInstance();
             $query = "
-            SELECT COUNT(*) 
-            FROM users u
-            JOIN roles r ON u.role_id = r.id
-            LEFT JOIN owners o ON u.id = o.user_id AND o.agent_id = ?
-            LEFT JOIN tenants t ON u.id = t.user_id AND t.agent_id = ?
-            LEFT JOIN buyers b ON u.id = b.user_id AND b.agent_id = ?
-            WHERE u.is_deleted = 0 
-            AND u.agency_id = ?
-            AND (o.id IS NOT NULL OR t.id IS NOT NULL OR b.id IS NOT NULL)
-            AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
-        ";
+                SELECT COUNT(*) 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                LEFT JOIN owners o ON u.id = o.user_id AND o.agent_id = ?
+                LEFT JOIN tenants t ON u.id = t.user_id AND t.agent_id = ?
+                LEFT JOIN buyers b ON u.id = b.user_id AND b.agent_id = ?
+                WHERE u.is_deleted = 0 
+                AND u.agency_id = ?
+                AND (o.id IS NOT NULL OR t.id IS NOT NULL OR b.id IS NOT NULL)
+                AND (u.username LIKE ? OR u.email LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?)
+            ";
             $params = [$agentId, $agentId, $agentId, $agencyId, "%{$search}%", "%{$search}%", "%{$search}%", "%{$search}%"];
 
             if (!empty($roles)) {
@@ -690,10 +706,9 @@ class User
     }
 
     /**
-     * Vérifie si un email existe déjà, en excluant un ID spécifique.
-     *
-     * @param string $email Email à vérifier
-     * @param int|null $excludeId ID à exclure (pour mise à jour)
+     * Vérifie si un email existe déjà, en excluant un ID spécifique
+     * @param string $email
+     * @param int|null $excludeId
      * @return bool
      */
     public static function emailExists($email, $excludeId = null)
@@ -715,9 +730,8 @@ class User
     }
 
     /**
-     * Effectue une suppression logique d'un utilisateur.
-     *
-     * @param int $id ID de l'utilisateur
+     * Effectue une suppression logique d'un utilisateur
+     * @param int $id
      * @return bool
      */
     public static function softDelete($id)

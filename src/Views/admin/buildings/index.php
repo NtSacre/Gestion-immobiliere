@@ -124,17 +124,17 @@ $msgFlash = new Flash();
                             <td class="p-3">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 bg-construction-yellow rounded-full flex items-center justify-center text-construction-black font-semibold mr-3">
-                                        <?= strtoupper(substr($building['data']->getName() ?? 'B', 0, 1)) ?>
+                                        <?= strtoupper(substr($building->getName() ?? 'B', 0, 1)) ?>
                                     </div>
-                                    <span class="font-medium"><?= htmlspecialchars($building['data']->getName() ?? 'N/A') ?></span>
+                                    <span class="font-medium"><?= htmlspecialchars($building->getName() ?? 'N/A') ?></span>
                                 </div>
                             </td>
                             <td class="p-3">
-                                <?php $city = $building['data']->getCity(); ?>
+                                <?php $city = $building->getCity(); ?>
                                 <?= $city ? htmlspecialchars($city) : '<span class="text-gray-400 italic">Non défini</span>' ?>
                             </td>
                             <td class="p-3">
-                                <?php $status = $building['data']->getStatus(); ?>
+                                <?php $status = $building->getStatus(); ?>
                                 <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full 
                                     <?= match($status) {
                                         'disponible' => 'bg-green-100 text-green-800',
@@ -148,19 +148,19 @@ $msgFlash = new Flash();
                             </td>
                             <td class="p-3">
                                 <?php 
-                                $type = \App\Models\BuildingType::find($building['data']->getTypeId());
+                                $type = \App\Models\BuildingType::find($building->getTypeId());
                                 $typeName = $type ? $type->getName() : 'Inconnu';
                                 ?>
                                 <?= htmlspecialchars(ucfirst($typeName)) ?>
                             </td>
                             <td class="p-3 text-sm text-gray-600">
-                                <?= date('d/m/Y', strtotime($building['data']->getCreatedAt())) ?>
+                                <?= date('d/m/Y', strtotime($building->getCreatedAt())) ?>
                             </td>
                             <td class="p-3">
                                 <div class="flex justify-center space-x-1">
                                     <!-- Bouton Voir -->
                                     <a
-                                        href="/buildings/show/<?= $building['data']->getId() ?>"
+                                        href="/buildings/<?= $building->getId() ?>"
                                         class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors duration-150"
                                         title="Voir les détails"
                                     >
@@ -168,10 +168,10 @@ $msgFlash = new Flash();
                                         Voir
                                     </a>
                                     
-                                    <?php if ($building['canManage']): ?>
+                                    <?php if ($building->canManage()): ?>
                                         <!-- Bouton Modifier -->
                                         <a
-                                            href="/buildings/edit/<?= $building['data']->getId() ?>"
+                                            href="/buildings/edit/<?= $building->getId() ?>"
                                             class="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors duration-150"
                                             title="Modifier le bâtiment"
                                         >
@@ -182,7 +182,7 @@ $msgFlash = new Flash();
                                         <!-- Bouton Supprimer -->
                                         <button
                                             type="button"
-                                            onclick="openDeleteModal('/buildings/delete/', <?= $building['data']->getId() ?>, 'buildings.delete', '<?= htmlspecialchars($building['data']->getName()) ?>')"
+                                            onclick="openDeleteModal('/buildings/delete/', <?= $building->getId() ?>, 'buildings.delete', '<?= htmlspecialchars($building->getName()) ?>')"
                                             class="inline-flex items-center px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors duration-150"
                                             title="Supprimer le bâtiment"
                                         >

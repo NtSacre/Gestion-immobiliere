@@ -18,7 +18,7 @@ class BuildingType
     protected $description;
     protected $created_at;
     protected $updated_at;
-    protected $deleted_at;
+    protected $is_deleted;
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class BuildingType
     public function getDescription() { return $this->description; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
-    public function getDeletedAt() { return $this->deleted_at; }
+    public function getIsDeleted() { return $this->is_deleted; }
 
     // Protected setters
     protected function setId($id) { $this->id = $id; }
@@ -39,7 +39,7 @@ class BuildingType
     protected function setDescription($description) { $this->description = $description; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
     protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
-    protected function setDeletedAt($deleted_at) { $this->deleted_at = $deleted_at; }
+    protected function setIsDeleted($is_deleted) { $this->is_deleted = $is_deleted; }
 
     /**
      * Crée un objet BuildingType à partir des données de la base
@@ -54,7 +54,7 @@ class BuildingType
         $buildingType->setDescription($data['description'] ?? null);
         $buildingType->setCreatedAt($data['created_at']);
         $buildingType->setUpdatedAt($data['updated_at'] ?? null);
-        $buildingType->setDeletedAt($data['deleted_at'] ?? null);
+        $buildingType->setIsDeleted($data['is_deleted'] ?? null);
         return $buildingType;
     }
 
@@ -67,7 +67,7 @@ class BuildingType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM building_types WHERE id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM building_types WHERE id = ? AND is_deleted = 0');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -94,7 +94,7 @@ class BuildingType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM building_types WHERE is_deleted IS FALSE ORDER BY name ASC');
+            $stmt = $pdo->query('SELECT * FROM building_types WHERE is_deleted = 0 ORDER BY name ASC');
             $buildingTypes = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $buildingTypes[] = self::fromData($data);
@@ -122,7 +122,7 @@ class BuildingType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM building_types WHERE is_deleted IS FALSE ORDER BY name ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM building_types WHERE is_deleted = 0 ORDER BY name ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -193,7 +193,7 @@ class BuildingType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('UPDATE building_types SET deleted_at = NOW() WHERE id = ?');
+            $stmt = $pdo->prepare('UPDATE building_types SET is_deleted = 1 WHERE id = ?');
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la suppression du type de bâtiment : " . $e->getMessage());
@@ -209,7 +209,7 @@ class BuildingType
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM building_types WHERE name = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM building_types WHERE name = ? AND is_deleted = 0');
             $stmt->execute([$name]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;

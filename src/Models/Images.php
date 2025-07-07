@@ -20,6 +20,7 @@ class Images
     protected $alt_text;
     protected $order;
     protected $created_at;
+    protected $is_deleted;
 
     public function __construct()
     {
@@ -34,6 +35,7 @@ class Images
     public function getAltText() { return $this->alt_text; }
     public function getOrder() { return $this->order; }
     public function getCreatedAt() { return $this->created_at; }
+    public function getIsDeleted() { return $this->is_deleted; }
 
     // Protected setters
     protected function setId($id) { $this->id = $id; }
@@ -43,6 +45,7 @@ class Images
     protected function setAltText($alt_text) { $this->alt_text = $alt_text; }
     protected function setOrder($order) { $this->order = $order; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
+    protected function setIsDeleted($is_deleted) { $this->is_deleted = $is_deleted; }
 
     /**
      * Crée un objet Images à partir des données de la base
@@ -59,6 +62,7 @@ class Images
         $image->setAltText($data['alt_text'] ?? null);
         $image->setOrder($data['order']);
         $image->setCreatedAt($data['created_at']);
+        $image->setIsDeleted($data['is_deleted'] ?? 0);
         return $image;
     }
 
@@ -71,7 +75,7 @@ class Images
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM images WHERE id = ?');
+            $stmt = $pdo->prepare('SELECT * FROM images WHERE id = ? AND is_deleted = 0');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -98,7 +102,7 @@ class Images
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM images ORDER BY created_at DESC');
+            $stmt = $pdo->query('SELECT * FROM images WHERE is_deleted = 0 ORDER BY created_at DESC');
             $images = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $images[] = self::fromData($data);
@@ -117,7 +121,7 @@ class Images
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM images ORDER BY created_at ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM images WHERE is_deleted = 0 ORDER BY created_at ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -135,7 +139,7 @@ class Images
         try {
             $pdo = Database::getInstance();
             // Validation basique de entity_type
-            $validEntityTypes = ['apartment', 'building', 'user']; // À ajuster selon vos besoins
+            $validEntityTypes = ['apartment', 'building', 'user'];
             if (!in_array($data['entity_type'], $validEntityTypes)) {
                 throw new PDOException("Type d’entité invalide");
             }
@@ -151,8 +155,8 @@ class Images
             }
             $stmt = $pdo->prepare('
                 INSERT INTO images (
-                    entity_type, entity_id, path, alt_text, `order`, created_at
-                ) VALUES (?, ?, ?, ?, ?, NOW())
+                    entity_type, entity_id, path, alt_text, `order`, created_at, is_deleted
+                ) VALUES (?, ?, ?, ?, ?, NOW(), 0)
             ');
             $stmt->execute([
                 $data['entity_type'],
@@ -184,7 +188,7 @@ class Images
             }
             // Validation basique de entity_type si modifié
             if (!empty($data['entity_type'])) {
-                $validEntityTypes = ['apartment', 'building', 'user']; // À ajuster
+                $validEntityTypes = ['apartment', 'building', 'user'];
                 if (!in_array($data['entity_type'], $validEntityTypes)) {
                     throw new PDOException("Type d’entité invalide");
                 }
@@ -204,7 +208,7 @@ class Images
             $stmt = $pdo->prepare('
                 UPDATE images
                 SET entity_type = ?, entity_id = ?, path = ?, alt_text = ?, `order` = ?
-                WHERE id = ?
+                WHERE id = ? AND is_deleted = 0
             ');
             $stmt->execute([
                 $data['entity_type'] ?? $existing->getEntityType(),
@@ -221,7 +225,7 @@ class Images
     }
 
     /**
-     * Supprime une image
+     * Supprime une image (suppression logique)
      * @param int $id
      * @return bool
      */
@@ -229,10 +233,44 @@ class Images
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('DELETE FROM images WHERE id = ?');
-            return $stmt->execute([$id]);
+            $stmt = $pdo->prepare('UPDATE images SET is_deleted = 1 WHERE id = ? AND is_deleted = 0');
+            $stmt->execute([$id]);
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            throw new PDOException("Erreur lors de la suppression de l’image : " . $e->getMessage());
+            throw new PDOException("Erreur lors de la suppression logique de l’image : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Supprime toutes les images d'une entité (suppression logique) et leurs fichiers physiques
+     * @param string $entityType (ex: 'building')
+     * @param int $entityId
+     * @return bool
+     */
+    public static function deleteByEntity(string $entityType, int $entityId): bool
+    {
+        try {
+            $pdo = Database::getInstance();
+
+            // Récupérer les chemins d’images à supprimer du disque
+            $stmt = $pdo->prepare('SELECT path FROM images WHERE entity_type = ? AND entity_id = ? AND is_deleted = 0');
+            $stmt->execute([$entityType, $entityId]);
+            $paths = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // Supprimer les fichiers du disque
+            foreach ($paths as $path) {
+                $fullPath = dirname(__DIR__, 2) . '/public' . $path;
+                if (file_exists($fullPath)) {
+                    unlink($fullPath);
+                }
+            }
+
+            // Marquer les images comme supprimées en base de données
+            $deleteStmt = $pdo->prepare('UPDATE images SET is_deleted = 1 WHERE entity_type = ? AND entity_id = ? AND is_deleted = 0');
+            $deleteStmt->execute([$entityType, $entityId]);
+            return $deleteStmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la suppression logique des images : " . $e->getMessage());
         }
     }
 
@@ -246,7 +284,7 @@ class Images
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM images WHERE entity_type = ? AND entity_id = ? ORDER BY `order` ASC');
+            $stmt = $pdo->prepare('SELECT * FROM images WHERE entity_type = ? AND entity_id = ? AND is_deleted = 0 ORDER BY `order` ASC');
             $stmt->execute([$entityType, $entityId]);
             $images = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {

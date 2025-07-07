@@ -1,47 +1,524 @@
-[2025-06-25 03:49:20] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/dashboard","method":"GET"}
-[2025-06-25 03:49:20] INFO: Route exacte trouvée: 'dashboard' pour URI: 'dashboard' 
-[2025-06-25 03:49:20] ACCESS: Attempted action: dashboard {"user_id":1,"action":"dashboard","status":"success"}
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour users.delete: 6061699c1371aa170edab56c8e4b09ec09d589268c6b4d0c26a30322464bde1d 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour buildings.delete: b72974e4e7296f62a633db210067a4b1fbbbdcf72f1feaee37f016adf2fd2b41 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour tenants.delete: 515ffb1eeb9b29912484f587a1feb2bcb1815eb5fd15df3f373155b5504cda52 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour owners.delete: 8c8963c57ec06317d6373792170e7d567a335720f5f7a94e095750f225d3a883 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour apartements.delete: 009c2bb6ec713c2e72b25cad2efb38f30402e85c9f0364d094c3b76e77f55d54 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour roles.delete: f37713a2783bc5f7f56f6af5f49fd35f77e6521618976498e309f8e52676faf1 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour agencies.delete: c8c8175666da7474c32881da0450cc8ce0b1f626ce8a6925e6a522dae0acda4c 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour apartment-types.delete: 5f5b338f732f9fe6acd08823255d49e92d181538d4233c5cb59fc589be7171e3 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour building-types.delete: 06d5c2e9b9b4c2df85e3a203ff5b3d91f68b2f903e1ae32008cc1739030bf6db 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour payments.delete: 0917cff198498e46a8b8038477f0366a67d7ba22956699eb157d7d8da91b14c6 
-[2025-06-25 03:49:20] ERROR: CSRF Token généré pour leases.delete: bce682412109bf0b8fef0c645ac413bc6610b23189a471dac10c0ac71c213c48 
-[2025-06-25 03:50:25] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/buildings","method":"GET"}
-[2025-06-25 03:50:25] INFO: Route exacte trouvée: 'buildings' pour URI: 'buildings' 
-[2025-06-25 03:50:25] ACCESS: Attempted action: buildings.index {"user_id":1,"action":"buildings.index","status":"success"}
-[2025-06-25 03:50:25] ERROR: Action index introuvable dans App\Controllers\BuildingController (Code: 500) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 136 {"exception":{},"uri":"buildings","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":136,"trace":"#0 {main}"}
-[2025-06-25 03:56:17] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/buildings","method":"GET"}
-[2025-06-25 03:56:17] INFO: Route exacte trouvée: 'buildings' pour URI: 'buildings' 
-[2025-06-25 03:56:17] ACCESS: Attempted action: buildings.index {"user_id":1,"action":"buildings.index","status":"success"}
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour users.delete: a6fcef618ed7bcf278d7ea83d592cd6b149bb933818f94e42f92cef98f4e9153 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour buildings.delete: fffc6ab499dc4192e734dc945aac33f7009fd2472b91958198957e987b34cf90 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour tenants.delete: d34b68b70bd7f458683196c9fa4753e80025edf342a86f7250d5f238a04f887b 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour owners.delete: aee41e89f8d485f6319dda5824dcdd4ae3d329b183f6fc060caf89e7fb0561b0 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour apartements.delete: fad6710df907cc66eaa1f4859b132e42d3a608b5b42c8aada0b102a61c8926c3 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour roles.delete: 42bbc5623808dfc3089b42650b0e6a17db7a34ee36c3ca59230d9077c8615b4f 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour agencies.delete: fd60ea3ed360ceaad5b818e1471f008f5a2c2036364279e23703c24179ce010e 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour apartment-types.delete: e60ff42d61957e90f9cb6194aefe7a4b7185d4a87ab6c77b19d74e3ba13a91ab 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour building-types.delete: 0d3dd59da8e1a428cd5950d4727724c69dc07cfe3ef6eef627a9d735b1eee3bd 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour payments.delete: 0dd91ba464c6c5e29e0fd1ba8462b8ecbaa98b2113d9abd9b8d783c2370b8700 
-[2025-06-25 03:56:17] ERROR: CSRF Token généré pour leases.delete: ac4f82e067a0f17daa262e8778f8f21d4a95e480cad77153e3fbf510102832b6 
-[2025-06-25 03:56:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/buildings\/create","method":"GET"}
-[2025-06-25 03:56:21] INFO: Route exacte trouvée: 'buildings/create' pour URI: 'buildings/create' 
-[2025-06-25 03:56:21] ACCESS: Attempted action: buildings.create {"user_id":1,"action":"buildings.create","status":"success"}
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour buildings.store: 95c3870e379308fd42cf9ee29dd7c074592b9a35dbbbbbd0a18102dd896a18b7 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour users.delete: 3f011c10be5ac5b27bb0c2a7bdb8bc64a384e3dd496394b1c68c4d82f9651ba7 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour buildings.delete: 4b9a180af5c8a96015096d846f5c24a2a7627f3d682566070cc48a0ee3388725 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour tenants.delete: aec1c2937be3763a81b224e8a64b2e580ee9678859caccc992666b315564b63e 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour owners.delete: 01b9f25e62aec2dfba173435f0497ca589ad116f8ae92eb3c9c246909d0d907c 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour apartements.delete: 4c79af8c3cee21834e28e6cb0f0fa20e0be32fcea0ef85874e2e3cca97d37caf 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour roles.delete: e9f9bb7c834177c0942eab508912d67b785f931f6d2b945959b8fa99568079c1 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour agencies.delete: 480c5ec15cb42ef1f3daf957ee9713381ddd29e6497b8fea7bf967ae84d24585 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour apartment-types.delete: c3c37dc3812d975465d22d38188b773a7c5d7909cc03d14a38012a22e5791046 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour building-types.delete: b145c08968463df3d7294bdc90284159f838b7e712ba6ff2255cb95a7774607e 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour payments.delete: 840a6cf19bfb832284ac4426bf744384e19b7d2acde136eb6b683d5229878d82 
-[2025-06-25 03:56:21] ERROR: CSRF Token généré pour leases.delete: c297ff9142d9e1d9c51a6458590f8d7359f0e701d11f9cfe3e2029452b177a2c 
+[2025-07-06 20:53:25] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 20:53:25] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 20:53:25] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour leases.store: 0f4736f3a8df798542947c791359c60f43997997bbd45b9820bebabc980fb45f 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour users.delete: 0f4b82dfcdd7a41944e58101010dfc2a8fb3b5b10e012938175d11117871c1b9 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour buildings.delete: 40ff60311f65af64309be8c8932e874ce7a4bd4416face87b7e81efbfa8ef441 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour tenants.delete: 004a3072161cc10b53862353a1502ac967b834a6a67701e6825bffe0dca889fa 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour owners.delete: 5dc56715c16883a5c5241555c813783bbd810c95f6746dec71a2cf2f1005e17d 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour apartements.delete: 299d39d1a1d7c4f4f39976154b777864a77994a5148db979a8f05fe34e98755d 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour roles.delete: 01cdf87de6a47230ffda2b7c4265f9eb91ec785eeb76d403ee80f768db8ba727 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour agencies.delete: fe6fb3a1bc5d86fafd08530e70f378cb842fa21451fccd5856cd80682831ffc9 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour apartment-types.delete: 289c4eb432b52790b4251985f3bec703335bb57c6108647d4af85cf3f637b1df 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour building-types.delete: 9f4122878826850a13df0b8f63a6d1852560c989a3ceed5a60e01b98ea0a1d3c 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour payments.delete: 39be0ddd92811fd93417de387c02137414bb6426272eeebf9b42d39aa431c8cc 
+[2025-07-06 20:53:25] ERROR: CSRF Token généré pour leases.delete: d4ff6af139ee35cec2d69b9a1a37a90a2a1c987ed8ab1fb39209f76763e9c49e 
+[2025-07-06 20:53:45] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/store","method":"POST"}
+[2025-07-06 20:53:45] INFO: Route exacte trouvée: 'leases/store' pour URI: 'leases/store' 
+[2025-07-06 20:53:45] ACCESS: Attempted action: leases.store {"user_id":2,"action":"leases.store","status":"success"}
+[2025-07-06 20:53:45] ERROR: CSRF Verify - Form: 'leases.store', Token envoyé: '0f4736f3a8df798542947c791359c60f43997997bbd45b9820bebabc980fb45f', Token session: '0f4736f3a8df798542947c791359c60f43997997bbd45b9820bebabc980fb45f' 
+[2025-07-06 20:53:45] INFO: Agent ID:  
+[2025-07-06 20:53:45] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 20:53:45] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 20:53:45] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour leases.store: aaaf22e3ace866f2a52911f426a563ff331efa53efd5849802405753f252db75 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour users.delete: a0d2a9dc4c475ebba49a2130a687453b050b108df744717c34a542735b8f1aad 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour buildings.delete: a422689b39d3d6b90796305f2913aa9a2091ec9bc30882e053a3ee4b3a990760 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour tenants.delete: 3493f54f105e2e0ab6af32eb10115d1675648252381632a3659b83ea9a313a21 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour owners.delete: 3c6940814a48dc99266aa3e5314e46a48afe369901ac1eb888b604ccc1be9896 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour apartements.delete: 095f907bd6176bad8f5a682fbe3af296ae4339acc5be3a00cddae5b1ec7fbc9c 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour roles.delete: ec7e41f1b7aee3c8f52cfea1bb61e5b1c4dcde8c586bdd65a4df08b3bc03a43f 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour agencies.delete: d931eb4bda3fbed8a74b6f122880507228579ff839a9a2cf09cd08f2d667b2a3 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour apartment-types.delete: 90868f56cd9b7ee3d438b2f0fb9edc1cd1510dac733f773cc29fb24c4dee204a 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour building-types.delete: 18ad40bb03899bb267f936f129ad8271c72bfde2b72f44eb943350eee93edb30 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour payments.delete: 0965c69061a9ea190bd7b245adcb4a485926e3920c5480614fbcab71eb9b29cd 
+[2025-07-06 20:53:45] ERROR: CSRF Token généré pour leases.delete: 506b04cbfae09634384f1d797926769d0f353c4a49db75d2729ea30301785d3b 
+[2025-07-06 20:55:57] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 20:55:57] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 20:55:57] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 20:55:57] INFO: User ID: 2 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour leases.store: 5ccf36c5d05210337c8ce02905a2c743359c8407a55d3882432daf03dec28b50 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour users.delete: 7b7a2f4f9ee4f5b63f931ca2b2abb972087bc6d660e61014636754db0b079314 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour buildings.delete: 4d8630e07a771c425977d17e5d4be5e69d5f3b6bc03f4da8bd39b5001557828d 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour tenants.delete: 8053d554ee0a3b94f61701dbdfabd726e455ff7f911a077f09c73074e5078965 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour owners.delete: 39503bb5c270bb84bd469ddeb3f36db74a58ce8fdf38d2cd30004a5abf1ab0c4 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour apartements.delete: 52afec3d89192eccc6b11d539a4a5ef1c163c26ca83c65304f9add0d129812e6 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour roles.delete: ec8530f316cac7a482e3e7e482c69bf1818724cb1fa7400089181c9e29f251ae 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour agencies.delete: 8e60c97b71d208cf489f8aa5d4394207921fd831113107d1393369143c54713b 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour apartment-types.delete: f28660de32d74b255afab531554f3157c2a1915afafaaf2eaf49a1bc3f6c2dc7 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour building-types.delete: 9e400f696438395704372d8253660a573e03256cedc7f08774eb2f061af76036 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour payments.delete: 74aaed15ba43d900fe8ccd59f2983c601c862a775224c72171ab1e445c1cdf0c 
+[2025-07-06 20:55:57] ERROR: CSRF Token généré pour leases.delete: fa633da9e8fd9fc0326bef5b9b502fcf6fef4231c04aedb79aabeb768c34a73c 
+[2025-07-06 20:58:50] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 20:58:50] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 20:58:50] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour leases.store: e4ac35ac28563a6fb7912fae549dc3098859f5a33f850f5fa17eb84fad0f5a68 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour users.delete: 9b5d9075b7f77a071ed8730823a358224c2495fc1b61c1c1bc32e81f1dac2964 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour buildings.delete: 35802847ae2201380d82ed48f9b445d6567b20cfb9ac0996c0e360f5776f5040 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour tenants.delete: 176c8188fb81b76509a19c8f99bdf5fbfaecd791bdb93873cd5c3d689de7f60e 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour owners.delete: ea32b0f1196dae48b524719e4779923012651cd834c6434a00acf976db668632 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour apartements.delete: 6f6fcea803e24d4fc3e30df8dda40ec6255a3a04d1c930a143426744ec1d6cc4 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour roles.delete: cc80d5e0195ba01d1f9e39776ea785ce1cc880243c8329befef6bb911b447b32 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour agencies.delete: 4306fac4152075defddfcd3629ce4684c586e078ce2b514da123a93ff7f068dc 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour apartment-types.delete: 380ed74a957af62541cf19a5f03c608eea073e8278cf6028a61bb2503078c874 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour building-types.delete: 87cce6ada98a3b807009f87cd86157a7d1f3224e978e297a1df861d021f2cf79 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour payments.delete: 879de6ff16f1ca848ce5787cd1e9aebcbbc7e9c4dd96b00de6012104960cf079 
+[2025-07-06 20:58:50] ERROR: CSRF Token généré pour leases.delete: 08a72237ce5dab3d20f0a7f55bb7cb60f33efcf5bd2d2bf25313c62c58e6d9ac 
+[2025-07-06 20:59:56] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/store","method":"POST"}
+[2025-07-06 20:59:56] INFO: Route exacte trouvée: 'leases/store' pour URI: 'leases/store' 
+[2025-07-06 20:59:56] ACCESS: Attempted action: leases.store {"user_id":2,"action":"leases.store","status":"success"}
+[2025-07-06 20:59:56] ERROR: CSRF Verify - Form: 'leases.store', Token envoyé: 'e4ac35ac28563a6fb7912fae549dc3098859f5a33f850f5fa17eb84fad0f5a68', Token session: 'e4ac35ac28563a6fb7912fae549dc3098859f5a33f850f5fa17eb84fad0f5a68' 
+[2025-07-06 20:59:56] INFO: Agent ID: 2 
+[2025-07-06 20:59:56] ERROR: Erreur lors de la création du bail : Erreur lors de la création du contrat de location : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'payment_frequency' in 'field list' 
+[2025-07-06 20:59:56] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 20:59:56] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 20:59:56] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour leases.store: 389a00a9fe38ff0ebc13afdb4bbb6a087bd20881b859aa4f65d737f219bdc1f9 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour users.delete: 93f71fc7080a02db4b027376f22e0124fc8da331d9d256597e789f52b2788a85 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour buildings.delete: 9709922712b866b8988112536995f8c98e6fdce2990a1d849065901cc62efbfc 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour tenants.delete: 26b85e0b6401eac431f87ea79d26d2757aa0512f9042b3f814b7771ae3da16a7 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour owners.delete: aa544e3bb9becd734cf9358f96ec2318263c61d957190ba77f3813d7e033a1f0 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour apartements.delete: 232c5488aebe7952b83debad4534bfdbe0a5936dc5fbb7ba19cb854b4adaf454 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour roles.delete: 9482cc1e185e928c9ea8a04131add1aa7f1ade08321ab99f0207d0c41c0ea1d9 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour agencies.delete: 979ae03748fee82ca443dbe616949bd974be34d6c5a0145289263df9d4ed5733 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour apartment-types.delete: 6f5257e07e46926f078aa7c6af12bc2e815cdcc48835942b7b15bf7da367e18b 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour building-types.delete: a8c0f27175116a1d735d6badd32a8d3e9fc44799d94d2e4b4d4a03407f35a94e 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour payments.delete: 8578591c438e280bb7aed5a69abf7fda7e215e3899380a823f0daf2eee6060c7 
+[2025-07-06 20:59:56] ERROR: CSRF Token généré pour leases.delete: cc00d6fa5a1b19c5817142a83aa36e22c16600afbb0ec84d0c722275615d50af 
+[2025-07-06 21:04:45] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 21:04:45] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 21:04:45] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour leases.store: 76abb5968ee2dca756d1715b88c9d5504a7f58af7b151d5a48b19a8727c49012 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour users.delete: b36c6025caf75c4d2aac9e2146cdb23fd595c98429a6c48bc2f5a22f3b320030 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour buildings.delete: 34bf957a29e6f1c659efd79349b32eccd80a4d02298d55e59c214bb92a59f9d6 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour tenants.delete: 76fb2cb9d87191ee73ba48e0be5005b3b5107a7767193da9fbd87a3066ca9b13 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour owners.delete: 0134b3b78c3bc8d8c35514406144a49128cffccc0511ea8d5a98cd5678d3f9cf 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour apartements.delete: 2978bece7ea51c3117afc28e1b26bdc080ecb826499e3151ac6bb443b4ff49fc 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour roles.delete: ad50302b52fbc7f82aa2f49d59b7f4eafc70ad5cfcee947349dbbb5bc9ff1378 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour agencies.delete: c7907c3544dc7af1e032cad090831953f14079cc299416fe2c1f0e5d1299a9ca 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour apartment-types.delete: 2f7e11084718fe5a77e8be2031d11ab890b263d3368186d5c4289517b11758f4 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour building-types.delete: 7cc84f6b8d4692b96258a8b5098c70e99ed15db229943ac589eb6a341615588e 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour payments.delete: 37aa47a5fce28714b7f5fb0a7f4d8633402fbfabb40a8530f04d32f086115a6f 
+[2025-07-06 21:04:45] ERROR: CSRF Token généré pour leases.delete: c9a8c4c1d282bf3c2d895b16812694d43778f5d29b0351231e87d08c070b9a93 
+[2025-07-06 21:05:10] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/store","method":"POST"}
+[2025-07-06 21:05:10] INFO: Route exacte trouvée: 'leases/store' pour URI: 'leases/store' 
+[2025-07-06 21:05:10] ACCESS: Attempted action: leases.store {"user_id":2,"action":"leases.store","status":"success"}
+[2025-07-06 21:05:10] ERROR: CSRF Verify - Form: 'leases.store', Token envoyé: '76abb5968ee2dca756d1715b88c9d5504a7f58af7b151d5a48b19a8727c49012', Token session: '76abb5968ee2dca756d1715b88c9d5504a7f58af7b151d5a48b19a8727c49012' 
+[2025-07-06 21:05:10] ERROR: Erreur lors de la création du bail : Erreur lors de la création du contrat de location : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'field list' 
+[2025-07-06 21:05:10] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 21:05:10] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 21:05:10] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour leases.store: 918685aefb66e80ee0af2bff22180c87ae1cf85fb14358f96abb437d59a7b6d5 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour users.delete: c3f2d0686b39c8bee283dbae401ecafd5fa9f162b8020317ff5266d458ede496 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour buildings.delete: 8c2cb5411cdfaf09240ddc3a03259318491a09753ccb9de6dd786e6299e0726d 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour tenants.delete: d9441bed91e47eb70aa495a6e627d86cb049a9180699d4ebf70c33d902f19ec8 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour owners.delete: 16732533fe9cc8b7c0b03328cbcd08f4a336c74115fe2c0d35192a5290b1c478 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour apartements.delete: 4ff97f7d07b8d11151bfe32248fc9963b39d2ff174fd8858f87304bab0e0a0c0 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour roles.delete: 77dd74ba606c9220468130191b8b9417ee9fa9f827ec23db9a673aa1c29933e7 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour agencies.delete: 56c875348b667d1eb4834767427b7d8fd783cf74c1c8e2028d0e789d5afa8cfe 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour apartment-types.delete: 8ff862a274ad3a997aedc7baefcf1f717788c6efc2e37309b5aeaee97c06c010 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour building-types.delete: 854638cf2dc8b4398697c1e3dd09f9b36b940a1a8ba61c95de1cbfabc4044692 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour payments.delete: bbe23e175b8fe502b37da598c6e1e5df7fd9f1789f9ba6dce0813c5e2640992e 
+[2025-07-06 21:05:10] ERROR: CSRF Token généré pour leases.delete: 0221233128c7b6b076514daffa1b92845ef550a772dad7fe726d650e5ff8a695 
+[2025-07-06 21:09:53] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/create","method":"GET"}
+[2025-07-06 21:09:53] INFO: Route exacte trouvée: 'leases/create' pour URI: 'leases/create' 
+[2025-07-06 21:09:53] ACCESS: Attempted action: leases.create {"user_id":2,"action":"leases.create","status":"success"}
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour leases.store: e9b4662494468bc0fd129093c21151df8f125d606d2011b8716a3c917eb04f49 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour users.delete: 466c44102aa7fff2d32b7005217ef6284e63f9e8926bd32fd80ecb762b53b1d6 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour buildings.delete: 6148ab0b63079abe4ce392b5807b39bdc2f621e0d970771e43c3d099dd96bd44 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour tenants.delete: f8b849fe89c404cfe9f2560347593f9ff945f3116af889597158d72458f6b2ef 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour owners.delete: 54fc9b5ff38bad493529dd876a7c3074e24f80c75c34931f89bcd0d15874846b 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour apartements.delete: 232f1582bc9a8e40b2b83d2316390be35eb6005e5f56bb60b82557493004bfd1 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour roles.delete: 7666a0ec8bdb54e6a11e7b1ad4d4aa5053a9614e39393fb41b09aa866ad82751 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour agencies.delete: 877611d466b295c353296f2056858210d433159e065654363eafcb6b70e4fcc0 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour apartment-types.delete: 5de2bee4bbd5bbcf784fb327c0c56862714ef69818cabf9d83fb0b6537b86ee9 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour building-types.delete: baf22f1df362b5b1d2f5e3ddfdd059c3e2556628c22b6eb4d547c0a5963e5966 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour payments.delete: 0c6716e03b67d93479725ac5bae6509a6e98e239bacddd8d49b28ecbccefab0a 
+[2025-07-06 21:09:53] ERROR: CSRF Token généré pour leases.delete: 74cb691089784babc39010fc234366bd23db267a91a6c91aba6922276fa342f8 
+[2025-07-06 21:10:20] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/store","method":"POST"}
+[2025-07-06 21:10:20] INFO: Route exacte trouvée: 'leases/store' pour URI: 'leases/store' 
+[2025-07-06 21:10:20] ACCESS: Attempted action: leases.store {"user_id":2,"action":"leases.store","status":"success"}
+[2025-07-06 21:10:20] ERROR: CSRF Verify - Form: 'leases.store', Token envoyé: 'e9b4662494468bc0fd129093c21151df8f125d606d2011b8716a3c917eb04f49', Token session: 'e9b4662494468bc0fd129093c21151df8f125d606d2011b8716a3c917eb04f49' 
+[2025-07-06 21:10:20] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-06 21:10:20] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-06 21:10:20] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour users.delete: 15bd45906bb27f435a7e655e7e94e58ee2538940d6b84068b7a318360eb10fbb 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour buildings.delete: 1b74608eb58f20cebd1d5b0bfe3e34888386469a60a8942d456fbc59d3b5b080 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour tenants.delete: 0931f23cd28292e016d287f1e98ab877fd0d646c903c103d9071572f75c538d7 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour owners.delete: 20f690ccdb0f95eea3ecfbe7baa2611502a7a3bff8c1fa9dae2ce18a7f5b1f55 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour apartements.delete: db5be2c761a864694de5eb9f1c3fd3cceb0b7a307e8b2c1586fbfdb70efa3017 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour roles.delete: d9ae3b492bdf143141f538949a4bb61b07f7e7d5bc5e1c8e4ed741480bfc2857 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour agencies.delete: 708716f92f2537460f157f61da9c65b704dd6d8c7dc5980c1e1b111ca8e5d6c7 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour apartment-types.delete: 71a6aecabdff0e16ecb741ad39aa5fa8cc559a8935bcd9569199d975f582f1a4 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour building-types.delete: d5878563cbe3ac0578c70303a99a228df0964d0f2fc5b52c24c5cdb8ffab5daf 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour payments.delete: 3ca2335f90312fbacc216648118d23a85e07cb861a2d1683db577e6b8cf8016c 
+[2025-07-06 21:10:20] ERROR: CSRF Token généré pour leases.delete: f84e55ab2cb31618a3169e2b7af371aa0e6e2262e7d566f4b92478b5403e3ca3 
+[2025-07-06 21:10:25] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/show\/1","method":"GET"}
+[2025-07-06 21:10:25] ERROR: Aucune route trouvée pour URI: 'leases/show/1' avec méthode: GET 
+[2025-07-06 21:10:25] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 101 {"exception":{},"uri":"leases\/show\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":101,"trace":"#0 {main}"}
+[2025-07-06 21:10:28] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-06 21:10:28] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-06 21:10:28] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour users.delete: d20016eb1ea51e62de8b0863d12f096029bcf8829cad7957b8ce22a08397c193 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour buildings.delete: b50ea869e62c003de51b9009a3bceef7e5ca4f2d8f1340d146f18edba6d52344 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour tenants.delete: 7ee288b1ec19a4e456306257cfa2db373886f6fd0f6510f0af2e783ad2b7802b 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour owners.delete: 6e3affeb1234ef2dce891a3c70c6845ddf7a258e411230c8c3215da4386cf1e5 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour apartements.delete: cc397e4a2bbe8e08d6d6c4d1afa1dd19c5fff4be708c5d7e183824a5eff5db78 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour roles.delete: 81b6d4960151ff128d6a20ced36c8902d75cc99bcb580d2495a6da69e51a3274 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour agencies.delete: 1226af1ddaaf40f4b912eaf1a0800c669961b379e59735a7d403f030c8c8b6b7 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour apartment-types.delete: 3ac7e65c82c7bb4864714d3555a8a4b7b440ecc06d6264b2ea1b904f363611bb 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour building-types.delete: 95e081baa731a13ca4b705f0689a4c20dbb3a7987ee65deb42f033741b89d6db 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour payments.delete: 80e5dd4882578718a775105b09ab4b4b9abe393e6205e7dc26a66edd72a3a073 
+[2025-07-06 21:10:28] ERROR: CSRF Token généré pour leases.delete: 38b295931d9399f56076c76404e9c7c52cab5b3fa066c76b85ddb139c8814768 
+[2025-07-06 21:10:30] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/edit\/1","method":"GET"}
+[2025-07-06 21:10:30] INFO: Route avec paramètres trouvée: 'leases/edit/:id' pour URI: 'leases/edit/1' {"pattern":"\/^leases\\\/edit\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-06 21:10:30] ACCESS: Attempted action: leases.edit {"user_id":2,"action":"leases.edit","status":"success"}
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour leases.update: 1aea3428f5fa7bac197764dfafb30f3fe5531d5028ec0c4819b1f5e5c0004200 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour users.delete: e68f45542ab7b1706a3cf90cdaca3087b28f49a5e811394b14dd093b5e6e2574 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour buildings.delete: 20a0bae4e85b22d7be1f38462fff5d0570171a7228f6fe82a7865a0a1740fb70 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour tenants.delete: e1d493160b3935526d26c32e41ba7bb8fd4415b7cfb8e32523f5ebc630cdf1c9 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour owners.delete: 37e1a4cb8049f8fb88027be1084da02cb850d74c63833071ea349ee581e1e6fa 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour apartements.delete: 8b76d93f3245b51f660c75451c1236f29f92272201ef6d95ee1cddab80fcc554 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour roles.delete: 53ac53dbc446c071611e68a57857afdf3848896e013c0c61dd44b80b79f16d5a 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour agencies.delete: 5db7b6522613192fa6f5359101992cb42a5be6d4e4ff86bcc476d011ebf56b87 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour apartment-types.delete: 3052c107f580b66175e6fe7faf846fa4113561288337c1e5bc7acc774dc8aa1d 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour building-types.delete: 6f59ad774146cc197ebc485a8b355b3fd3238b127fd7046d556a0d1e80c5b0e2 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour payments.delete: 99e595788ec358cf1d9298e8d514ade7264e969605718c572d806bac6e13410d 
+[2025-07-06 21:10:30] ERROR: CSRF Token généré pour leases.delete: 07b1057c95d5088614b21d32ecb4ef9893e723acc7bfadd731dbcbc8bca52825 
+[2025-07-07 01:31:03] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/edit\/1","method":"GET"}
+[2025-07-07 01:31:03] INFO: Route avec paramètres trouvée: 'leases/edit/:id' pour URI: 'leases/edit/1' {"pattern":"\/^leases\\\/edit\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 01:31:03] ACCESS: Attempted action: leases.edit {"user_id":2,"action":"leases.edit","status":"success"}
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour leases.update: 91849bf9cc7b4b35c43d63a88f3b09c56d59f2fec0b32cb866408efcede7b20c 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour users.delete: 2bd2f6aea9e1a65123452b439c43543fb5b25713968460c238749ca789b4c53a 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour buildings.delete: a0a9e054efeda70dd706e52e4a319005357f18e84c4255cfa930d4ba61d722af 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour tenants.delete: c8fa125076b35d9048615a603c8c04d1e939f515351c8e9544c1173991736aa9 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour owners.delete: bb40a95281c24fbc61f86b56ba43af01e6ecec67f826a33963c1cd17da6b4902 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour apartements.delete: 3cdef5a4709a10c109f8fdc8f59bd173adce0870011205b4cef11f8a386d7de6 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour roles.delete: 0d3ec8e889f75b7fabc1976583c5e150ea793b86d9b67fd400f91bcc8e1b3efd 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour agencies.delete: 68e2ee500285c61bd5c5debc0047a51adec76f267f40e32d3bd05d964a068a63 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour apartment-types.delete: 1c0a90ef828f9d84b43a04eb409a97425598344444b65d9d6743a88f0ef4a991 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour building-types.delete: e7cc5e2cae49b4f25b32e0f036636697f26bfdd97c2cb25e5f59cef8ca7c5b2d 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour payments.delete: 1387a2d8a7f4301085f0e413220c0368ed7b8299596451123a8fff8a295fc649 
+[2025-07-07 01:31:03] ERROR: CSRF Token généré pour leases.delete: 3ee8e914596496fc434ee09adcf1972524577f001ca9c9a51ed2fce079787003 
+[2025-07-07 01:31:23] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/update\/1","method":"POST"}
+[2025-07-07 01:31:23] INFO: Route avec paramètres trouvée: 'leases/update/:id' pour URI: 'leases/update/1' {"pattern":"\/^leases\\\/update\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 01:31:23] ACCESS: Attempted action: leases.update {"user_id":2,"action":"leases.update","status":"success"}
+[2025-07-07 01:31:23] ERROR: CSRF Verify - Form: 'leases.update', Token envoyé: '91849bf9cc7b4b35c43d63a88f3b09c56d59f2fec0b32cb866408efcede7b20c', Token session: '91849bf9cc7b4b35c43d63a88f3b09c56d59f2fec0b32cb866408efcede7b20c' 
+[2025-07-07 01:31:23] ERROR: Erreur lors de la mise à jour du bail ID 1 : Erreur lors de la mise à jour du contrat de location : SQLSTATE[HY093]: Invalid parameter number 
+[2025-07-07 01:31:23] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/edit\/1","method":"GET"}
+[2025-07-07 01:31:23] INFO: Route avec paramètres trouvée: 'leases/edit/:id' pour URI: 'leases/edit/1' {"pattern":"\/^leases\\\/edit\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 01:31:23] ACCESS: Attempted action: leases.edit {"user_id":2,"action":"leases.edit","status":"success"}
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour leases.update: d4954020e487c69fe9367524f017f18759e32cf954a5096bcf2af1e05bc5912e 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour users.delete: e38ed44cee93195f4d8561bd50b132ee59810906ac4836eee566450d1c19cb67 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour buildings.delete: 2c2d3ab33ad565a3ba787b1311870b1f473e2d0200d7dced5d523c3e606cedc2 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour tenants.delete: 0d7ece34b5acf50d90517e37d804fc0c06ea037eb4bb89d28ad2e206361a440a 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour owners.delete: 9f231cb9f45813df7fa52b98662bb4ee1bb61f1fdd661ae1c7935bc66541eab1 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour apartements.delete: 394802c42e391ca12ca4f0c890ce59b8fa8776ad65112c90f8c1b09ec1944168 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour roles.delete: 1ec6743d5177b2b3bec60320c1d3cd49afec12f3ef4a5ae63fb9f42babb10e30 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour agencies.delete: 5ef4edbb062eebedd004418db41dfce93eb24b63d62900980f61096c13e94625 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour apartment-types.delete: 84912b83bc0e5d9224610e4b2109df4fa8e91eebd380d27cdf10cbd8a74fca0d 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour building-types.delete: d0575e1543d14ee85ac1a275fa2e37031c773ef400af2fb79329dd57f814d0f4 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour payments.delete: 565f09601a6d7106ba33ddc5cec446f511f776201b7dd038b14bc5fffd36cb6d 
+[2025-07-07 01:31:23] ERROR: CSRF Token généré pour leases.delete: 05d5c6674ff79f3c4f7ba2ec477879aa6a603da0046c5705b68cb5ce48178b4c 
+[2025-07-07 01:49:31] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/edit\/1","method":"GET"}
+[2025-07-07 01:49:31] INFO: Route avec paramètres trouvée: 'leases/edit/:id' pour URI: 'leases/edit/1' {"pattern":"\/^leases\\\/edit\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 01:49:31] ACCESS: Attempted action: leases.edit {"user_id":2,"action":"leases.edit","status":"success"}
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour leases.update: 578eeb1b05ffd099ac7d5d8027b5c29e61a001908c538fa9368f7a227a0fe5d1 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour users.delete: 1bd098fa3aa331f97a07734e041fbc7a8d7e1dd05f818baf16e9f4df852c1ef8 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour buildings.delete: fab896f88115f96363b99aedd10e66a2640a25cbc3e39b9671181aff5aef23ec 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour tenants.delete: aa5fef3f120ab369c12b3d1d557da551621f3a9b95202fded9a793273607d85b 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour owners.delete: df9b42b4213ccf4cb1386e083479aaded087d3daac7bf9c8e72d372c1d1d6dbf 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour apartements.delete: 28e886a45edfd01ba00eb2efcdc816c047615ff62204ae8d36ebb02a8da81da4 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour roles.delete: 2f865f5054171139c58fd8506658fc1c135ea33a6ed67fc2ad7bbb0419885b10 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour agencies.delete: 75ac703950c12b26e67f12ceac19722c85615dacb3d4e75e20455b029265dfcb 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour apartment-types.delete: 098f4fbd8b110361c77c6fd6d4c524d5d69aa2fc4284cca23d8a8f7e02bdad60 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour building-types.delete: ea323726f290c790974073bbfb79c8d6ec5f370cd11cfb4c7ae8d4a5c8258199 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour payments.delete: 71ec7b867fc0c64bb0844a28ce4bbdc51c13fcb0bc671ae6db358c2c67f8e935 
+[2025-07-07 01:49:31] ERROR: CSRF Token généré pour leases.delete: c494d29246aac4f99971439dd0d68deebdf16bfb1c33ae6b4ade16483f18e59b 
+[2025-07-07 01:49:47] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/update\/1","method":"POST"}
+[2025-07-07 01:49:47] INFO: Route avec paramètres trouvée: 'leases/update/:id' pour URI: 'leases/update/1' {"pattern":"\/^leases\\\/update\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 01:49:47] ACCESS: Attempted action: leases.update {"user_id":2,"action":"leases.update","status":"success"}
+[2025-07-07 01:49:47] ERROR: CSRF Verify - Form: 'leases.update', Token envoyé: '578eeb1b05ffd099ac7d5d8027b5c29e61a001908c538fa9368f7a227a0fe5d1', Token session: '578eeb1b05ffd099ac7d5d8027b5c29e61a001908c538fa9368f7a227a0fe5d1' 
+[2025-07-07 01:49:47] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 01:49:47] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 01:49:47] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour users.delete: 22d8fce1321663cba556f17fe675f1072e33f5f453c8360d01174d43d598a9a0 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour buildings.delete: 87bd9c1d72758c8d29c214b1e7c198f93d98381448ff9d2af0ba8d29e653b19d 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour tenants.delete: bce64878bb513b3bb8bf8a67bb920edc8eb9c611d0d10ea9e125475b46270b05 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour owners.delete: 2aad27f54b0a0210c3d2ab91301d2c0db0d8b066e515cb53a82cd357ca1699b6 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour apartements.delete: d5d01ff5e5367d2945c0e115bff38b93e70c800d750838a31273d3e1d625e7dd 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour roles.delete: 74fd49ca45febf0f41972f3f781435cfd59cbbb32ab043a64a4e218e16ca0a66 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour agencies.delete: ddd65e1add7aac2f0468b6a892a3b7ed3ccea5bcb17169b1b7775b36c1b3c3e2 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour apartment-types.delete: 9ecb1ee0f2cca9d72f8c563eff9231133cd27d2d539f983ebd17390ca1452fc6 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour building-types.delete: abb02227b8d7f400beee0e271a3df5173b91dac3172cf15eac0ea3e68cc59da6 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour payments.delete: 9f89f6cb0105ee7f3a5022dba4e9e7e0141f1f6e110a268bed671412700a2010 
+[2025-07-07 01:49:47] ERROR: CSRF Token généré pour leases.delete: 2d9e878c9b49cac7a835b207d26fc5cd23592b0f429cb73fe32b17208a78fb78 
+[2025-07-07 01:49:51] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/show\/1","method":"GET"}
+[2025-07-07 01:49:51] ERROR: Aucune route trouvée pour URI: 'leases/show/1' avec méthode: GET 
+[2025-07-07 01:49:51] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 101 {"exception":{},"uri":"leases\/show\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":101,"trace":"#0 {main}"}
+[2025-07-07 01:49:53] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 01:49:53] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 01:49:53] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour users.delete: 37cb46566ee0db4061daa4c9e9781580723b753714ad1c20ff58e2cfc0bad750 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour buildings.delete: c9b5aa8dec118929cdb947ddddd4ffced1c71dbe63a9af10ae54cdf0887a03e4 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour tenants.delete: b8064e6aa48b81bd7da8d3928a0799677bbed86cd9a679c42ad95c92607e3c9a 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour owners.delete: 90a44d33d9f12d513ac5431f67623f3b980eecd8d4f339752d1183236785ba3a 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour apartements.delete: 60e63332ba195ea701fb10cd98c899e4e8069da703c6b84dc3655ef842b0b0fd 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour roles.delete: 43842c88bd310ac38659168fe8352dd2e0b797acdce9002c878506228425aa6b 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour agencies.delete: 23bd9435d03a87c4751831a312d5817c9f07b2a4c39741bbc82b6b920ad5ab4b 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour apartment-types.delete: c1c977921249ca9f23afa4d521519e958389321aabd50e566aa3198cbd42078f 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour building-types.delete: e65a5acd7b4547e0995b611fce931e7ad93ea181de2746416d84c26728b78b18 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour payments.delete: 2c1182cafadf8dbf3e20c026d8397bc24b5be072806af97ed9b0278fe77272e5 
+[2025-07-07 01:49:53] ERROR: CSRF Token généré pour leases.delete: 973aa8c3638c920802222833e044cf5bf035c7a5ef289969ceaf343d4778078d 
+[2025-07-07 02:09:11] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/show\/1","method":"GET"}
+[2025-07-07 02:09:11] ERROR: Aucune route trouvée pour URI: 'leases/show/1' avec méthode: GET 
+[2025-07-07 02:09:11] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 101 {"exception":{},"uri":"leases\/show\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":101,"trace":"#0 {main}"}
+[2025-07-07 02:09:16] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 02:09:16] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 02:09:16] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour users.delete: 9ef6c53a464c101213dbe615079986bf82ade709c426be5a6455404e952f9307 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour buildings.delete: 751e3cd74a2e392c13c353451f16f9ac6413f9a3cb7d8d3e6dae30e22ba70d57 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour tenants.delete: 7ae86044d49ce415d4188a680ec3714a40e6d26198e94ee82dd7249c4c84f50d 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour owners.delete: d79ae5bfd8e1371ba7df296bca03b4a98fa4a32e6be9303763a5d1412698c266 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour apartements.delete: f6bbbb4b9c12e0a4e5597fc60d76454c30d1f569951b6384a0a737453947591f 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour roles.delete: 37927ce26acf607eb796ed73fe8903052d02a999245c0cd581f96e34af1fdfa1 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour agencies.delete: 5e2d15aadf37546732894fc9715d774ae61db1102e53001abe0e9f55cad08019 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour apartment-types.delete: 16bc5a0082c1a2209ac86d93494711cb228c09f30931e599bdcd0fe41529de28 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour building-types.delete: 7563fbd2b130c3373db8a1d9915771165f2dc4c3f27be6dc41be687c1eb480fc 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour payments.delete: 1b66048235c04c16aa4a0eb91a3f1a2720b9e29553106bb0ad60a0a2d67af894 
+[2025-07-07 02:09:16] ERROR: CSRF Token généré pour leases.delete: 34508fcc83bc139e5d968c5430af3bacf0d610ec66340a51a79dcb5cdfb8984b 
+[2025-07-07 02:09:17] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 02:09:17] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 02:09:17] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour users.delete: dd4cb4d2d28870e7fbd5796c2187067818842b2f894cd14a67bcc37407fc31ba 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour buildings.delete: 9e36e774f267a8f88a51b9639ef02fa1b7a6e78ded6c121d27a2105d4441469c 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour tenants.delete: d5eeaa2e8ac9c149258b54acd33703f463ce1a0938b3d30ba60ad8272eeb7073 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour owners.delete: d9807d3e512e82f5e77bce9a2b62100693654096b4eb3fe2f1793a8c8e254ddb 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour apartements.delete: 23425339ef9542df1941eb4acfbf39a1000af20fbc1c965f2aa32bbd71c4de4f 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour roles.delete: 7e43da0decfb97b2ef9354703bb0ad4e58ca750e4c597db8981689b10c16f5b3 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour agencies.delete: 7c81b44bddf7bc73b48d66242f1e06656233b2be1c26b5f5df41fc6a0e4e7bc4 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour apartment-types.delete: 55b9c3751e7495294e9daeca59b4ea5a18ea9356799bc067738b5631f98a7c5b 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour building-types.delete: 8a6b41da7416a843ef284d142d6632b7b06aa41f4584b9d1c2de14688039af68 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour payments.delete: 8570a4a0146025f70f2104a1aa3d51465339e67c4de1896a3eb2def0baa15ea7 
+[2025-07-07 02:09:17] ERROR: CSRF Token généré pour leases.delete: 31f599e820ba73e182be26bb63873651e29b5d30dc99364bb5e7fee4cd956818 
+[2025-07-07 02:09:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:09:21] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:09:21] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour users.delete: e0b5c9b7caa590bb4f4c40d334bafd3afe03195b945154b48a5f224ca8d7451d 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour buildings.delete: 1f1861ee48ae115162e61ffa61514c55fdd3d848a3d1e3d60729a9e14da8f653 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour tenants.delete: 7000f2ad7722c2b049fa07ddab4e10d1cffc2971817b6a4a36de3f58f2697fd0 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour owners.delete: 1afcd0f2948e7d05309841eb921b1fb5cb4e5253eb0e19b903880e27a26207c2 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour apartements.delete: 22f94f9988df4afa38c09cab58a899917787ce5b899099d3b34510d92d78a988 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour roles.delete: 90870a3b4b26fa00b07871d1b240de3d20b114c3a57d41220113df11eb603185 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour agencies.delete: 94ebc87032322db98cf31350a70f283f8126c87535c289ae4957bdbca5528613 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour apartment-types.delete: 3bac91dc3f9e705325d7876593b9bfbf3138fbd7dcd0f074943651928d55ddb4 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour building-types.delete: ac0f58db4b30ca94debbd484e70540222ac7d337e6499a158875df141670ca88 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour payments.delete: e551aa51a0d0233dd2f67f3b795d5d23bba320856ec7b4c4825e23a1e863bb7b 
+[2025-07-07 02:09:21] ERROR: CSRF Token généré pour leases.delete: a83478070aae12aa94fc7b16c9711b96a43e8d62c23c17a1d386ff767cf17031 
+[2025-07-07 02:20:28] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:20:28] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:20:28] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour users.delete: ae0fa12b8da0d0cd91baeba7f63c1ea904b1f090ae44e80f328c67bda0bf8849 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour buildings.delete: 593e6242f0f6192c4b488eac818ebe309b8c87834a51560fd408c485025379b2 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour tenants.delete: 846880e82716dfca3b14c3790f7de8e9de7bb9247acf0eebdcabfc9747ecbd5d 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour owners.delete: 0aab76f2fc2c6fe942946afe22301798aa09076d2d206f0dd78011e9a379453f 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour apartements.delete: bdefe9a91db5e40eb50d652a05ba6180e3094f440efc735eb1df2c3b6f244ac1 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour roles.delete: e12a5123aae7b3a67ddc56a8d50d2fd3c439b5edd47b158ad5fc412b0e6262a9 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour agencies.delete: 418fe6dfb21f9e00b3d6464bbeecccbf9f8ab2bf390c9bc1a149d2e398dc0436 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour apartment-types.delete: 167c05aec5cc784fa917ba3efcb4696bd6faf4e0ceb9b62e6e568630f11a4c56 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour building-types.delete: c7a20a00c71c786629fbbd7eb7ed19f2648e2566edb6863e8786aaa8414b70ca 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour payments.delete: f9069f31839e98f40ade5bc3670d4b46e15de37d9bcc22f0b2b2271fdf15c945 
+[2025-07-07 02:20:28] ERROR: CSRF Token généré pour leases.delete: f15b249af535ace2bd57b71dc148e992eb1fe3448987f91d12a2fac7f507cfad 
+[2025-07-07 02:20:56] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 02:20:56] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 02:20:56] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour users.delete: af1fe6d518f010a42498c6991967cbe1b59aaf44b8c7fbe43bf21105ff19ded7 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour buildings.delete: 52550f4c9588d75931bc839adc068696352cce93e18fea665138d55db4cbeadf 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour tenants.delete: e167e9ad0ede5aa3c6d00a5cb9a4380be72946b9f6f51b659ac1c80848399289 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour owners.delete: 524c951789cba1f87478c1f8a1f544d2ec6e70fe4b1380b4ad141d9ff703c7be 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour apartements.delete: 6074f0192a105c824fa4aca8e1f7ce6bbf4ff77b6e191b78a8e6d6e8b1057d26 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour roles.delete: 3b454223f79a33c5746c33438d4a7e4e16675a75faeb6d0b090a61437d4877cc 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour agencies.delete: 52380859f3619f24e4977e80d94a50412c83a7cbafed8635ee2253480c845a86 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour apartment-types.delete: f53f07cb5160e9e6378628d5072ddfd63df73c5c729c51905b027929560ed260 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour building-types.delete: 193d03b762998d6c1feb7e96206571d29ae2bb8f372d400beee99cf001ffd673 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour payments.delete: abe9d641acc08362eb0fc28fca5eabb0d3c9d759902e7861d25d14280f773ab0 
+[2025-07-07 02:20:56] ERROR: CSRF Token généré pour leases.delete: 45a62784e35074d88bdbecedea9e7afe291fd3c4f528dfa7ad82fe966cc92184 
+[2025-07-07 02:20:59] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:20:59] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:20:59] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour users.delete: 00acd2917eb1a9463d25d07c972285fa7d7a12add55bebb7a5785e4c292cc293 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour buildings.delete: 4f6816ddc72632d262af6c9908f8cf90ec8894762b6b5d47e6b7516b2fd82610 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour tenants.delete: 8b89f51b21fe4cb9dd0561d5150a033e847cfd0bb5f02658ffcca9115995a1e3 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour owners.delete: 8d533fae76a3af4f68633109e2e6405aa1230686e72532acd594cdde33a82b6f 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour apartements.delete: 89362e34388897f5c073e1242a18eecaeb76ce1a665e9fcae11492ddff164536 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour roles.delete: 3ea69501a643ac549ffdfcd9dc5694a9ce0a2c6a60da19a9000cdcc464b19106 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour agencies.delete: b62713bcc9c046b323c123e85a0c8213455da554d9134f1998206c9f6c5b03f3 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour apartment-types.delete: d43e629eb1ed7c550e4f9cdf1f0264483e5e7b44df4d953fb27a83dac311f5d2 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour building-types.delete: 73dc66d90e4cc3e1afdfa01488d769f8e985c67b87ab1007082a8cda63a2f519 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour payments.delete: 96d0a8e8fed6389046f60e563594e60d007a87afa7232a8ca6fea99f89ad86a1 
+[2025-07-07 02:20:59] ERROR: CSRF Token généré pour leases.delete: 00c8f2931386e99b5c2b0653e2467bbb70ee01b626054947a21c3c79ee24c16b 
+[2025-07-07 02:23:31] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:23:31] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:23:31] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour leases.delete: e76ad39fbd1b83443654aa1375659395e3f56ea5906b3b1eefdfdb98c3a81115 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour users.delete: b80965f1edb0998d4e125757c193b88a53fdb06d8038840fd47716a303e6f139 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour buildings.delete: 1ff75ba1cb418048b90fbd349f338c7608f3e214da44939facf023ce80208b45 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour tenants.delete: bc47ac40672474ca7c52d7fd7a09a51ca74913fd3d86a6745f6eb5a218735137 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour owners.delete: f48627d865c7831783593ef1c0c3b03cc11b8258941e5c919294a9a884d58a30 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour apartements.delete: 922d323c6fd0c2bac3bdb3d3d2bd0651dc4a5984c9ff7a535cb7a944454ac86a 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour roles.delete: 512a69ed1a7eb72f5fd2d53374248e5234188ef41ec66825edc8973e229e4f29 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour agencies.delete: da53c35bb04386375df2b339369b7b08c3c7498a0b9263df2b7767c83fbd9cf2 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour apartment-types.delete: b8b11eecc7314ca69999216efa6e1125e8477037e2a3f351ee063d3a7cc8f3f2 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour building-types.delete: 83032f44ff3db5304a9decf4ff82e2e30579c0c8f37fa38277c550f942672ae6 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour payments.delete: c88e3c3ac409cabdcd3a47cda372c1355d25bcf40703545cdd52d860a872a568 
+[2025-07-07 02:23:31] ERROR: CSRF Token généré pour leases.delete: b7992b24ce62fee73765e02d8ff5e563ce4446121602a38f3ce1708021ce2b69 
+[2025-07-07 02:24:51] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:24:51] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:24:51] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour leases.delete: c5fb7e9860ba7d369bc72e3a5824403505dc67b3e1afd2d29091eedd65f1e595 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour users.delete: f1015666e69889bb86929650bff5fa11f87111c6106a1f601dabb19a212c16cc 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour buildings.delete: c5d38c031dd1dcd44afc8d5bc4c1dda797e3e226db6cb170c58483d887f20446 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour tenants.delete: 50543ff41ebfb6c5a0c297044ae1ba0d88060e890ce8380d852610c3d5e2d9f8 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour owners.delete: b66f087d9f0db559c6118d8d636a69358082feec7deae8be17ca277bed80396a 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour apartements.delete: 250663799a188a261e7653a6d84e88afd31974d889a3dc7f8f8c8b5dace70c0f 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour roles.delete: cdf7338fe2ea93855ce7db72adb6220eb656d6863b9d0caa6bb2fe3f27bbccd3 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour agencies.delete: 4b74cae090815e7d38c59cedef737f993ca63553c6db59926ade3dbbd5ede1b0 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour apartment-types.delete: 3437ac30d0419f4de7fdfa6ddd5c15edc41c3eec47cec1c7dddfa44db2c1fac3 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour building-types.delete: 010e41901ad45ae372767c4cd89a486990d837b03873021a9df4c60aeb7534d6 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour payments.delete: 3dcc6b1b298d2e88c3937bc813372d510a93a43c66ce9129d32276f491d9e2e7 
+[2025-07-07 02:24:51] ERROR: CSRF Token généré pour leases.delete: 209f275d34f0234db865a00437e7cdbd4a44076923a3f941ff25eee69cbf8a3e 
+[2025-07-07 02:38:10] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:38:10] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:38:10] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour leases.delete: 894e96d7268c84e43c21547560ab4e293a8759409bc45c1a0cc0aa2fd109770d 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour users.delete: 7cca44bf5e07b8cfa749f24be69f89ec35a5dff087c4521e08f7bf93058bd33e 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour buildings.delete: 231a2a5d52161eee8d9fcb7436181c868c2ad560dd922b7a60f931c58d77a1ca 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour tenants.delete: 7428ae1f6f99b838a93f5fe43991714276bac3e3416348e9702b7aee46034e23 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour owners.delete: d380c7a21c125be5f7c227aaa43544dfa0110367d67ec736121da91a55087e7e 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour apartements.delete: 50ce1806c0aadf2d06f8322fc867ddc01c2857f7db3f98b112da8353f0afc672 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour roles.delete: 6333acf2b06fd7d37c9fe84e065a48babfa8b828ea8e10b975c9bb3e57b47d66 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour agencies.delete: ace9b8e53d1c7f7d440f079f703349e6476cc213ad3d5c2b0b0279acd2e119f0 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour apartment-types.delete: d8ea323a634541e5d87cbb1873539e3e93b3af0e5550f0ffb14ae786f235576e 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour building-types.delete: 78d66aca2d98b2ff32a4c9b1f73f90a7122902bb03835944b49c9ca94e783ae6 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour payments.delete: dcee20f8e1f3c36aef1135c2a15f4f812aef3532572ebc88e487e2e192eec21c 
+[2025-07-07 02:38:10] ERROR: CSRF Token généré pour leases.delete: af3d552b3042f67c393185b07ca7d9a8f68285d79c650d5db34126b905b1a987 
+[2025-07-07 02:38:14] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/downloadPDF\/1","method":"GET"}
+[2025-07-07 02:38:14] ERROR: Aucune route trouvée pour URI: 'leases/downloadPDF/1' avec méthode: GET 
+[2025-07-07 02:38:14] ERROR: Route non trouvée ou méthode non autorisée (Code: 404) in E:\Documents\Unipro\developpement web dynamique\Projet Exam\Gestion-immobiliere\public\index.php on line 101 {"exception":{},"uri":"leases\/downloadPDF\/1","method":"GET","file":"E:\\Documents\\Unipro\\developpement web dynamique\\Projet Exam\\Gestion-immobiliere\\public\\index.php","line":101,"trace":"#0 {main}"}
+[2025-07-07 02:39:21] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:39:21] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:39:21] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour leases.delete: 49ba1338281ab4017afe65fe2fe1c5aa556ef202b99f395bba750722fad30b84 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour users.delete: 5cd9a100941dbeaff5228083a923c7dd69f49def8f116f994b41d75cfff232f5 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour buildings.delete: 18878e3bfe4797d61aa24e409118d657a459e761611ea4fdba23720d879f5d40 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour tenants.delete: 739cf4c6866f0f02b54a019cb553fce507edca0b81de9c4ba761fba2075ef48d 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour owners.delete: 5e2c09f765390709f088a66b7b5fac3d191d00580acf392cb881bb3abd4d564a 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour apartements.delete: c4bd19f108d0b33b3fe1d2dba1c74071b16547d895a2c6f6ac5b9936f997cf81 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour roles.delete: f6732f24f8e330f98c04c16db19fcfbb67aea0639a15baea188a3e80e154ab95 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour agencies.delete: eb803c7cc99503c0338581199cd2b94762a9a5ebb731fa85abc76ba402ac914d 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour apartment-types.delete: 5f3213b1034bd0477d0f185fe097672840b9e03159c845120f280c3014f708d8 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour building-types.delete: 6d86a586820b233d2ee32af63171ca179a45e6c4162939dbb29e24a719e21337 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour payments.delete: c78d9f8778ae1ce22d8276ef6a29dfe140ed4938a0ff290c8feb10e78ed91834 
+[2025-07-07 02:39:21] ERROR: CSRF Token généré pour leases.delete: 224eb5dac1de1eabe24236b69c6601dab5bd04e03480ab904a4cd2e8817716b2 
+[2025-07-07 02:39:23] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 02:39:23] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:39:23] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour leases.delete: 2fbac9ce85964765f53497a140e3db471f934885266c219558e4c13fe2d66fd8 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour users.delete: 5ee546f2ab87a1a6a56fae2af001ab88f8c8365dca30ad319fb4919452a31d9a 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour buildings.delete: a236bc149eeb444eea1487ac3da12a9b44bdd1c7eb448835e99f25d707322abf 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour tenants.delete: 74bd1a76bdc357165596187ac10dda4ea6e63f1960cd8f87d809a8afa0db787c 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour owners.delete: c08d84de6a8db8d28c18259db6fe52ebd804f8977494ad50d59b3c13e8f51e4d 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour apartements.delete: cbaf017c36bb42a8144e55464003514334c97b1c65e696f98c6a2a0e4d85d37c 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour roles.delete: 21a48641d4466b452bb92def86f362d3cef4d504005f3196bd8e98a5c09502c4 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour agencies.delete: 31f3d917be0a66f534138b9f86aa6f8ce78ec46ac1f19a12f2ac6e424b5be0f6 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour apartment-types.delete: ded85d845233b420a410c6e8c6b02e9fd97b94d409f5c20d10ce18665af8bc26 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour building-types.delete: c333a71e7179d370f614ea6d83fe6a1909949cf5c30b90ea192e1056f721d4b5 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour payments.delete: c0427f8b4c41299e1c0523516c542e7ad706c2bf1f63ee4362460e5b9fc51f8a 
+[2025-07-07 02:39:23] ERROR: CSRF Token généré pour leases.delete: 7636d8c2275628dadd11dd3c8c76d7ba99d05ff54862e437a1e28d21381d887c 
+[2025-07-07 02:39:25] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/downloadPDF\/1","method":"GET"}
+[2025-07-07 02:39:25] INFO: Route avec paramètres trouvée: 'leases/downloadPDF/:id' pour URI: 'leases/downloadPDF/1' {"pattern":"\/^leases\\\/downloadPDF\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 02:39:25] ACCESS: Attempted action: leases.downloadPDF {"user_id":2,"action":"leases.downloadPDF","status":"success"}
+[2025-07-07 02:39:25] ERROR: Erreur lors de la compilation LaTeX pour le bail ID 1 : 'latexmk' n'est pas reconnu en tant que commande interne
+ou externe, un programme ex�cutable ou un fichier de commandes. 
+[2025-07-07 02:39:25] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 02:39:25] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 02:39:25] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour users.delete: 20cf30da59a901f54abda70d7a1020bbed6d8e460b9cb9cbdb299b72b7dd8e76 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour buildings.delete: 6c9a59d29abea7d504f096d8dbcbb1cfd3ab97b7b946e3343719571ed365e165 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour tenants.delete: 69072c48ec4beed3e09e7c8113d697b37f8022928de5c50b292906575d7251dc 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour owners.delete: cecdda3a29ee5ec4c4ebabae69f93560a5910b01684702d0c7d2b9ab17cad428 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour apartements.delete: 0187d17b47e39841c2f9fb25dccd63eac8291c1f518f4e1749d9a9e25425f0a2 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour roles.delete: 3df6b5c72190b9eb61a0a1754f8cc1cb61293f09fc734d95c9f967ad8ccbad1d 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour agencies.delete: a30790ab07990d11bc6d726272f592c0de2bbb41997b379c1fd51c0baf781758 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour apartment-types.delete: 819f00fb2f52e109f10a4cc7cd6c20359c6f7dda0ae745fabd6bc1bc0adaf207 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour building-types.delete: 6b95c207a2e412413dc3aa221ec368e74e1c5536489bfa554e81232dc07a3298 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour payments.delete: 1a88d6c6c3fd42e1cbf9406c788296cd422c7777aa0efaefcfbfac6e73cf8bb6 
+[2025-07-07 02:39:25] ERROR: CSRF Token généré pour leases.delete: cd35fe30335b48e0e5192a601180fe4162af6d063a242ee487bd709f0c0aa0fd 
+[2025-07-07 03:29:38] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases","method":"GET"}
+[2025-07-07 03:29:38] INFO: Route exacte trouvée: 'leases' pour URI: 'leases' 
+[2025-07-07 03:29:38] ACCESS: Attempted action: leases.index {"user_id":2,"action":"leases.index","status":"success"}
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour users.delete: 58dd1a8d71cfa54a7334b697bb9ac6b2100763735f89e03057eb0b08296fae84 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour buildings.delete: 2efa6c3a9c5a5ac969e398eb8ba63f912a5acb532a2c71e7d65f4e1166f2b354 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour tenants.delete: 55e7cae9861025f9a903cb8fd0755fae0d4ac5b6b39c157cad274448ea7e8079 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour owners.delete: 35933bd0b6931cd00a58616b09c3c5f48055db58add46ff79dc2c23b6997b47b 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour apartements.delete: fc8338ecd84fb6d6a79d28c6f407dcbf49b1ce5d04937fa85e83c25ca2801023 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour roles.delete: 0653e953f2877c68d8a002023d29104de2087e507358daf2d7834bb5028f6ade 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour agencies.delete: d80cc3b45dcf4600b38e3df4a65f3379c25c304481f69e0c1bd9867ab383fc16 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour apartment-types.delete: 966e4df5e2bf14b6ac3cbf67d6c64a497247b74c28f257a900b97e68070baa3c 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour building-types.delete: ff0e6b582939eaa1c1342ef488e5c8555261ef3b8f210d62bdabb3eee4578173 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour payments.delete: 296edf02ce530292e0d7a8685335ee759135ee30c3e11a2c7f85fc6afd52b6fb 
+[2025-07-07 03:29:38] ERROR: CSRF Token généré pour leases.delete: 521dc707b79bb11753adfb30ab68a6f945e750d5c2bca8618618d09251fbea54 
+[2025-07-07 03:29:40] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 03:29:40] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:29:40] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour leases.delete: a46b887479ba44c973d077f816711840a8f1ff4179d76da783e764c6fcd868dc 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour users.delete: c4c8744dd14e66fc137a6094b9e60df9160012cc45ed720264a162e57c868b9a 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour buildings.delete: 2cbbc602ef635dbeb8317aa8dd1089b7dcd37b01c11b87eabfcf955b87d7a941 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour tenants.delete: 9fa4b3c042696e3eb848a43324562eebda2aa16d105fe05c485f7226ab05dd11 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour owners.delete: b3d4c584785cb4a6ffc258ef22aadbc352abfd90d755653e20e59905034637f4 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour apartements.delete: 6aa69ea9ec1543f0f90110f0348b1ecb21661bb7f8a409e62ba8667d600038cc 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour roles.delete: 54d58dac8cecc43d288d127d5dedf0f8366667e06205dbafd147204148a76bff 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour agencies.delete: 842b31eea03ad2a42093c2d7e7e11d45e478f35c95dd237985e0b7ae3df70667 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour apartment-types.delete: 8af588caa71186a740b9d494a1bf697e9d9f33443822691fe3a2c07c43615d6e 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour building-types.delete: 91dcc3e8a6b8e3fad218915dff61959ce74d3e22174b278d904939122eef8a56 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour payments.delete: 6da30f56bc23ba830aa41157149840336771459e70dba0b5bbd6487c88ffeb06 
+[2025-07-07 03:29:40] ERROR: CSRF Token généré pour leases.delete: 81918a369d7252eed6dcec5b008cdf9d08d8d317016df3a680571bcf8c0efa03 
+[2025-07-07 03:29:43] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/downloadPDF\/1","method":"GET"}
+[2025-07-07 03:29:43] INFO: Route avec paramètres trouvée: 'leases/downloadPDF/:id' pour URI: 'leases/downloadPDF/1' {"pattern":"\/^leases\\\/downloadPDF\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:29:43] ACCESS: Attempted action: leases.downloadPDF {"user_id":2,"action":"leases.downloadPDF","status":"success"}
+[2025-07-07 03:36:48] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 03:36:48] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:36:48] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour leases.delete: 48e04d521a963342e36009a1f2680a7832e1a5ab2f7a6e9b853510dbbfa1c72f 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour users.delete: 5c8d2a22b15d9480002cc20a4a90697b7d0de97ce25caa6f090997ec45a8ba44 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour buildings.delete: f6b44690e8a87b7a99e1d2c4a2e45457c2ee8123a1a62fb3036e586ba97f911f 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour tenants.delete: 82e73ae22ce03570ece8ede9d0f7f3523444eba5a576579e7bf359cb203db979 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour owners.delete: 4770960e643a1541f8ae9d822846fff8f004e0b2b4849ce9a8dd62d95888e07d 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour apartements.delete: 75c7a9440eab267ee9a4ebcd2cad3ed4090130a482efef231fa6666fb4073fad 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour roles.delete: 4efc22a65a0339c2d97ed77c35bf2032dad85cf27c1b9899e81ef6fd7f173a81 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour agencies.delete: 8937516def80b5053742d45c302c91317d2a692e1f2610c0fd986c81f8b57d53 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour apartment-types.delete: bb7dafaf910ebe48bdb3736d1e49dd9bcaa642169f7e1c5375a0f5d9ed3ddb1c 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour building-types.delete: 75fb76c86f05ddb685c3a9415b154352e29b7f20e65484965d77a9958b56f4c2 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour payments.delete: 681af208c6e67479629f5316f4c2a1da29e59b5788d28176abb57d885a147ced 
+[2025-07-07 03:36:48] ERROR: CSRF Token généré pour leases.delete: 3bcd850577119d471ec416a1b935093f3e1fa5f9ab1ef47390d44e9e2bd8af03 
+[2025-07-07 03:36:51] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/downloadPDF\/1","method":"GET"}
+[2025-07-07 03:36:51] INFO: Route avec paramètres trouvée: 'leases/downloadPDF/:id' pour URI: 'leases/downloadPDF/1' {"pattern":"\/^leases\\\/downloadPDF\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:36:51] ACCESS: Attempted action: leases.downloadPDF {"user_id":2,"action":"leases.downloadPDF","status":"success"}
+[2025-07-07 03:38:50] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/1","method":"GET"}
+[2025-07-07 03:38:50] INFO: Route avec paramètres trouvée: 'leases/:id' pour URI: 'leases/1' {"pattern":"\/^leases\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:38:50] ACCESS: Attempted action: leases.show {"user_id":2,"action":"leases.show","status":"success"}
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour leases.delete: 9227ce980d85d939436d4b82b9b5982dcdfe1c177e9ba4565448afb26abac8e0 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour users.delete: 3ce6b95b16e606513ff805d37d0b263342baa4b29a97bd5e5f0267b44d8e1e07 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour buildings.delete: 3a75a6a7f1a5856cef04c86004c312044ccbf591c0954c76a540001ffc93a3d9 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour tenants.delete: 27970a465d46cc1dfc6c9dc2330517c7f4b739f30f79af2fceaf5583433deda1 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour owners.delete: 410258ca6013c694b6e94d236cc96d1ebc9a2419d3f4233461f7898d2cf82d8a 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour apartements.delete: 7468677199759c5a8fbc5640e5a9232332053c3757e5f00ff50da4642b913cab 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour roles.delete: c2c7a57244ae9df8d938726819862b44e9b02ca86f4f0c846021176573294d31 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour agencies.delete: b662a5fdf8e1c78ffc061099eaa97f3b5b2eedfc83184fea69966d028e7cfc25 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour apartment-types.delete: 8e8c330380cf48a641cf18f261c166aa1bb2b24df729a1703e94dabe1371ee3a 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour building-types.delete: 86a43b029bf669237122af7880aedaba9eb1d2923e9489a8ce115bdd909ee8ed 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour payments.delete: e6364e9a1b1e297dde07930dec03420039e34adfa41656e568bf54b5ace8c32e 
+[2025-07-07 03:38:50] ERROR: CSRF Token généré pour leases.delete: 4fced91ca5bc69aa3c5750c9889ad2374e70321a8d75f7548417694e9067ef16 
+[2025-07-07 03:38:52] INFO: Démarrage de la requête pour URI: {uri} {"uri":"\/leases\/downloadPDF\/1","method":"GET"}
+[2025-07-07 03:38:52] INFO: Route avec paramètres trouvée: 'leases/downloadPDF/:id' pour URI: 'leases/downloadPDF/1' {"pattern":"\/^leases\\\/downloadPDF\\\/([^\\\/]+)$\/","params":["1"]}
+[2025-07-07 03:38:52] ACCESS: Attempted action: leases.downloadPDF {"user_id":2,"action":"leases.downloadPDF","status":"success"}

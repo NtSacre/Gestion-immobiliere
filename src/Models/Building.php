@@ -27,6 +27,10 @@ class Building
     protected $created_at;
     protected $updated_at;
     protected $is_deleted;
+    protected bool $canManage = false;
+
+
+
 
     public function __construct()
     {
@@ -52,7 +56,12 @@ class Building
     public function getPrice() { return $this->price; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
-    public function getIsDeleted() { return $this->is_deleted; } // Changed to public
+    public function getIsDeleted() { return $this->is_deleted; } 
+    public function canManage(): bool
+{
+    return $this->canManage;
+}
+
 
     // Setters
     protected function setId($id) { $this->id = $id; }
@@ -74,6 +83,11 @@ class Building
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
     protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
     protected function setIsDeleted($is_deleted) { $this->is_deleted = $is_deleted; }
+    public function setCanManage(bool $value): void
+{
+    $this->canManage = $value;
+}
+
 
     /**
      * Crée un objet Building à partir des données de la base.
@@ -169,6 +183,15 @@ class Building
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la récupération des bâtiments : " . $e->getMessage());
         }
+    }
+
+        /**
+     * Récupère tous les appartements
+     * @return array
+     */
+    public static function get()
+    {
+        return self::getAll();
     }
 
     /**

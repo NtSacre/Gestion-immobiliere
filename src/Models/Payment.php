@@ -15,6 +15,8 @@ class Payment
     private $pdo;
     protected $id;
     protected $lease_id;
+    protected $agent_id;
+    protected $agency_id;
     protected $amount;
     protected $payment_date;
     protected $due_date;
@@ -23,7 +25,7 @@ class Payment
     protected $quittance_path;
     protected $created_at;
     protected $updated_at;
-    protected $deleted_at;
+    protected $is_deleted;
 
     public function __construct()
     {
@@ -33,6 +35,8 @@ class Payment
     // Getters
     public function getId() { return $this->id; }
     public function getLeaseId() { return $this->lease_id; }
+    public function getAgentId() { return $this->agent_id; }
+    public function getAgencyId() { return $this->agency_id; }
     public function getAmount() { return $this->amount; }
     public function getPaymentDate() { return $this->payment_date; }
     public function getDueDate() { return $this->due_date; }
@@ -41,11 +45,13 @@ class Payment
     public function getQuittancePath() { return $this->quittance_path; }
     public function getCreatedAt() { return $this->created_at; }
     public function getUpdatedAt() { return $this->updated_at; }
-    public function getDeletedAt() { return $this->deleted_at; }
+    public function getIsDeleted() { return $this->is_deleted; }
 
     // Protected setters
     protected function setId($id) { $this->id = $id; }
     protected function setLeaseId($lease_id) { $this->lease_id = $lease_id; }
+    protected function setAgentId($agent_id) { $this->agent_id = $agent_id; }
+    protected function setAgencyId($agency_id) { $this->agency_id = $agency_id; }
     protected function setAmount($amount) { $this->amount = $amount; }
     protected function setPaymentDate($payment_date) { $this->payment_date = $payment_date; }
     protected function setDueDate($due_date) { $this->due_date = $due_date; }
@@ -54,7 +60,7 @@ class Payment
     protected function setQuittancePath($quittance_path) { $this->quittance_path = $quittance_path; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
     protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
-    protected function setDeletedAt($deleted_at) { $this->deleted_at = $deleted_at; }
+    protected function setIsDeleted($is_deleted) { $this->is_deleted = $is_deleted; }
 
     /**
      * Crée un objet Payment à partir des données de la base
@@ -66,6 +72,8 @@ class Payment
         $payment = new self();
         $payment->setId($data['id']);
         $payment->setLeaseId($data['lease_id']);
+        $payment->setAgentId($data['agent_id'] ?? null);
+        $payment->setAgencyId($data['agency_id'] ?? null);
         $payment->setAmount($data['amount']);
         $payment->setPaymentDate($data['payment_date']);
         $payment->setDueDate($data['due_date']);
@@ -74,7 +82,7 @@ class Payment
         $payment->setQuittancePath($data['quittance_path'] ?? null);
         $payment->setCreatedAt($data['created_at']);
         $payment->setUpdatedAt($data['updated_at'] ?? null);
-        $payment->setDeletedAt($data['deleted_at'] ?? null);
+        $payment->setIsDeleted($data['is_deleted'] ?? 0);
         return $payment;
     }
 
@@ -87,7 +95,7 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM payments WHERE id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM payments WHERE id = ? AND is_deleted = 0');
             $stmt->execute([$id]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
@@ -114,7 +122,7 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted IS FALSE ORDER BY payment_date DESC');
+            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted = 0 ORDER BY payment_date DESC');
             $payments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $payments[] = self::fromData($data);
@@ -133,7 +141,7 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted IS FALSE ORDER BY payment_date ASC LIMIT 1');
+            $stmt = $pdo->query('SELECT * FROM payments WHERE is_deleted = 0 ORDER BY payment_date ASC LIMIT 1');
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             return $data ? self::fromData($data) : null;
         } catch (PDOException $e) {
@@ -150,23 +158,42 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            // Vérifier l’existence du contrat
             if (!Lease::find($data['lease_id'])) {
-                throw new PDOException("Lease ID invalide");
+                throw new PDOException("ID de bail invalide : {$data['lease_id']}");
             }
-            // Validation basique de type
-            $validTypes = ['rent', 'charges', 'deposit']; // À ajuster selon vos besoins
+            if (isset($data['agent_id']) && !\App\Models\User::find($data['agent_id'])) {
+                throw new PDOException("ID d'agent invalide : {$data['agent_id']}");
+            }
+            if (isset($data['agency_id']) && !\App\Models\Agency::find($data['agency_id'])) {
+                throw new PDOException("ID d'agence invalide : {$data['agency_id']}");
+            }
+            $validTypes = ['rent', 'charges', 'deposit'];
             if (!in_array($data['type'], $validTypes)) {
-                throw new PDOException("Type de paiement invalide");
+                throw new PDOException("Type de paiement invalide : {$data['type']}");
             }
+            $validStatuses = ['pending', 'paid', 'late', 'canceled'];
+            if (!in_array($data['status'], $validStatuses)) {
+                throw new PDOException("Statut de paiement invalide : {$data['status']}");
+            }
+            if ($data['amount'] <= 0) {
+                throw new PDOException("Le montant doit être positif");
+            }
+            if (empty($data['payment_date']) || !strtotime($data['payment_date'])) {
+                throw new PDOException("Date de paiement invalide");
+            }
+            if (empty($data['due_date']) || !strtotime($data['due_date'])) {
+                throw new PDOException("Date d'échéance invalide");
+            }
+
             $stmt = $pdo->prepare('
                 INSERT INTO payments (
-                    lease_id, amount, payment_date, due_date, type, status, quittance_path,
-                    created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                    lease_id, agent_id, agency_id, amount, payment_date, due_date, type, status, quittance_path, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
             ');
             $stmt->execute([
                 $data['lease_id'],
+                $data['agent_id'] ?? null,
+                $data['agency_id'] ?? null,
                 $data['amount'],
                 $data['payment_date'],
                 $data['due_date'],
@@ -175,7 +202,11 @@ class Payment
                 $data['quittance_path'] ?? null
             ]);
             $id = $pdo->lastInsertId();
-            return self::find($id);
+            $payment = self::find($id);
+            if (!$payment) {
+                throw new PDOException("Paiement non trouvé après création, ID : $id");
+            }
+            return $payment;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la création du paiement : " . $e->getMessage());
         }
@@ -195,25 +226,46 @@ class Payment
             if (!$existing) {
                 throw new PDOException("Paiement introuvable");
             }
-            // Vérifier l’existence du contrat si modifié
-            if (!empty($data['lease_id']) && !Lease::find($data['lease_id'])) {
-                throw new PDOException("Lease ID invalide");
+            if (isset($data['lease_id']) && !Lease::find($data['lease_id'])) {
+                throw new PDOException("ID de bail invalide");
             }
-            // Validation basique de type si modifié
-            if (!empty($data['type'])) {
-                $validTypes = ['rent', 'charges', 'deposit']; // À ajuster
+            if (isset($data['agent_id']) && !\App\Models\User::find($data['agent_id'])) {
+                throw new PDOException("ID d'agent invalide");
+            }
+            if (isset($data['agency_id']) && !\App\Models\Agency::find($data['agency_id'])) {
+                throw new PDOException("ID d'agence invalide");
+            }
+            if (isset($data['type'])) {
+                $validTypes = ['rent', 'charges', 'deposit'];
                 if (!in_array($data['type'], $validTypes)) {
                     throw new PDOException("Type de paiement invalide");
                 }
             }
+            if (isset($data['status'])) {
+                $validStatuses = ['pending', 'paid', 'late', 'canceled'];
+                if (!in_array($data['status'], $validStatuses)) {
+                    throw new PDOException("Statut de paiement invalide");
+                }
+            }
+            if (isset($data['amount']) && $data['amount'] <= 0) {
+                throw new PDOException("Le montant doit être positif");
+            }
+            if (isset($data['payment_date']) && (empty($data['payment_date']) || !strtotime($data['payment_date']))) {
+                throw new PDOException("Date de paiement invalide");
+            }
+            if (isset($data['due_date']) && (empty($data['due_date']) || !strtotime($data['due_date']))) {
+                throw new PDOException("Date d'échéance invalide");
+            }
+
             $stmt = $pdo->prepare('
                 UPDATE payments
-                SET lease_id = ?, amount = ?, payment_date = ?, due_date = ?, type = ?, status = ?,
-                    quittance_path = ?, updated_at = NOW()
+                SET lease_id = ?, agent_id = ?, agency_id = ?, amount = ?, payment_date = ?, due_date = ?, type = ?, status = ?, quittance_path = ?, updated_at = NOW()
                 WHERE id = ?
             ');
             $stmt->execute([
                 $data['lease_id'] ?? $existing->getLeaseId(),
+                $data['agent_id'] ?? $existing->getAgentId(),
+                $data['agency_id'] ?? $existing->getAgencyId(),
                 $data['amount'] ?? $existing->getAmount(),
                 $data['payment_date'] ?? $existing->getPaymentDate(),
                 $data['due_date'] ?? $existing->getDueDate(),
@@ -237,8 +289,9 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('UPDATE payments SET deleted_at = NOW() WHERE id = ?');
-            return $stmt->execute([$id]);
+            $stmt = $pdo->prepare('UPDATE payments SET is_deleted = 1, updated_at = NOW() WHERE id = ?');
+            $stmt->execute([$id]);
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la suppression du paiement : " . $e->getMessage());
         }
@@ -253,7 +306,7 @@ class Payment
     {
         try {
             $pdo = Database::getInstance();
-            $stmt = $pdo->prepare('SELECT * FROM payments WHERE lease_id = ? AND is_deleted IS FALSE');
+            $stmt = $pdo->prepare('SELECT * FROM payments WHERE lease_id = ? AND is_deleted = 0 ORDER BY payment_date DESC');
             $stmt->execute([$leaseId]);
             $payments = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -274,24 +327,18 @@ class Payment
         return Lease::find($this->lease_id);
     }
 
-     /**
+    /**
      * Compte le nombre de paiements en attente (global).
-     *
-     * @return int Nombre de paiements en attente
+     * @return int
      */
     public static function countPending()
     {
         try {
             $pdo = Database::getInstance();
-            $query = "
-                SELECT COUNT(*)
-                FROM payments
-                WHERE status = 'pending'
-            ";
+            $query = "SELECT COUNT(*) FROM payments WHERE status = 'pending' AND is_deleted = 0";
             $stmt = $pdo->prepare($query);
             $stmt->execute();
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des paiements en attente : " . $e->getMessage());
         }
@@ -299,9 +346,8 @@ class Payment
 
     /**
      * Compte le nombre de paiements en attente pour une agence spécifique.
-     *
-     * @param int $agency_id ID de l'agence
-     * @return int Nombre de paiements en attente
+     * @param int $agency_id
+     * @return int
      */
     public static function countPendingByAgency($agency_id)
     {
@@ -313,12 +359,11 @@ class Payment
                 JOIN leases l ON p.lease_id = l.id
                 JOIN apartments a ON l.apartment_id = a.id
                 JOIN buildings b ON a.building_id = b.id
-                WHERE p.status = 'pending' AND b.agency_id = ?
+                WHERE p.status = 'pending' AND b.agency_id = ? AND p.is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agency_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des paiements en attente pour une agence spécifique : " . $e->getMessage());
         }
@@ -326,10 +371,9 @@ class Payment
 
     /**
      * Compte le nombre de paiements en attente pour un agent spécifique dans une agence.
-     *
-     * @param int $agent_id ID de l'agent
-     * @param int $agency_id ID de l'agence
-     * @return int Nombre de paiements en attente
+     * @param int $agent_id
+     * @param int $agency_id
+     * @return int
      */
     public static function countPendingByAgent($agent_id, $agency_id)
     {
@@ -341,12 +385,11 @@ class Payment
                 JOIN leases l ON p.lease_id = l.id
                 JOIN apartments a ON l.apartment_id = a.id
                 JOIN buildings b ON a.building_id = b.id
-                WHERE p.status = 'pending' AND l.agent_id = ? AND b.agency_id = ?
+                WHERE p.status = 'pending' AND l.agent_id = ? AND b.agency_id = ? AND p.is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agent_id, $agency_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des paiements en attente pour un agent spécifique : " . $e->getMessage());
         }
@@ -354,9 +397,8 @@ class Payment
 
     /**
      * Compte le nombre de paiements effectués pour un locataire spécifique.
-     *
-     * @param int $tenant_id ID du locataire
-     * @return int Nombre de paiements effectués
+     * @param int $tenant_id
+     * @return int
      */
     public static function countPaidByTenant($tenant_id)
     {
@@ -366,12 +408,11 @@ class Payment
                 SELECT COUNT(*)
                 FROM payments p
                 JOIN leases l ON p.lease_id = l.id
-                WHERE l.tenant_id = ? AND p.status = 'paid'
+                WHERE l.tenant_id = ? AND p.status = 'paid' AND p.is_deleted = 0
             ";
             $stmt = $pdo->prepare($query);
             $stmt->execute([$tenant_id]);
-            $result = $stmt->fetchColumn();
-            return (int) $result;
+            return (int) $stmt->fetchColumn();
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors du comptage des paiements effectués pour un locataire spécifique : " . $e->getMessage());
         }

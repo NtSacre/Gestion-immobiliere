@@ -15,6 +15,8 @@ class Owner
     private $pdo;
     protected $id;
     protected $user_id;
+    protected $first_name;
+    protected $last_name;
     protected $type;
    
     protected $siret;
@@ -32,6 +34,10 @@ class Owner
     // Getters
     public function getId() { return $this->id; }
     public function getUserId() { return $this->user_id; }
+
+    public function getFirstName() { return $this->first_name; }
+    public function getLastName() { return $this->last_name; }
+
     public function getType() { return $this->type; }
    
     public function getSiret() { return $this->siret; }
@@ -160,11 +166,13 @@ class Owner
                 throw new PDOException("User ID invalide");
             }
             $stmt = $pdo->prepare('
-                INSERT INTO owners (user_id, type, siret, created_at, updated_at)
-                VALUES (?, ?, ?, NOW(), NOW())
+                INSERT INTO owners (user_id, agent_id, agency_id, type, siret, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, NOW(), NOW())
             ');
             $stmt->execute([
                 $data['user_id'],
+                $data['agent_id'] ?? null,
+                $data['agency_id'] ?? null,
                 $data['type'],
                 $data['siret'] ?? null
             ]);
@@ -212,9 +220,13 @@ class Owner
             $stmt = $pdo->prepare($query);
             $stmt->execute([$agencyId]);
             $owners = [];
-            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $owners[] = self::fromData($data);
-            }
+           while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $owner = self::fromData($data);
+            // Injecter les noms si tu veux les exposer directement
+                $owner->first_name = $data['first_name'];
+                $owner->last_name = $data['last_name'];
+                $owners[] = $owner;
+        }
             return $owners;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la récupération des propriétaires par agence : " . $e->getMessage());

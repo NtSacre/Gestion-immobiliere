@@ -29,7 +29,7 @@ $msgFlash = new Flash();
                 <?= htmlspecialchars($flash) ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if ($flash = $msgFlash->get('error')): ?>
             <div class="bg-red-100 border border-green-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
                 <i class="fas fa-exclamation-circle mr-2"></i>
@@ -194,24 +194,18 @@ $msgFlash = new Flash();
 
                     <!-- Parking -->
                     <div>
-                        <label for="parking" class="block text-sm font-medium text-gray-700 mb-1">
-                            Parking disponible <span class="text-red-500">*</span>
-                        </label>
-                        <div class="flex items-center space-x-4">
-                            <label class="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    id="parking"
-                                    name="parking"
-                                    value="1"
-                                    <?= isset($_POST['parking']) ? 'checked' : '' ?>
-                                    class="form-checkbox h-4 w-4 text-construction-yellow focus:ring-construction-yellow border-gray-300"
-                                >
-                                <span class="ml-2 text-sm text-gray-700">Oui</span>
-                            </label>
-                        </div>
+                        <label for="parking" class="block text-sm font-medium text-gray-700 mb-1">Parking <span class="text-red-500">*</span></label>
+                        <select id="parking" name="parking" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-construction-yellow bg-white">
+                            <option value="">Sélectionnez le type de parking</option>
+                            <?php foreach ($parkingOptions as $value => $label): ?>
+                                <option value="<?= htmlspecialchars($value) ?>" <?= ($_POST['parking'] ?? '') === $value ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($label) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                         <div class="error-message text-red-500 text-sm mt-1 hidden"></div>
                     </div>
+
 
                     <!-- Type de bâtiment -->
                     <div>
@@ -331,7 +325,7 @@ $msgFlash = new Flash();
                                 <select
                                     id="agency_id"
                                     name="agency_id"
-                                    required
+                                    
                                     class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-construction-yellow focus:border-transparent bg-white"
                                 >
                                     <option value="">Sélectionnez une agence</option>
@@ -350,7 +344,7 @@ $msgFlash = new Flash();
                         </div>
                     <?php endif; ?>
 
-                    <!-- Agent (pour superadmin et admin) -->
+                    <!-- Agent (optionnel) -->
                     <?php if (in_array($role, ['superadmin', 'admin'])): ?>
                         <div>
                             <label for="agent_id" class="block text-sm font-medium text-gray-700 mb-1">
@@ -393,8 +387,8 @@ $msgFlash = new Flash();
                                 <option value="">Sélectionnez un propriétaire</option>
                                 <?php foreach ($owners as $owner): ?>
                                     <option 
-                                        value="<?= $owner->id() ?>"
-                                        <?= (isset($_POST['owner_id']) && $_POST['owner_id'] == $owner->id()) ? 'selected' : '' ?>
+                                        value="<?= $owner->getId() ?>"
+                                        <?= (isset($_POST['owner_id']) && $_POST['owner_id'] == $owner->getId()) ? 'selected' : '' ?>
                                     >
                                         <?= htmlspecialchars($owner->getFirstName() . ' ' . $owner->getLastName()) ?>
                                     </option>
@@ -443,7 +437,7 @@ $msgFlash = new Flash();
                     </a>
                     <button
                         type="submit"
-                        class="inline-flex items-center px-6 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-construction-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-construction-yellow"
+                        class="inline-flex items-center px-6 py-2 border border-transparent rounded-lg text-sm font-medium text-construction-black bg-construction-yellow hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-construction-yellow transition-colors duration-200"
                     >
                         <i class="fas fa-building mr-2"></i>
                         Créer le bâtiment
@@ -454,16 +448,14 @@ $msgFlash = new Flash();
     </div>
 </div>
 
-<!-- JavaScript pour la validation et l'interactivité -->
+<!-- JavaScript pour validation et prévisualisation -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('building-form');
     const imageInput = document.getElementById('images');
     const imagePreview = document.getElementById('image-preview');
 
-    // Validation en temps réel
-    function validateField(field) {
-        const input = field instanceof Event ? this : field;
+    function validateField(input) {
         const name = input.name;
         const errorDiv = input.parentNode.querySelector('.error-message') || input.parentNode.parentNode.querySelector('.error-message');
         let isValid = true;
@@ -517,10 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 break;
             case 'agency_id':
-                if (input.required && !input.value) {
-                    isValid = false;
-                    errorMessage = 'L’agence est requise.';
-                }
+
                 break;
             case 'images[]':
                 if (input.files.length > 4) {
@@ -558,7 +547,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    // Aperçu des images
     function updateImagePreview() {
         imagePreview.innerHTML = '';
         const files = imageInput.files;
@@ -595,16 +583,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Event listeners
     imageInput.addEventListener('change', function() {
         validateField(this);
         updateImagePreview();
     });
 
-    // Validation en temps réel
-    const inputsToValidate = ['name', 'city', 'country', 'floors', 'apartment_count', 'land_area', 'year_built', 'price', 'status', 'type_id', 'owner_id', 'agency_id'];
-    inputsToValidate.forEach(inputName => {
-        const input = document.querySelector(`[name="${inputName}"]`);
+    // Validation en temps réel pour certains champs
+    ['name', 'city', 'country', 'floors', 'apartment_count', 'land_area', 'year_built', 'price', 'status', 'type_id', 'owner_id', 'agency_id'].forEach(name => {
+        const input = form.querySelector(`[name="${name}"]`);
         if (input) {
             input.addEventListener('blur', () => validateField(input));
             input.addEventListener('input', () => {
@@ -615,24 +601,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Validation du formulaire avant soumission
     form.addEventListener('submit', function(e) {
-        let isFormValid = true;
-        
-        // Vérifier tous les champs
-        const allInputs = form.querySelectorAll('input[required], select[required], input[name="images[]"]');
-        allInputs.forEach(input => {
+        let isValid = true;
+        const inputs = form.querySelectorAll('input[required], select[required], input[name="images[]"]');
+        inputs.forEach(input => {
             if (!validateField(input)) {
-                isFormValid = false;
+                isValid = false;
             }
         });
-
-        if (!isFormValid) {
+        if (!isValid) {
             e.preventDefault();
-            const firstInvalid = form.querySelector('.border-red-500, :invalid');
-            if (firstInvalid) {
-                firstInvalid.focus();
-                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const firstError = form.querySelector('.border-red-500, :invalid');
+            if (firstError) {
+                firstError.focus();
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
     });
