@@ -177,7 +177,7 @@ $msgFlash = new Flash();
                         </a>
                         <button
                             type="button"
-                            onclick="openDeleteModal('/leases/destroy/', <?= htmlspecialchars($lease->getId()) ?>, 'leases.delete', 'Bail #<?= htmlspecialchars($lease->getId()) ?>')"
+                            onclick="openDeleteModal('/leases/delete/', <?= htmlspecialchars($lease->getId()) ?>, 'leases.delete', 'Bail #<?= htmlspecialchars($lease->getId()) ?>')"
                             class="inline-flex items-center px-6 py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                         >
                             <i class="fas fa-trash mr-2"></i>

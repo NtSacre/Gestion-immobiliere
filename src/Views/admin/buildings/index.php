@@ -300,25 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour ouvrir le modal de suppression
-    window.openDeleteModal = function(baseUrl, id, action, name) {
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
-        modal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-md w-full">
-                <h2 class="text-lg font-semibold mb-4">Confirmer la suppression</h2>
-                <p class="mb-4">Êtes-vous sûr de vouloir supprimer le bâtiment "${name}" ?</p>
-                <form action="${baseUrl}${id}" method="POST">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <div class="flex justify-end space-x-2">
-                        <button type="button" onclick="this.closest('.fixed').remove()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Annuler</button>
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Supprimer</button>
-                    </div>
-                </form>
-            </div>
-        `;
-        document.body.appendChild(modal);
-    };
+
 });
 </script>
