@@ -279,10 +279,10 @@ $routes = [
     ],
     'payments/quittance/:id' => [
         'controller' => 'App\Controllers\PaymentController',
-        'action' => 'createQuittance',
+        'action' => 'downloadQuittance',
         'method' => 'GET',
         'name' => 'payments.quittance',
-        'allowed_roles' => ['superadmin', 'admin', 'agent']
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
     ],
     'leases/downloadPDF/:id' => [
         'controller' => 'App\Controllers\LeaseController',

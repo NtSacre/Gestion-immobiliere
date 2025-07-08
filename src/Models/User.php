@@ -399,10 +399,10 @@ class User
                 SELECT u.* 
                 FROM users u
                 JOIN roles r ON u.role_id = r.id
-                WHERE r.name = ? AND u.is_deleted = 0
+                WHERE r.name = :role AND u.is_deleted = 0
                 ORDER BY u.last_name, u.first_name
             ');
-            $stmt->execute([$roleName]);
+            $stmt->execute([':role' => $roleName]);
             $users = [];
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $users[] = self::fromData($data);
@@ -410,6 +410,34 @@ class User
             return $users;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la recherche des utilisateurs par rôle : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Trouve les utilisateurs par nom de rôle et agency_id
+     * @param string $roleName
+     * @param int $agencyId
+     * @return array
+     */
+    public static function findByRoleAndAgency($roleName, $agencyId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT u.* 
+                FROM users u
+                JOIN roles r ON u.role_id = r.id
+                WHERE r.name = :role AND u.agency_id = :agency_id AND u.is_deleted = 0
+                ORDER BY u.last_name, u.first_name
+            ');
+            $stmt->execute([':role' => $roleName, ':agency_id' => $agencyId]);
+            $users = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = self::fromData($data);
+            }
+            return $users;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des utilisateurs par rôle et agence : " . $e->getMessage());
         }
     }
 

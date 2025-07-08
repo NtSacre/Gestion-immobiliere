@@ -21,6 +21,7 @@ class Payment
     protected $payment_date;
     protected $due_date;
     protected $type;
+    protected $mode;
     protected $status;
     protected $quittance_path;
     protected $created_at;
@@ -41,6 +42,7 @@ class Payment
     public function getPaymentDate() { return $this->payment_date; }
     public function getDueDate() { return $this->due_date; }
     public function getType() { return $this->type; }
+    public function getMode() { return $this->mode; }
     public function getStatus() { return $this->status; }
     public function getQuittancePath() { return $this->quittance_path; }
     public function getCreatedAt() { return $this->created_at; }
@@ -56,6 +58,7 @@ class Payment
     protected function setPaymentDate($payment_date) { $this->payment_date = $payment_date; }
     protected function setDueDate($due_date) { $this->due_date = $due_date; }
     protected function setType($type) { $this->type = $type; }
+    protected function setMode($mode) { $this->mode = $mode; }
     protected function setStatus($status) { $this->status = $status; }
     protected function setQuittancePath($quittance_path) { $this->quittance_path = $quittance_path; }
     protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
@@ -78,6 +81,7 @@ class Payment
         $payment->setPaymentDate($data['payment_date']);
         $payment->setDueDate($data['due_date']);
         $payment->setType($data['type']);
+        $payment->setMode($data['mode']);
         $payment->setStatus($data['status']);
         $payment->setQuittancePath($data['quittance_path'] ?? null);
         $payment->setCreatedAt($data['created_at']);
@@ -167,11 +171,15 @@ class Payment
             if (isset($data['agency_id']) && !\App\Models\Agency::find($data['agency_id'])) {
                 throw new PDOException("ID d'agence invalide : {$data['agency_id']}");
             }
-            $validTypes = ['rent', 'charges', 'deposit'];
+            $validTypes = ['payer', 'charges', 'depot', 'autre'];
             if (!in_array($data['type'], $validTypes)) {
                 throw new PDOException("Type de paiement invalide : {$data['type']}");
             }
-            $validStatuses = ['pending', 'paid', 'late', 'canceled'];
+            $validModes = ['cash', 'mobile', 'carte'];
+            if (!in_array($data['mode'], $validModes)) {
+                throw new PDOException("Mode de paiement invalide : {$data['mode']}");
+            }
+            $validStatuses = ['en_attente', 'payé', 'en_retard', 'annulé'];
             if (!in_array($data['status'], $validStatuses)) {
                 throw new PDOException("Statut de paiement invalide : {$data['status']}");
             }
@@ -187,8 +195,8 @@ class Payment
 
             $stmt = $pdo->prepare('
                 INSERT INTO payments (
-                    lease_id, agent_id, agency_id, amount, payment_date, due_date, type, status, quittance_path, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+                    lease_id, agent_id, agency_id, amount, payment_date, due_date, type, mode, status, quittance_path, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
             ');
             $stmt->execute([
                 $data['lease_id'],
@@ -198,6 +206,7 @@ class Payment
                 $data['payment_date'],
                 $data['due_date'],
                 $data['type'],
+                $data['mode'],
                 $data['status'],
                 $data['quittance_path'] ?? null
             ]);
@@ -259,7 +268,7 @@ class Payment
 
             $stmt = $pdo->prepare('
                 UPDATE payments
-                SET lease_id = ?, agent_id = ?, agency_id = ?, amount = ?, payment_date = ?, due_date = ?, type = ?, status = ?, quittance_path = ?, updated_at = NOW()
+                SET lease_id = ?, agent_id = ?, agency_id = ?, amount = ?, payment_date = ?, due_date = ?, type = ?, mode = ?, status = ?, quittance_path = ?, updated_at = NOW()
                 WHERE id = ?
             ');
             $stmt->execute([
@@ -270,6 +279,7 @@ class Payment
                 $data['payment_date'] ?? $existing->getPaymentDate(),
                 $data['due_date'] ?? $existing->getDueDate(),
                 $data['type'] ?? $existing->getType(),
+                $data['mode'] ?? $existing->getMode(),
                 $data['status'] ?? $existing->getStatus(),
                 $data['quittance_path'] ?? $existing->getQuittancePath(),
                 $id
@@ -315,6 +325,65 @@ class Payment
             return $payments;
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de la recherche des paiements par lease_id : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Trouve les paiements par agency_id
+     * @param int $agencyId
+     * @return array
+     */
+    public static function findByAgencyId($agencyId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT p.*
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE b.agency_id = ? AND p.is_deleted = 0
+                ORDER BY p.payment_date DESC
+            ');
+            $stmt->execute([$agencyId]);
+            $payments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $payments[] = self::fromData($data);
+            }
+            return $payments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des paiements par agency_id : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Trouve les paiements par agent_id et agency_id
+     * @param int $agentId
+     * @param int $agencyId
+     * @return array
+     */
+    public static function findByAgentId($agentId, $agencyId)
+    {
+        try {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare('
+                SELECT p.*
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.agent_id = ? AND b.agency_id = ? AND p.is_deleted = 0
+                ORDER BY p.payment_date DESC
+            ');
+            $stmt->execute([$agentId, $agencyId]);
+            $payments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $payments[] = self::fromData($data);
+            }
+            return $payments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des paiements par agent_id : " . $e->getMessage());
         }
     }
 
@@ -417,4 +486,263 @@ class Payment
             throw new PDOException("Erreur lors du comptage des paiements effectués pour un locataire spécifique : " . $e->getMessage());
         }
     }
+
+
+
+   /**
+     * Récupère tous les paiements avec filtres et pagination
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
+     * @return array
+     */
+    public static function getWithFilters($search = '', $limit = 10, $offset = 0, $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "SELECT * FROM payments WHERE is_deleted = 0";
+            $params = [];
+
+            if ($search) {
+                $query .= " AND (id LIKE :search OR lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= " ORDER BY payment_date DESC LIMIT :limit OFFSET :offset";
+            $params[':limit'] = (int)$limit;
+            $params[':offset'] = (int)$offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $payments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $payments[] = self::fromData($data);
+            }
+            return $payments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la récupération des paiements avec filtres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte tous les paiements avec filtres
+     * @param string $search
+     * @param array $statuses
+     * @return int
+     */
+    public static function countWithFilters($search = '', $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "SELECT COUNT(*) FROM payments WHERE is_deleted = 0";
+            $params = [];
+
+            if ($search) {
+                $query .= " AND (id LIKE :search OR lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements avec filtres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les paiements par agency_id avec filtres et pagination
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
+     * @return array
+     */
+    public static function findByAgencyIdWithFilters($agencyId, $search = '', $limit = 10, $offset = 0, $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT p.*
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE b.agency_id = :agency_id AND p.is_deleted = 0
+            ";
+            $params = [':agency_id' => $agencyId];
+
+            if ($search) {
+                $query .= " AND (p.id LIKE :search OR p.lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND p.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= " ORDER BY p.payment_date DESC LIMIT :limit OFFSET :offset";
+            $params[':limit'] = (int)$limit;
+            $params[':offset'] = (int)$offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $payments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $payments[] = self::fromData($data);
+            }
+            return $payments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des paiements par agency_id avec filtres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte les paiements par agency_id avec filtres
+     * @param int $agencyId
+     * @param string $search
+     * @param array $statuses
+     * @return int
+     */
+    public static function countByAgencyIdWithFilters($agencyId, $search = '', $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE b.agency_id = :agency_id AND p.is_deleted = 0
+            ";
+            $params = [':agency_id' => $agencyId];
+
+            if ($search) {
+                $query .= " AND (p.id LIKE :search OR p.lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND p.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements par agency_id avec filtres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère les paiements par agent_id et agency_id avec filtres et pagination
+     * @param int $agentId
+     * @param int $agencyId
+     * @param string $search
+     * @param int $limit
+     * @param int $offset
+     * @param array $statuses
+     * @return array
+     */
+    public static function findByAgentIdWithFilters($agentId, $agencyId, $search = '', $limit = 10, $offset = 0, $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT p.*
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.agent_id = :agent_id AND b.agency_id = :agency_id AND p.is_deleted = 0
+            ";
+            $params = [':agent_id' => $agentId, ':agency_id' => $agencyId];
+
+            if ($search) {
+                $query .= " AND (p.id LIKE :search OR p.lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND p.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $query .= " ORDER BY p.payment_date DESC LIMIT :limit OFFSET :offset";
+            $params[':limit'] = (int)$limit;
+            $params[':offset'] = (int)$offset;
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            $payments = [];
+            while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $payments[] = self::fromData($data);
+            }
+            return $payments;
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors de la recherche des paiements par agent_id avec filtres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Compte les paiements par agent_id et agency_id avec filtres
+     * @param int $agentId
+     * @param int $agencyId
+     * @param string $search
+     * @param array $statuses
+     * @return int
+     */
+    public static function countByAgentIdWithFilters($agentId, $agencyId, $search = '', $statuses = [])
+    {
+        try {
+            $pdo = Database::getInstance();
+            $query = "
+                SELECT COUNT(*)
+                FROM payments p
+                JOIN leases l ON p.lease_id = l.id
+                JOIN apartments a ON l.apartment_id = a.id
+                JOIN buildings b ON a.building_id = b.id
+                WHERE l.agent_id = :agent_id AND b.agency_id = :agency_id AND p.is_deleted = 0
+            ";
+            $params = [':agent_id' => $agentId, ':agency_id' => $agencyId];
+
+            if ($search) {
+                $query .= " AND (p.id LIKE :search OR p.lease_id LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($statuses)) {
+                $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+                $query .= " AND p.status IN ($placeholders)";
+                $params = array_merge($params, $statuses);
+            }
+
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            throw new PDOException("Erreur lors du comptage des paiements par agent_id avec filtres : " . $e->getMessage());
+        }
+    }
+
 }
