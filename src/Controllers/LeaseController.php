@@ -236,7 +236,7 @@ class LeaseController
             'rent_amount'       => isset($_POST['rent_amount']) ? (float)$_POST['rent_amount'] : null,
             'charges_amount'    => isset($_POST['charges_amount']) ? (float)$_POST['charges_amount'] : null,
             'deposit_amount'    => isset($_POST['deposit_amount']) ? (float)$_POST['deposit_amount'] : null,
-            'payment_frequency' => trim($_POST['payment_frequency'] ?? 'mensuel'),
+            'payment_frequency' => strtolower(trim($_POST['payment_frequency']) ?? 'mensuel'),
             'is_active'         => isset($_POST['is_active']) ? 1 : 0,
         ];
 
@@ -282,12 +282,13 @@ class LeaseController
         if (empty($data['deposit_amount']) || $data['deposit_amount'] < 0) {
             $errors[] = 'Le dépôt ne peut pas être négatif.';
         }
-        if (!in_array($data['payment_frequency'], ['monthly', 'quarterly'])) {
+        if (!in_array($data['payment_frequency'], ['mensuel', 'trimestriel'])) {
             $errors[] = 'La fréquence de paiement est invalide.';
         }
         if ($tenant && $tenant->hasActiveLease()) {
             $errors[] = 'Ce locataire a déjà un bail actif.';
         }
+      
 
         if (!empty($errors)) {
             $this->flash->flash('error', implode('<br>', $errors));

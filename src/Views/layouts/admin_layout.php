@@ -20,6 +20,11 @@ $username = $auth->user()['username'] ?? 'Invité';
 $firstName = $auth->user()['first_name'] ?? '';
 $lastName = $auth->user()['last_name'] ?? '';
 $userId = $auth->user()['id'] ?? 0;
+
+use App\Services\NotificationService;
+$notificationService = new NotificationService();
+$unreadNotifications = $notificationService->getUnreadByUser($userId);
+
 $initials = strtoupper(substr($firstName, 0, 1) . substr($lastName, 0, 1));
 $isAuthenticated = $auth->check();
 
@@ -315,6 +320,38 @@ foreach ($csrfRoutes as $routeName) {
                             <p class="text-sm lg:text-base text-gray-600"><?php echo htmlspecialchars($roleDescription); ?></p>
                         </div>
                         <div class="flex items-center space-x-4">
+
+                        <!-- Notifications -->
+<div class="relative">
+    <button id="notificationBtn" class="relative text-gray-600 hover:text-construction-yellow focus:outline-none">
+        <i class="fas fa-bell fa-lg"></i>
+        <?php if (count($unreadNotifications) > 0): ?>
+        <span class="absolute top-0 right-0 bg-red-600 text-white text-xs font-semibold rounded-full px-1.5 py-0.5">
+            <?= count($unreadNotifications) ?>
+        </span>
+        <?php endif; ?>
+    </button>
+    <div id="notificationMenu" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 hidden">
+        <div class="p-4 border-b text-sm font-medium text-construction-black">Notifications récentes</div>
+        <ul class="max-h-64 overflow-y-auto">
+            <?php if (count($unreadNotifications) === 0): ?>
+                <li class="p-4 text-gray-500 text-sm">Aucune notification non lue</li>
+            <?php else: ?>
+                <?php foreach ($unreadNotifications as $notif): ?>
+                    <li class="px-4 py-2 hover:bg-gray-100 text-sm border-b">
+                        <a href="<?= htmlspecialchars($notif['link'] ?? '#') ?>" class="text-construction-black font-semibold block">
+                            <?= htmlspecialchars($notif['title']) ?>
+                        </a>
+                        <p class="text-gray-600 text-xs"><?= htmlspecialchars($notif['message']) ?></p>
+                        <p class="text-gray-400 text-xs mt-1"><?= date('d/m/Y H:i', strtotime($notif['created_at'])) ?></p>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+
+
                             <!-- Quick Actions Menu -->
                             <div class="relative">
                                 <button id="quickActionsBtn" class="btn-primary px-4 py-2 rounded-lg font-medium hover:scale-105 transition-all flex items-center space-x-2">
@@ -399,6 +436,21 @@ foreach ($csrfRoutes as $routeName) {
             const menu = document.getElementById('quickActionsMenu');
             menu.classList.toggle('hidden');
         }
+
+        // Notification Menu
+document.getElementById('notificationBtn')?.addEventListener('click', () => {
+    document.getElementById('notificationMenu')?.classList.toggle('hidden');
+});
+
+// Fermer si clic en dehors
+document.addEventListener('click', (e) => {
+    const notifBtn = document.getElementById('notificationBtn');
+    const notifMenu = document.getElementById('notificationMenu');
+    if (!notifBtn.contains(e.target) && !notifMenu.contains(e.target)) {
+        notifMenu?.classList.add('hidden');
+    }
+});
+
 
         // Config Submenu
         function toggleConfigMenu() {

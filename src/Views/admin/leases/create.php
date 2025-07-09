@@ -226,8 +226,8 @@ $msgFlash = new Flash();
                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-construction-yellow focus:border-transparent bg-white"
                             >
                                 <option value="">Sélectionnez une fréquence</option>
-                                <option value="monthly" <?= isset($form_data['payment_frequency']) && $form_data['payment_frequency'] === 'monthly' ? 'selected' : '' ?>>Mensuel</option>
-                                <option value="quarterly" <?= isset($form_data['payment_frequency']) && $form_data['payment_frequency'] === 'quarterly' ? 'selected' : '' ?>>Trimestriel</option>
+                                <option value="mensuel" <?= isset($form_data['payment_frequency']) && $form_data['payment_frequency'] === 'mensuel' ? 'selected' : '' ?>>Mensuel</option>
+                                <option value="trimestriel" <?= isset($form_data['payment_frequency']) && $form_data['payment_frequency'] === 'trimestriel' ? 'selected' : '' ?>>Trimestriel</option>
                             </select>
                             <i class="fas fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>

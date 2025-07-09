@@ -7,6 +7,8 @@ if (getenv('APP_ENV') !== 'production') {
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Services\MailService;
 use App\Utils\Auth;
 use App\Utils\Logger;
 use App\Utils\Helpers;
@@ -24,6 +26,7 @@ $auth = new Auth();
 $logger = new Logger();
 $helpers = new Helpers();
 $flash = new Flash();
+$mailService = new MailService();
 
 // Journalisation de la requête
 $logger->info("Démarrage de la requête pour URI: {uri}", ['uri' => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']]);
@@ -137,7 +140,7 @@ try {
     }
 
     // Instancier le contrôleur et injecter les dépendances
-    $controller = new $controller_class($auth, $logger, $helpers, $flash);
+    $controller = new $controller_class($auth, $logger, $helpers, $flash, $mailService);
 
     // Rendre $auth et $flash disponibles dans les vues
     $auth = $controller->auth ?? $auth;

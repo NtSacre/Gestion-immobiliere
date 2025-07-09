@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Utils\Auth;
+use App\Utils\Audit;
+use App\Services\MailService;
+use App\Services\NotificationService;
 use App\Utils\Logger;
 use App\Utils\Helpers;
 use App\Utils\Flash;
@@ -20,13 +23,17 @@ class UserController
     protected $logger;
     protected $helpers;
     protected $flash;
+    protected $mailService;
+    protected $notificationService;
 
-    public function __construct(Auth $auth, Logger $logger, Helpers $helpers, Flash $flash)
+    public function __construct(Auth $auth, Logger $logger, Helpers $helpers, Flash $flash, MailService $mailService)
     {
         $this->auth = $auth;
         $this->logger = $logger;
         $this->helpers = $helpers;
         $this->flash = $flash;
+        $this->mailService = $mailService;
+        $this->notificationService = new NotificationService();
     }
 
     /**
@@ -340,7 +347,30 @@ class UserController
             }
 
             $pdo->commit();
+            // Enregistrement de l'audit
+            $auditData = $userData;
+            unset($auditData['password']);
+            Audit::log('create', 'users', $userId->getId(), null, $auditData);
+
+            // Enregistrement de la notification
+            $this->notificationService->create(
+                $userId->getId(),                
+                $data['agency_id'],              
+                'info',                          
+                'Bienvenue sur ImmoApp',         
+                'Votre compte a été créé avec succès.', 
+                '/dashboard'                       
+            );
+        
+
+
             $this->flash->flash('success', 'Utilisateur ajouté avec succès.');
+            // Envoi de l'email de bienvenue
+            $this->mailService->send(
+            $data['email'],
+            'Bienvenue sur ImmoApp',
+            '<h1>Bienvenue ' . htmlspecialchars($data['first_name']) . ' !</h1><p>Votre compte a été créé avec succès.</p>'
+            );
             $this->helpers->redirect('/users');
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -490,6 +520,8 @@ class UserController
             }
 
             $pdo->commit();
+
+            Audit::log('update', 'users', $id, $targetUser->toArray(), $userData);
             $this->flash->flash('success', 'Utilisateur mis à jour avec succès.');
             $this->helpers->redirect('/users');
         } catch (PDOException $e) {

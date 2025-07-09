@@ -772,4 +772,19 @@ class User
             throw new PDOException("Erreur lors de la suppression logique de l’utilisateur : " . $e->getMessage());
         }
     }
+
+    public function toArray(): array
+{
+    return [
+        'id'         => $this->getId(),
+        'username'   => $this->getUsername(),
+        'email'      => $this->getEmail(),
+        'role_id'    => $this->getRoleId(),
+        'agency_id'  => $this->getAgencyId(),
+        'first_name' => $this->getFirstName(),
+        'last_name'  => $this->getLastName(),
+        'phone'      => $this->getPhone(),
+    ];
+}
+
 }

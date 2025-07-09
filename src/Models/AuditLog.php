@@ -345,31 +345,35 @@ public static function getRecentActivities($limit = 3)
      * @param int $agency_id ID de l'agence
      * @return array Tableau associatif des 3 dernières activités
      */
-    public static function getRecentActivitiesByAgency($agency_id)
-    {
-        try {
-           
-        
+public static function getRecentActivitiesByAgency($agency_id)
+{
+    try {
         $pdo = Database::getInstance();
-        $query = "
-            SELECT al.action, al.table_name, al.created_at
-            FROM audit_log al
-            LEFT JOIN leases l ON al.table_name = 'leases' AND al.record_id = l.id
-            LEFT JOIN apartments a ON al.table_name = 'apartments' AND al.record_id = a.id OR l.apartment_id = a.id
-            LEFT JOIN buildings b ON al.table_name = 'buildings' AND al.record_id = b.id OR a.building_id = b.id
-            WHERE b.agency_id = ?
-            ORDER BY al.created_at DESC
-            LIMIT 3
-        ";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$agency_id]);
+$query = "
+    SELECT al.action, al.table_name, al.created_at
+    FROM audit_log al
+    LEFT JOIN leases l ON al.table_name = 'leases' AND al.record_id = l.id
+    LEFT JOIN apartments a ON 
+        (al.table_name = 'apartments' AND al.record_id = a.id)
+        OR (al.table_name = 'leases' AND l.apartment_id = a.id)
+    LEFT JOIN buildings b ON 
+        (al.table_name = 'buildings' AND al.record_id = b.id)
+        OR (al.table_name IN ('apartments', 'leases') AND a.building_id = b.id)
+    LEFT JOIN users u ON al.table_name = 'users' AND al.record_id = u.id
+    WHERE 
+        (b.agency_id = ?)
+        OR (u.agency_id = ?)
+    ORDER BY al.created_at DESC
+    LIMIT 3
+";
+$stmt = $pdo->prepare($query);
+$stmt->execute([$agency_id, $agency_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        } catch (PDOException $e) {
-        throw new PDOException("Erreur lors de la récupèration des 3 dernières activités de l'audit log pour une agence spécifique : " . $e->getMessage());
-
-        }
+    } catch (PDOException $e) {
+        throw new PDOException("Erreur lors de la récupération des activités : " . $e->getMessage());
     }
+}
+
 
     /**
      * Récupère les tâches urgentes (baux en attente) pour une agence spécifique.
