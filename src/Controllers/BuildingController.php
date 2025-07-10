@@ -13,6 +13,7 @@ use App\Models\Images;
 use App\Models\Agency;
 use App\Models\Owner;
 use App\Config\Database;
+use App\Utils\Audit;
 use PDOException;
 
 class BuildingController
@@ -465,6 +466,8 @@ class BuildingController
             }
 
             $pdo->commit();
+            // Audit de la création du bâtiment
+            Audit::log('create', 'buildings', $building->getId(), $data['agency_id'], null, $data);
             $this->flash->flash('success', 'Bâtiment ajouté avec succès.');
             $this->helpers->redirect('/buildings/create');
         } catch (PDOException $e) {
@@ -804,6 +807,8 @@ class BuildingController
             }
 
             $pdo->commit();
+            // Audit de la mise à jour du bâtiment
+            Audit::log('update', 'buildings', $id, $data['agency_id'], $building->toArray(), $data);
             $this->flash->flash('success', 'Bâtiment mis à jour avec succès.');
             $this->helpers->redirect("/buildings/$id");
         } catch (PDOException $e) {

@@ -14,6 +14,7 @@ use App\Models\Images;
 use App\Models\Agency;
 use App\Models\Owner;
 use App\Config\Database;
+use App\Utils\Audit;
 use PDOException;
 
 class ApartmentController
@@ -526,6 +527,9 @@ public function store()
         }
 
         $pdo->commit();
+        // Audit de la création de l’appartement
+        Audit::log('create', 'apartments', $apartment->getId(), $data['agency_id'], null, $data);
+
         $this->flash->flash('success', 'Appartement ajouté avec succès.');
         $this->helpers->redirect('/apartments');
     } catch (PDOException $e) {
@@ -853,6 +857,8 @@ public function store()
             }
 
             $pdo->commit();
+            // Audit de la mise à jour de l’appartement
+            Audit::log('update', 'apartments', $id, $data['agency_id'], $apartment->toArray(), $data);
             $this->flash->flash('success', 'Appartement mis à jour avec succès.');
             $this->helpers->redirect("/apartments/$id");
         } catch (PDOException $e) {

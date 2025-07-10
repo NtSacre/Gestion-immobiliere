@@ -350,7 +350,7 @@ class UserController
             // Enregistrement de l'audit
             $auditData = $userData;
             unset($auditData['password']);
-            Audit::log('create', 'users', $userId->getId(), null, $auditData);
+            Audit::log('create', 'users', $userId->getId(), $data['agency_id'], null, $auditData);
 
             // Enregistrement de la notification
             $this->notificationService->create(
@@ -521,7 +521,7 @@ class UserController
 
             $pdo->commit();
 
-            Audit::log('update', 'users', $id, $targetUser->toArray(), $userData);
+            Audit::log('update', 'users', $id, $user['agency_id'], $targetUser->toArray(), $userData);
             $this->flash->flash('success', 'Utilisateur mis à jour avec succès.');
             $this->helpers->redirect('/users');
         } catch (PDOException $e) {

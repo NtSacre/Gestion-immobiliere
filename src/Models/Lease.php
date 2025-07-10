@@ -871,5 +871,33 @@ class Lease
             throw new PDOException("Erreur lors du comptage des baux créés ce mois pour un agent spécifique : " . $e->getMessage());
         }
     }
+
+    /**
+     * Convertit l'objet en tableau 
+     * @return array
+     */
+
+    public function toArray(): array
+{
+    return [
+        'id' => $this->getId(),
+        'apartment_id' => $this->getApartmentId(),
+        'tenant_id' => $this->getTenantId(),
+        'agent_id' => $this->getAgentId(),
+        'agency_id' => $this->getAgencyId(),
+        'start_date' => $this->getStartDate(),
+        'end_date' => $this->getEndDate(),
+        'rent_amount' => $this->getRentAmount(),
+        'charges_amount' => $this->getChargesAmount(),
+        'deposit_amount' => $this->getDepositAmount(),
+        'payment_frequency' => $this->getPaymentFrequency(),
+        'is_active' => $this->getIsActive(),
+        'created_at' => $this->getCreatedAt(),
+        'updated_at' => $this->getUpdatedAt(),
+        'deleted_at' => $this->getDeletedAt(),
+        'is_deleted' => $this->getIsDeleted(),
+    ];
 }
-?>
+
+
+}

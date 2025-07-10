@@ -8,6 +8,7 @@ use App\Models\Owner;
 use App\Models\Tenant;
 use App\Models\Payment;
 use App\Models\User;
+use App\Utils\Audit;
 use App\Utils\Auth;
 use App\Utils\Logger;
 use App\Utils\Helpers;
@@ -298,7 +299,9 @@ class LeaseController
         }
 
         try {
-            Lease::create($data);
+           $leases= Lease::create($data);
+            // Audit de la création du bail
+            Audit::log('create', 'leases', $leases->getId(), $data['agency_id'], null, $data);
             $this->flash->flash('success', 'Bail créé avec succès.');
             $this->helpers->redirect('/leases');
         } catch (PDOException $e) {
@@ -521,6 +524,8 @@ class LeaseController
 
         try {
             Lease::update($id, $data);
+            // Audit de la mise à jour du bail
+            Audit::log('update', 'leases', $id, $data['agency_id'], $lease->toArray(), $data);
             $this->flash->flash('success', 'Bail mis à jour avec succès.');
             $this->helpers->redirect('/leases');
         } catch (PDOException $e) {

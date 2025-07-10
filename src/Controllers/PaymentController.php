@@ -7,6 +7,7 @@ use App\Models\Owner;
 use App\Models\Payment;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Utils\Audit;
 use App\Utils\Auth;
 use App\Utils\Logger;
 use App\Utils\Helpers;
@@ -270,7 +271,8 @@ public function create()
             if ($quittancePath) {
                 Payment::update($payment->getId(), ['quittance_path' => $quittancePath]);
             }
-
+            // Audit de la création du paiement
+            Audit::log('create', 'payments', $payment->getId(), $data['agency_id'], null, $data);
             $this->flash->flash('success', 'Paiement enregistré avec succès.');
             $this->helpers->redirect('/payments');
         } catch (PDOException $e) {
@@ -444,7 +446,8 @@ public function edit($paymentId)
             if ($quittancePath) {
                 Payment::update($paymentId, ['quittance_path' => $quittancePath]);
             }
-
+            // Audit de la mise à jour du paiement
+            Audit::log('update', 'payments', $paymentId, $data['agency_id'], $payment->toArray(), $data);
             $this->flash->flash('success', 'Paiement modifié avec succès.');
             $this->helpers->redirect('/payments');
         } catch (PDOException $e) {

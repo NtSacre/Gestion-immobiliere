@@ -489,4 +489,34 @@ class Building
             throw new PDOException("Erreur lors du comptage des bâtiments pour un agent spécifique : " . $e->getMessage());
         }
     }
+    /**
+     * Convertit l'objet en tableau associatif.
+     * @return array
+     */
+
+    public function toArray(): array
+{
+    return [
+        'id' => $this->getId(),
+        'agency_id' => $this->getAgencyId(),
+        'agent_id' => $this->getAgentId(),
+        'owner_id' => $this->getOwnerId(),
+        'name' => $this->getName(),
+        'city' => $this->getCity(),
+        'neighborhood' => $this->getNeighborhood(),
+        'country' => $this->getCountry(),
+        'floors' => $this->getFloors(),
+        'apartment_count' => $this->getApartmentCount(),
+        'land_area' => $this->getLandArea(),
+        'parking' => $this->getParking(),
+        'type_id' => $this->getTypeId(),
+        'year_built' => $this->getYearBuilt(),
+        'status' => $this->getStatus(),
+        'price' => $this->getPrice(),
+        'created_at' => $this->getCreatedAt(),
+        'updated_at' => $this->getUpdatedAt(),
+        'is_deleted' => $this->getIsDeleted(),
+    ];
+}
+
 }

@@ -756,4 +756,39 @@ public static function create(array $data)
             throw new PDOException("Erreur lors du comptage des appartements occupés par un locataire spécifique : " . $e->getMessage());
         }
     }
+    /**
+     * Convertit l'appartement en tableau pour JSON
+     * @return array
+     */
+
+    public function toArray(): array
+{
+    return [
+        'id' => $this->getId(),
+        'building_id' => $this->getBuildingId(),
+        'owner_id' => $this->getOwnerId(),
+        'agency_id' => $this->getAgencyId(),
+        'agent_id' => $this->getAgentId(),
+        'number' => $this->getNumber(),
+        'floor' => $this->getFloor(),
+        'area' => $this->getArea(),
+        'rooms' => $this->getRooms(),
+        'bedrooms' => $this->getBedrooms(),
+        'bathrooms' => $this->getBathrooms(),
+        'toilets' => $this->getToilets(),
+        'living_rooms' => $this->getLivingRooms(),
+        'kitchens' => $this->getKitchens(),
+        'has_balcony' => $this->getHasBalcony(),
+        'amenities' => json_encode($this->getAmenities()),
+        'type_id' => $this->getTypeId(),
+        'rent_amount' => $this->getRentAmount(),
+        'charges_amount' => $this->getChargesAmount(),
+        'status' => $this->getStatus(),
+        'price' => $this->getPrice(),
+        'created_at' => $this->getCreatedAt(),
+        'updated_at' => $this->getUpdatedAt(),
+        'is_deleted' => $this->getIsDeletedAt()
+    ];
+}
+
 }

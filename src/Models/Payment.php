@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Config\Database;
@@ -34,36 +35,120 @@ class Payment
     }
 
     // Getters
-    public function getId() { return $this->id; }
-    public function getLeaseId() { return $this->lease_id; }
-    public function getAgentId() { return $this->agent_id; }
-    public function getAgencyId() { return $this->agency_id; }
-    public function getAmount() { return $this->amount; }
-    public function getPaymentDate() { return $this->payment_date; }
-    public function getDueDate() { return $this->due_date; }
-    public function getType() { return $this->type; }
-    public function getMode() { return $this->mode; }
-    public function getStatus() { return $this->status; }
-    public function getQuittancePath() { return $this->quittance_path; }
-    public function getCreatedAt() { return $this->created_at; }
-    public function getUpdatedAt() { return $this->updated_at; }
-    public function getIsDeleted() { return $this->is_deleted; }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getLeaseId()
+    {
+        return $this->lease_id;
+    }
+    public function getAgentId()
+    {
+        return $this->agent_id;
+    }
+    public function getAgencyId()
+    {
+        return $this->agency_id;
+    }
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+    public function getPaymentDate()
+    {
+        return $this->payment_date;
+    }
+    public function getDueDate()
+    {
+        return $this->due_date;
+    }
+    public function getType()
+    {
+        return $this->type;
+    }
+    public function getMode()
+    {
+        return $this->mode;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function getQuittancePath()
+    {
+        return $this->quittance_path;
+    }
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+    public function getIsDeleted()
+    {
+        return $this->is_deleted;
+    }
 
     // Protected setters
-    protected function setId($id) { $this->id = $id; }
-    protected function setLeaseId($lease_id) { $this->lease_id = $lease_id; }
-    protected function setAgentId($agent_id) { $this->agent_id = $agent_id; }
-    protected function setAgencyId($agency_id) { $this->agency_id = $agency_id; }
-    protected function setAmount($amount) { $this->amount = $amount; }
-    protected function setPaymentDate($payment_date) { $this->payment_date = $payment_date; }
-    protected function setDueDate($due_date) { $this->due_date = $due_date; }
-    protected function setType($type) { $this->type = $type; }
-    protected function setMode($mode) { $this->mode = $mode; }
-    protected function setStatus($status) { $this->status = $status; }
-    protected function setQuittancePath($quittance_path) { $this->quittance_path = $quittance_path; }
-    protected function setCreatedAt($created_at) { $this->created_at = $created_at; }
-    protected function setUpdatedAt($updated_at) { $this->updated_at = $updated_at; }
-    protected function setIsDeleted($is_deleted) { $this->is_deleted = $is_deleted; }
+    protected function setId($id)
+    {
+        $this->id = $id;
+    }
+    protected function setLeaseId($lease_id)
+    {
+        $this->lease_id = $lease_id;
+    }
+    protected function setAgentId($agent_id)
+    {
+        $this->agent_id = $agent_id;
+    }
+    protected function setAgencyId($agency_id)
+    {
+        $this->agency_id = $agency_id;
+    }
+    protected function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+    protected function setPaymentDate($payment_date)
+    {
+        $this->payment_date = $payment_date;
+    }
+    protected function setDueDate($due_date)
+    {
+        $this->due_date = $due_date;
+    }
+    protected function setType($type)
+    {
+        $this->type = $type;
+    }
+    protected function setMode($mode)
+    {
+        $this->mode = $mode;
+    }
+    protected function setStatus($status)
+    {
+        $this->status = $status;
+    }
+    protected function setQuittancePath($quittance_path)
+    {
+        $this->quittance_path = $quittance_path;
+    }
+    protected function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+    }
+    protected function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+    }
+    protected function setIsDeleted($is_deleted)
+    {
+        $this->is_deleted = $is_deleted;
+    }
 
     /**
      * Crée un objet Payment à partir des données de la base
@@ -489,7 +574,7 @@ class Payment
 
 
 
-   /**
+    /**
      * Récupère tous les paiements avec filtres et pagination
      * @param string $search
      * @param int $limit
@@ -745,4 +830,28 @@ class Payment
         }
     }
 
+    /**
+     * Convertit l'objet Payment en tableau associatif
+     * @return array
+     */
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'lease_id' => $this->getLeaseId(),
+            'agent_id' => $this->getAgentId(),
+            'agency_id' => $this->getAgencyId(),
+            'amount' => $this->getAmount(),
+            'payment_date' => $this->getPaymentDate(),
+            'due_date' => $this->getDueDate(),
+            'type' => $this->getType(),
+            'mode' => $this->getMode(),
+            'status' => $this->getStatus(),
+            'quittance_path' => $this->getQuittancePath(),
+            'created_at' => $this->getCreatedAt(),
+            'updated_at' => $this->getUpdatedAt(),
+            'is_deleted' => $this->getIsDeleted(),
+        ];
+    }
 }

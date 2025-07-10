@@ -14,14 +14,14 @@ class Audit
      * @param array|null $oldData Les anciennes données (avant l'action)
      * @param array|null $newData Les nouvelles données (après l'action)
      */
-    public static function log(string $action, string $table, int $recordId, ?array $oldData = null, ?array $newData = null): void
+    public static function log(string $action, string $table, int $recordId, int $agencyId, ?array $oldData = null, ?array $newData = null): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
         $userId = $_SESSION['user_id'] ?? null;
-        $agencyId = $_SESSION['agency_id'] ?? null;
+        
 
         try {
             AuditLog::create([

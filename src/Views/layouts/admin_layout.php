@@ -338,13 +338,22 @@ foreach ($csrfRoutes as $routeName) {
                 <li class="p-4 text-gray-500 text-sm">Aucune notification non lue</li>
             <?php else: ?>
                 <?php foreach ($unreadNotifications as $notif): ?>
-                    <li class="px-4 py-2 hover:bg-gray-100 text-sm border-b">
-                        <a href="<?= htmlspecialchars($notif['link'] ?? '#') ?>" class="text-construction-black font-semibold block">
-                            <?= htmlspecialchars($notif['title']) ?>
-                        </a>
-                        <p class="text-gray-600 text-xs"><?= htmlspecialchars($notif['message']) ?></p>
-                        <p class="text-gray-400 text-xs mt-1"><?= date('d/m/Y H:i', strtotime($notif['created_at'])) ?></p>
-                    </li>
+<li class="px-4 py-2 hover:bg-gray-100 text-sm border-b">
+    <div class="text-construction-black font-semibold">
+        <?= htmlspecialchars($notif['title']) ?>
+    </div>
+    <p class="text-gray-600 text-xs"><?= htmlspecialchars($notif['message']) ?></p>
+    <p class="text-gray-400 text-xs mt-1"><?= date('d/m/Y H:i', strtotime($notif['created_at'])) ?></p>
+    
+    <!-- Lien pour marquer comme lu -->
+    <div class="mt-2">
+        <a href="/notifications/read/<?= $notif['id'] ?>?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>"
+           class="text-xs text-blue-500 hover:underline inline-flex items-center">
+            <i class="fas fa-check mr-1"></i> Marquer comme lue
+        </a>
+    </div>
+</li>
+
                 <?php endforeach; ?>
             <?php endif; ?>
         </ul>

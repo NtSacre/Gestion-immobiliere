@@ -752,7 +752,14 @@ $routes = [
         'method' => 'GET',
         'name' => 'export',
         'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
-    ]
+    ],
+    'notifications/read/:id' => [
+        'controller' => 'App\Controllers\NotificationController',
+        'action' => 'markAsRead',
+        'method' => 'GET',
+        'name' => 'notifications.read',
+        'allowed_roles' => ['superadmin', 'admin', 'agent', 'proprietaire', 'locataire', 'acheteur']
+    ],
 ];
 
 return $routes;
